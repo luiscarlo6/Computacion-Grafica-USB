@@ -79,7 +79,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bloque.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="objeto.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bloque.h" />
+    <ClInclude Include="objeto.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

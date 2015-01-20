@@ -12,6 +12,7 @@ private:
 	float anguloRuedas;
 	float xPatineta;
 	float yPatineta;
+	bool  vista;
 
 public:
 	void setAnguloCInferior(float a);
@@ -24,10 +25,13 @@ public:
 	float getXPatineta();
 	void setAnguloRuedas(float a);
 	float getAnguloRuedas();
+	void setVista(bool a);
+	bool getVista();
 	objetos(void);
-	objetos(float i, float c, float s, float x, float y, float r);
+	objetos(float i, float c, float s, float x, float y, float r,bool v);
 	void dibujar();
 	void circulo(float r, float x, float y, int n);
+	void relleno(float r, float x, float y, int n);
 	void piso();
 	void rectangulo(float a, float l, float x_center, float y_center);
 	void triangulo();
@@ -36,5 +40,6 @@ public:
 	void dibujarCirculoSuperior();
 	void dibujarLampara();
 	void dibujarPatineta();
+	void ejesCoordenada(float limite);
 };
 

@@ -10,8 +10,9 @@ using namespace std;
 #define DEF_floorGridXSteps	DEF_maxSteps
 #define DEF_floorGridZSteps	DEF_maxSteps
 
-objetos l = objetos(20.0, -80.0, -100.0,-1.0, -8.0, 0.0);
+objetos l = objetos(20.0, -80.0, -100.0,-1.0, -8.0, 0.0, false);
 //objetos l = objetos();
+float speed = 0.1;
 
 void changeViewport(int w, int h) {
 	float aspectratio;
@@ -129,7 +130,7 @@ void ejesCoordenada(float limite) {
 }
 
 void render(){
-	//glClearColor(0.8, 0.8, 0.8, 1.0);
+	//glClearColor(0.1, 0.1, 0.8, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity ();
 	gluLookAt (0.0, 0.0, DEF_maxSteps, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
@@ -140,6 +141,7 @@ void render(){
 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable( GL_LINE_SMOOTH );
 	glEnable( GL_POINT_SMOOTH );
+	glTranslatef(0.0f,6.0f,0.0f);
 	l.dibujar();	
 	glDisable(GL_BLEND);
 	glDisable(GL_LINE_SMOOTH);
@@ -173,13 +175,18 @@ void teclado(unsigned char key, int x, int y){
 			render();
 			break;
 		case 'c':
-			l.setXPatineta(l.getXPatineta() + 0.1);
-			l.setAnguloRuedas(l.getAnguloRuedas() + 0.1*360/2*3.14159265358979323846*0.5);//Formula de longitud de Arco
+			l.setXPatineta(l.getXPatineta() + speed);
+			/*Formula despejado el angulo de rotacion de la longitud del arco
+			  de una circunferencia, por alguna razon la rotacion se ve al 
+			  reves al desplazar*/
+			l.setAnguloRuedas(l.getAnguloRuedas() + speed*360/2*3.14159265358979323846*0.5);
+			l.setVista(false);
 			render();
 			break;
 		case 'v':
-			l.setXPatineta(l.getXPatineta() - 0.1);
-			l.setAnguloRuedas(l.getAnguloRuedas() - 0.1*360/2*3.14159265358979323846*0.5);
+			l.setXPatineta(l.getXPatineta() - speed);
+			l.setAnguloRuedas(l.getAnguloRuedas() - speed*360/2*3.14159265358979323846*0.5);
+			l.setVista(true);
 			render();
 			break;
 	}
