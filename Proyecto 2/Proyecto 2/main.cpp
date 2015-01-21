@@ -140,9 +140,9 @@ void render(){
 					total[i].setXY(x,y);
 					total[i].dibujar(x,y);
 				}
-				x = x + 15.0;
+				x = x + 10.0;
 				if ((i==5)||(i==11)||(i==17)||(i==23)){
-					y = y - 10.0;
+					y = y - 5.0;
 					if ((i==11)||(i==23)){
 						x = -35.0;
 					}
@@ -161,7 +161,7 @@ int main (int argc, char** argv) {
 
 	for (int i = 0; i < 30; i++)
 	{
-		bloque b = bloque(3.0,9.0);
+		bloque b = bloque(2.0,7.0);
 		total[i] = b;
 	}
 
