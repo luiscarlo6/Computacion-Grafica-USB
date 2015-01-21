@@ -17,6 +17,7 @@ using namespace std;
 bloque total[30]; // Posicion de los morados: 1, 3, 11, 15, 19, 28
 float vel = 1.0;
 float despl = 0.0;
+int time = 500;
 void changeViewport(int w, int h) {
 	glViewport(0,0,w,h);
 	glMatrixMode(GL_PROJECTION);
@@ -165,13 +166,15 @@ void cambiar(int a){
 	
 	cout<<total[5].getX()<<"\n";
 	if (total[5].getX()>=46 || total[6].getX()<=-46){
-		vel = -vel*1.25;
+		//vel = -vel*1.25;
+		vel=-vel;
+		time = time*0.9;
 		for (int i = 0; i < 30; i++)
 		{
 			total[i].setXY(total[i].getX(),total[i].getY()-3);
 		}
 		render();
-		glutTimerFunc(500,cambiar,0);
+		glutTimerFunc(time,cambiar,0);
 	}
 
 	for (int i = 0; i < 30; i++)
@@ -179,7 +182,7 @@ void cambiar(int a){
 		total[i].setXY(total[i].getX()+vel,total[i].getY());
 	}
 	render();
-	glutTimerFunc(500,cambiar,0);
+	glutTimerFunc(time,cambiar,0);
 }
 
 int main (int argc, char** argv) {
