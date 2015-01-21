@@ -49,7 +49,4 @@ void bloque::dibujar(float a, float b)
 	glPopMatrix();
 }
 
-void bloque::incrementar(float *val){
-	x+=*val;
-}
 
