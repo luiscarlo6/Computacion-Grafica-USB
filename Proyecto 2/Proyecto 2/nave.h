@@ -8,15 +8,12 @@ class nave:
 	protected:
 		float base;
 		float altura;
-		bool existe;
 
 	//metodos
 	public:
 		void setXY(float cx, float cy);
 		float getX();
 		float getY();
-		void setExiste(bool e);
-		bool getExiste();
 
 		nave(void);
 		nave(float b, float a);

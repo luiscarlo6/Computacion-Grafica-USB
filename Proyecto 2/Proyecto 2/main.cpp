@@ -154,6 +154,17 @@ void render(){
 			}
 		glPopMatrix();
 
+		//no los quiere dibujar :(
+		glBegin(GL_TRIANGLES);
+				glVertex2f(0.0f, 0.0f); // V0
+				glVertex2f(1.0f, 1.0f); // V1
+				glVertex2f(2.0f, 0.0f); // V2
+		glEnd();
+
+		jugadores[0].setXY(0.0,0.0);
+		jugadores[0].dibujar();
+
+
 	glPopMatrix();
 
 	glutSwapBuffers();
@@ -267,10 +278,9 @@ int main (int argc, char** argv)
 	// inicializacion de los jugadores
 	for (int i = 0; i < 2; i++)
 	{
-		nave n = nave(2.0,7.0);
+		nave n = nave(2.0,1.0);
 		jugadores[i] = n;
 	}
-
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 
