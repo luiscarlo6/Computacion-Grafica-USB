@@ -14,10 +14,12 @@ using namespace std;
 #define DEF_floorGridZSteps	DEF_maxSteps
 
 // creacion de los objetos
-bloque total[30]; // Posicion de los morados: 1, 3, 11, 15, 19, 28
+bloque total[30]; // Bloques enemigos. Posicion de los morados: 1, 3, 11, 15, 19, 28
+bloque defensa[24];
 float vel = 1.0;
 float despl = 0.0;
 int time = 500;
+
 void changeViewport(int w, int h) {
 	glViewport(0,0,w,h);
 	glMatrixMode(GL_PROJECTION);
@@ -109,6 +111,7 @@ void render(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glLoadIdentity();
+	// esta funcion te localiza la camara en la consola
 	gluLookAt(0.0,0.0,5.0,0.0,0.0,0.0,0.0,1.0,0.0);
 
 	//renderGrid();
@@ -128,7 +131,7 @@ void render(){
 			glPopMatrix();
 		glPopMatrix();
 
-		// Push para dibujar los cuadrados
+		// Push para dibujar los bloques enemigos
 		glPushMatrix();
 			for (int i = 0; i < 30; i++)
 			{
@@ -151,6 +154,41 @@ void render(){
 					else{
 						x = -40.0;
 					}
+				}
+			}
+		glPopMatrix();
+
+		// reseteo x e y
+		x = -38.0;
+		y = -35.0;
+		// Push para dibujar los bloques defensa
+		glPushMatrix();
+			for (int i = 0; i < 24; i++)
+			{
+				glColor3f(0.36f,0.15f,0.10f);
+				defensa[i].setXY(x,y);
+				defensa[i].dibujar(x,y);
+				if ((i==3)||(i==7)){
+					x = x + 10.0;				
+				}
+				if ((i==13)||(i==15)){
+					x = x + 10.0;
+				}
+				if ((i==19)||(i==21)){
+					x = x + 20.0;
+				}
+				if ((12<=i) && (i<18)){
+					x = x + 10.0;
+				}
+				else{
+					x = x + 5.0;
+				}
+				if ((i==11) || (i==17)){
+					y = y + 3.0;
+					if (i==11)
+						x = -35.0;
+					else
+						x = -33.0;
 				}
 			}
 		glPopMatrix();
@@ -187,10 +225,18 @@ void cambiar(int a){
 
 int main (int argc, char** argv) {
 
+	// inicializacion de los bloques enemigos
 	for (int i = 0; i < 30; i++)
 	{
 		bloque b = bloque(2.0,7.0);
 		total[i] = b;
+	}
+
+	// inicializacion de los bloques defensa
+	for (int i = 0; i < 24; i++)
+	{
+		bloque b = bloque(1.0,3.0);
+		defensa[i] = b;
 	}
 
 	float x=-35.0;
@@ -198,28 +244,57 @@ int main (int argc, char** argv) {
 
 
 	for (int i = 0; i < 30; i++)
-			{
-				if ((i==1)||(i==3)||(i==11)||(i==15)||(i==19)||(i==28)){
-					//glColor3f(1.0f,0.0f,1.0f);
-					total[i].setXY(x,y);
-					//total[i].dibujar(x+despl,y);
-				}
-				else{
-					//glColor3f(1.0f,0.5f,0.0f);
-					total[i].setXY(x,y);
-					//total[i].dibujar(x+despl,y);
-				}
-				x = x + 10.0;
-				if ((i==5)||(i==11)||(i==17)||(i==23)){
-					y = y - 5.0;
-					if ((i==11)||(i==23)){
-						x = -35.0;
-					}
-					else{
-						x = -40.0;
-					}
-				}
+	{
+		if ((i==1)||(i==3)||(i==11)||(i==15)||(i==19)||(i==28)){
+			//glColor3f(1.0f,0.0f,1.0f);
+			total[i].setXY(x,y);
+			//total[i].dibujar(x+despl,y);
+		}
+		else{
+			//glColor3f(1.0f,0.5f,0.0f);
+			total[i].setXY(x,y);
+			//total[i].dibujar(x+despl,y);
+		}
+		x = x + 10.0;
+		if ((i==5)||(i==11)||(i==17)||(i==23)){
+			y = y - 5.0;
+			if ((i==11)||(i==23)){
+				x = -35.0;
 			}
+			else{
+				x = -40.0;
+			}
+		}
+	}
+	for (int i = 0; i < 24; i++)
+	{
+		glColor3f(0.36f,0.15f,0.10f);
+		defensa[i].setXY(x,y);
+//		defensa[i].dibujar(x,y);
+		if ((i==3)||(i==7)){
+			x = x + 10.0;				
+		}
+		if ((i==13)||(i==15)){
+			x = x + 10.0;
+		}
+		if ((i==19)||(i==21)){
+			x = x + 20.0;
+		}
+		if ((12<=i) && (i<18)){
+			x = x + 10.0;
+		}
+		else{
+			x = x + 5.0;
+		}
+		if ((i==11) || (i==17)){
+			y = y + 3.0;
+			if (i==11)
+				x = -35.0;
+			else
+				x = -33.0;
+		}
+	}
+
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
