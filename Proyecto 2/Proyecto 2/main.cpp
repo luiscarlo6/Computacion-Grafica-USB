@@ -170,6 +170,8 @@ void cambiar(int a){
 		{
 			total[i].setXY(total[i].getX(),total[i].getY()-3);
 		}
+		render();
+		glutTimerFunc(500,cambiar,0);
 	}
 
 	for (int i = 0; i < 30; i++)
