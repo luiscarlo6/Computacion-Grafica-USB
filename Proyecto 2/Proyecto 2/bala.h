@@ -9,8 +9,7 @@ protected:
 	float radio;
 public:
 	bala(void);
-	bala(float coord_x, float coord_y);
-	bala(float coord_x, float coord_y, float r);
+	bala(float r);
 
 	virtual void dibujar();
 };

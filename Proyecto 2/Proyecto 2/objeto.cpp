@@ -15,8 +15,19 @@ objeto::objeto(float coord_x, float coord_y)
 }
 
 void objeto::setXY(float xNew, float yNew){
-	x = xNew;
-	y = yNew;
+	if (xNew>=50)
+		x=50;
+	else if (xNew<=-50)
+		x=-50;
+	else
+		x = xNew;
+	
+	if (yNew>=50)
+		y=50;
+	else if (yNew<=-50)
+		y=-50;
+	else
+		y = yNew;
 }
 
 float objeto::getX(){

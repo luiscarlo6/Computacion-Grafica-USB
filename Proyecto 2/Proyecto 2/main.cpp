@@ -15,8 +15,8 @@ using namespace std;
 
 // creacion de los objetos
 objeto o = objeto(2.0,2.0);
-bloque b = bloque(-2.0,-2.0,1.0,3.0);
-bala  d = bala(0.0,5.0,2.0);
+bloque b = bloque(1.0,3.0);
+bala  d = bala(0.5);
 
 void changeViewport(int w, int h) {
 	glViewport(0,0,w,h);
@@ -109,23 +109,30 @@ void render(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glLoadIdentity();
-	// esta funcion te localiza la camara en la consola
 	gluLookAt(0.0,0.0,5.0,0.0,0.0,0.0,0.0,1.0,0.0);
 
 	//renderGrid();
 	//ejesCoordenada(30);
 	glColor3f(1.0f,1.0f,0.0f);	
-	o.dibujar();
 	b.dibujar();
-	d.dibujar();
 	
 	glutSwapBuffers();
+}
+void teclado(unsigned char key, int x, int y){
+	b.setXY(b.getX()-1,b.getY()+1);
+}
+
+void cambiar(int a){
+
+	b.setXY(b.getX()+1,b.getY()-1);
+	cout<<b.getX()<<"\n";
+	render();
+	glutTimerFunc(50,cambiar,0);
 }
 
 int main (int argc, char** argv) {
 
 	glutInit(&argc, argv);
-
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 
 	glutInitWindowSize(800,600);
@@ -134,7 +141,8 @@ int main (int argc, char** argv) {
 
 	glutReshapeFunc(changeViewport);
 	glutDisplayFunc(render);
-	//glutKeyboardFunc(teclado); 
+	glutKeyboardFunc(teclado); 
+	glutTimerFunc(500,cambiar,0);
 	
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
