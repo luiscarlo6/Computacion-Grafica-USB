@@ -7,14 +7,14 @@
 
 using namespace std;
 
-#define DEF_maxSteps 50.0f
+#define DEF_maxSteps 51.0f
 #define DEF_floorGridScale	1.0f
 #define DEF_floorGridXSteps	DEF_maxSteps
 #define DEF_floorGridZSteps	DEF_maxSteps
 
 // creacion de los objetos
-objeto o = objeto(2.0,2.0);
-bloque b = bloque(-2.0,-2.0,1.0,3.0);
+bloque bloquesNaranja[24];
+bloque bloquesMorado[6]; 
 
 void changeViewport(int w, int h) {
 	glViewport(0,0,w,h);
@@ -27,7 +27,7 @@ void changeViewport(int w, int h) {
 	} else {
 		// si cambias el xsteps debe concordar con el valor del aspectratio
 		// si cambias el zsteps debe concordar con los valores bottom y top
-		glOrtho(-51.0*aspectratio,51.0*aspectratio,-51.0,51.0,1.0,10.0);
+		glOrtho(-DEF_maxSteps*aspectratio,DEF_maxSteps*aspectratio,-DEF_maxSteps,DEF_maxSteps,1.0,10.0);
 	}
 	glMatrixMode(GL_MODELVIEW);
 }
@@ -112,6 +112,23 @@ void render(){
 
 	//renderGrid();
 	ejesCoordenada(50);
+	//inicializacion de los bloques naranja
+	for (int i = 0; i < 24; i++)
+	{
+		bloque b = bloque(3.0,9.0);
+		bloquesNaranja[i] = b;
+	}
+
+	//inicializacion de los bloques morados
+	for (int i = 0; i < 6; i++)
+	{
+		bloque b = bloque(3.0,9.0);
+		bloquesMorado[i] = b;
+	}
+
+	//variables para llevar la suma
+	float x=0.0;
+	float y=0.0;
 
 	glPushMatrix();
 		// Push del borde marron
@@ -126,9 +143,44 @@ void render(){
 		// Push para dibujar los cuadrados
 		glPushMatrix();
 			glColor3f(1.0f,0.5f,0.0f);
-			glTranslatef(-40.0f,40.0f,0.0f);
-			o.dibujar();
-			b.dibujar();
+			glTranslatef(-35.0f,35.0f,0.0f); //con este sirve para rotar todos desde arriba hacia abajo
+			glPushMatrix();
+				x = x - 35.0;
+				y = y + 35.0;
+				bloquesNaranja[0].setXY(x,y);
+				bloquesNaranja[0].dibujar();
+				//printf("bloque naranja 0 x=%f y=%f\n",bloquesNaranja[0].getX(),bloquesNaranja[0].getY());
+				// dibujando los bloques paralelos
+				glPushMatrix();
+					glTranslatef(15.0f,0.0f,0.0f);
+					glColor3f(1.0f,0.0f,1.0f);
+					glPushMatrix();
+						x = x + 15.0;
+						bloquesMorado[0].setXY(x,y);
+						bloquesMorado[0].dibujar();
+						//printf("bloque morado 0 x=%f y=%f\n",bloquesMorado[0].getX(),bloquesMorado[0].getY());
+						glPushMatrix();
+							glTranslated(15.0f,0.0f,0.0f);
+							glColor3f(1.0f,0.5f,0.0f);
+							glPushMatrix();
+								x = x + 15.0;
+								bloquesNaranja[1].setXY(x,y);
+								bloquesNaranja[1].dibujar();
+								//printf("bloque naranja 1 x=%f y=%f\n",bloquesNaranja[1].getX(),bloquesNaranja[1].getY());
+								glPushMatrix();
+									glTranslated(15.0f,0.0f,0.0f);
+									glColor3f(1.0f,0.0f,1.0f);
+									glPushMatrix();
+										x = x + 15.0;
+										bloquesMorado[1].setXY(x,y);
+										bloquesMorado[1].dibujar();
+									glPopMatrix();
+								glPopMatrix();
+							glPopMatrix();
+						glPopMatrix();
+					glPopMatrix();
+				glPopMatrix();
+			glPopMatrix();
 		glPopMatrix();
 	glPopMatrix();
 
