@@ -13,8 +13,7 @@ using namespace std;
 #define DEF_floorGridZSteps	DEF_maxSteps
 
 // creacion de los objetos
-bloque bloquesNaranja[24];
-bloque bloquesMorado[6]; 
+bloque total[30]; // Posicion de los morados: 1, 3, 11, 15, 19, 28
 
 void changeViewport(int w, int h) {
 	glViewport(0,0,w,h);
@@ -112,23 +111,10 @@ void render(){
 
 	//renderGrid();
 	ejesCoordenada(50);
-	//inicializacion de los bloques naranja
-	for (int i = 0; i < 24; i++)
-	{
-		bloque b = bloque(3.0,9.0);
-		bloquesNaranja[i] = b;
-	}
-
-	//inicializacion de los bloques morados
-	for (int i = 0; i < 6; i++)
-	{
-		bloque b = bloque(3.0,9.0);
-		bloquesMorado[i] = b;
-	}
 
 	//variables para llevar la suma
-	float x=0.0;
-	float y=0.0;
+	float x=-35.0;
+	float y=35.0;
 
 	glPushMatrix();
 		// Push del borde marron
@@ -142,45 +128,29 @@ void render(){
 
 		// Push para dibujar los cuadrados
 		glPushMatrix();
-			glColor3f(1.0f,0.5f,0.0f);
-			glTranslatef(-35.0f,35.0f,0.0f); //con este sirve para rotar todos desde arriba hacia abajo
-			glPushMatrix();
-				x = x - 35.0;
-				y = y + 35.0;
-				bloquesNaranja[0].setXY(x,y);
-				bloquesNaranja[0].dibujar();
-				//printf("bloque naranja 0 x=%f y=%f\n",bloquesNaranja[0].getX(),bloquesNaranja[0].getY());
-				// dibujando los bloques paralelos
-				glPushMatrix();
-					glTranslatef(15.0f,0.0f,0.0f);
+			for (int i = 0; i < 30; i++)
+			{
+				if ((i==1)||(i==3)||(i==11)||(i==15)||(i==19)||(i==28)){
 					glColor3f(1.0f,0.0f,1.0f);
-					glPushMatrix();
-						x = x + 15.0;
-						bloquesMorado[0].setXY(x,y);
-						bloquesMorado[0].dibujar();
-						//printf("bloque morado 0 x=%f y=%f\n",bloquesMorado[0].getX(),bloquesMorado[0].getY());
-						glPushMatrix();
-							glTranslated(15.0f,0.0f,0.0f);
-							glColor3f(1.0f,0.5f,0.0f);
-							glPushMatrix();
-								x = x + 15.0;
-								bloquesNaranja[1].setXY(x,y);
-								bloquesNaranja[1].dibujar();
-								//printf("bloque naranja 1 x=%f y=%f\n",bloquesNaranja[1].getX(),bloquesNaranja[1].getY());
-								glPushMatrix();
-									glTranslated(15.0f,0.0f,0.0f);
-									glColor3f(1.0f,0.0f,1.0f);
-									glPushMatrix();
-										x = x + 15.0;
-										bloquesMorado[1].setXY(x,y);
-										bloquesMorado[1].dibujar();
-									glPopMatrix();
-								glPopMatrix();
-							glPopMatrix();
-						glPopMatrix();
-					glPopMatrix();
-				glPopMatrix();
-			glPopMatrix();
+					total[i].setXY(x,y);
+					total[i].dibujar(x,y);
+				}
+				else{
+					glColor3f(1.0f,0.5f,0.0f);
+					total[i].setXY(x,y);
+					total[i].dibujar(x,y);
+				}
+				x = x + 15.0;
+				if ((i==5)||(i==11)||(i==17)||(i==23)){
+					y = y - 10.0;
+					if ((i==11)||(i==23)){
+						x = -35.0;
+					}
+					else{
+						x = -40.0;
+					}
+				}
+			}
 		glPopMatrix();
 	glPopMatrix();
 
@@ -188,6 +158,12 @@ void render(){
 }
 
 int main (int argc, char** argv) {
+
+	for (int i = 0; i < 30; i++)
+	{
+		bloque b = bloque(3.0,9.0);
+		total[i] = b;
+	}
 
 	glutInit(&argc, argv);
 
@@ -199,7 +175,6 @@ int main (int argc, char** argv) {
 
 	glutReshapeFunc(changeViewport);
 	glutDisplayFunc(render);
-	//glutKeyboardFunc(teclado); 
 	
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
