@@ -162,7 +162,7 @@ void teclado(unsigned char key, int x, int y){
 
 }
 
-void movEnemigos(int a){
+void cambiar(int a){
 	
 	cout<<total[5].getX()<<"\n";
 	if (total[5].getX()>=46 || total[6].getX()<=-46){
@@ -171,10 +171,10 @@ void movEnemigos(int a){
 		time = time*0.9;
 		for (int i = 0; i < 30; i++)
 		{
-			total[i].setXY(total[i].getX(),total[i].getY()-5);
+			total[i].setXY(total[i].getX(),total[i].getY()-3);
 		}
-		//render();
-		glutTimerFunc(time,movEnemigos,0);
+		render();
+		glutTimerFunc(time,cambiar,0);
 	}
 
 	for (int i = 0; i < 30; i++)
@@ -182,7 +182,7 @@ void movEnemigos(int a){
 		total[i].setXY(total[i].getX()+vel,total[i].getY());
 	}
 	render();
-	glutTimerFunc(time,movEnemigos,0);
+	glutTimerFunc(time,cambiar,0);
 }
 
 int main (int argc, char** argv) {
@@ -231,7 +231,7 @@ int main (int argc, char** argv) {
 	glutReshapeFunc(changeViewport);
 	glutDisplayFunc(render);
 	glutKeyboardFunc(teclado); 
-	glutTimerFunc(500,movEnemigos,0);
+	glutTimerFunc(500,cambiar,0);
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
 		fprintf(stderr, "GLEW error");

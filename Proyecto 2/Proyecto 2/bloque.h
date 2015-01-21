@@ -15,6 +15,7 @@ public:
 	bloque(void);
 	bloque(float a, float l);
 
-	virtual void dibujar(float a, float b);
+	virtual void dibujar(float x, float y);
+	void incrementar(float *val);
 };
 
