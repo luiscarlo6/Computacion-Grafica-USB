@@ -56,12 +56,11 @@ bool bloque::getExiste(){
 	return existe;
 }
 
-
 void bloque::dibujar()
 {	
 	if (existe){
 		glPushMatrix();
-		glTranslatef(x,y,0.0);
+			glTranslatef(x,y,0.0);
 			glBegin(GL_POLYGON);
 				glVertex2f(-largo/2,alto/2); 
 				glVertex2f(largo/2,alto/2); 

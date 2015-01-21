@@ -1,27 +1,25 @@
 #pragma once
 #include "objeto.h"
 
-class bloque :
+class nave:
 	public objeto
 {
 	//atributos
 	protected:
-		float alto;
-		float largo;
-		bool esMorado;
+		float base;
+		float altura;
 		bool existe;
-	// metodos
+
+	//metodos
 	public:
-		void setXY(float xNew, float yNew);
-		void setMorado(bool m);
-		bool getMorado();
+		void setXY(float cx, float cy);
 		float getX();
 		float getY();
 		void setExiste(bool e);
 		bool getExiste();
 
-		bloque(void);
-		bloque(float a, float l);
+		nave(void);
+		nave(float b, float a);
 
 		virtual void dibujar();
 };
