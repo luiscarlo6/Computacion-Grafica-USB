@@ -17,23 +17,19 @@ objeto o = objeto(2.0,2.0);
 bloque b = bloque(-2.0,-2.0,1.0,3.0);
 
 void changeViewport(int w, int h) {
-	float aspectratio;
-	h=h-5;
-	if (h==0)
-		h=1;	
 	glViewport(0,0,w,h);
-	glMatrixMode (GL_PROJECTION);
-	glLoadIdentity ();
-	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	float aspectratio;
 	aspectratio = (float) w / (float) h;
-
-	if (w<=h) {
-		glOrtho(-DEF_maxSteps,DEF_maxSteps,-DEF_maxSteps/aspectratio,DEF_maxSteps/aspectratio,1.0,50.0);
-	}else {
-		glOrtho(-DEF_maxSteps*aspectratio,DEF_maxSteps*aspectratio,-DEF_maxSteps,DEF_maxSteps,1.0,50.0);
+	if (w<=h){
+		glOrtho(-1.0,1.0,-1.0/aspectratio,1.0/aspectratio,1.0,10.0);
+	} else {
+		// si cambias el xsteps debe concordar con el valor del aspectratio
+		// si cambias el zsteps debe concordar con los valores bottom y top
+		glOrtho(-51.0*aspectratio,51.0*aspectratio,-51.0,51.0,1.0,10.0);
 	}
-
-	glMatrixMode (GL_MODELVIEW);
+	glMatrixMode(GL_MODELVIEW);
 }
 
 void renderGrid(){
@@ -107,9 +103,12 @@ void dibujarBorde(){
 }
 
 void render(){
+	glClearColor(0.0,0.0,0.0,0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	glLoadIdentity();
-	gluLookAt (0.0, 0.0, DEF_maxSteps, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	// esta funcion te localiza la camara en la consola
+	gluLookAt(0.0,0.0,5.0,0.0,0.0,0.0,0.0,1.0,0.0);
 
 	//renderGrid();
 	ejesCoordenada(50);
@@ -118,15 +117,16 @@ void render(){
 		// Push del borde marron
 		glPushMatrix();
 			glColor3f(0.45f,0.26f,0.10f);
-			glLineWidth(10.0f);
+			glLineWidth(5.0f);
 			glPushMatrix();
 				dibujarBorde();
 			glPopMatrix();
 		glPopMatrix();
 
-		glColor3f(1.0f,0.5f,0.0f);
+		// Push para dibujar los cuadrados
 		glPushMatrix();
-		//	glTranslatef();
+			glColor3f(1.0f,0.5f,0.0f);
+			glTranslatef(-40.0f,40.0f,0.0f);
 			o.dibujar();
 			b.dibujar();
 		glPopMatrix();
