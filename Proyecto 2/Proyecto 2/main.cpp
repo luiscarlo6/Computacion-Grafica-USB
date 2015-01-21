@@ -18,7 +18,7 @@ bloque b = bloque(-2.0,-2.0,1.0,3.0);
 
 void changeViewport(int w, int h) {
 	float aspectratio;
-
+	h=h-5;
 	if (h==0)
 		h=1;	
 	glViewport(0,0,w,h);
