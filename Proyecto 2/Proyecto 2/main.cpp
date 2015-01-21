@@ -115,7 +115,7 @@ void render(){
 	gluLookAt(0.0,0.0,5.0,0.0,0.0,0.0,0.0,1.0,0.0);
 
 	//renderGrid();
-	ejesCoordenada(50);
+	//ejesCoordenada(50);
 
 	//variables para llevar la suma
 	float x=-35.0;

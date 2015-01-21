@@ -15,6 +15,8 @@ public:
 	bool getMorado();
 	float getX();
 	float getY();
+	void setExiste(bool e);
+	bool getExiste();
 
 	bloque(void);
 	bloque(float a, float l);
