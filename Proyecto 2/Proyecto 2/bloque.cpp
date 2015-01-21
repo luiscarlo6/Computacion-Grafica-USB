@@ -39,17 +39,16 @@ float bloque::getY(){
 void bloque::dibujar(float a, float b)
 {	
 	glPushMatrix();
-	glTranslatef(x,y,0.0);
-		glBegin(GL_POLYGON);
-			glVertex2f(-largo/2,alto/2); 
-			glVertex2f(largo/2,alto/2); 
-			glVertex2f(largo/2,-alto/2); 
-			glVertex2f(-largo/2,-alto/2); 
-		glEnd();
+		glTranslatef(x,y,0.0);
+		glPushMatrix();
+			glBegin(GL_POLYGON);
+				glVertex2f(-largo/2,alto/2); 
+				glVertex2f(largo/2,alto/2); 
+				glVertex2f(largo/2,-alto/2); 
+				glVertex2f(-largo/2,-alto/2); 
+			glEnd();
+		glPopMatrix();
 	glPopMatrix();
 }
 
-void bloque::incrementar(float *val){
-	x+=*val;
-}
 
