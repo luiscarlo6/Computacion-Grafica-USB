@@ -8,10 +8,14 @@ protected:
 	float alto;
 	float largo;
 public:
+	void setXY(float xNew, float yNew);
+	float getX();
+	float getY();
 
 	bloque(void);
 	bloque(float a, float l);
 
-	virtual void dibujar();
+	virtual void dibujar(float x, float y);
+	void incrementar(float *val);
 };
 

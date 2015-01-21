@@ -33,6 +33,7 @@ void objeto::setXY(float xNew, float yNew){
 float objeto::getX(){
 	return x;
 }
+
 float objeto::getY(){
 	return y;
 }

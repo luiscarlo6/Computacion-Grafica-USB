@@ -8,16 +8,15 @@
 
 using namespace std;
 
-#define DEF_maxSteps 50.0f
+#define DEF_maxSteps 51.0f
 #define DEF_floorGridScale	1.0f
 #define DEF_floorGridXSteps	DEF_maxSteps
 #define DEF_floorGridZSteps	DEF_maxSteps
 
 // creacion de los objetos
-objeto o = objeto(2.0,2.0);
-bloque b = bloque(1.0,3.0);
-bala  d = bala(0.5);
-
+bloque total[30]; // Posicion de los morados: 1, 3, 11, 15, 19, 28
+float vel = 1.0;
+float despl = 0.0;
 void changeViewport(int w, int h) {
 	glViewport(0,0,w,h);
 	glMatrixMode(GL_PROJECTION);
@@ -29,7 +28,7 @@ void changeViewport(int w, int h) {
 	} else {
 		// si cambias el xsteps debe concordar con el valor del aspectratio
 		// si cambias el zsteps debe concordar con los valores bottom y top
-		glOrtho(-51.0*aspectratio,51.0*aspectratio,-51.0,51.0,1.0,10.0);
+		glOrtho(-DEF_maxSteps*aspectratio,DEF_maxSteps*aspectratio,-DEF_maxSteps,DEF_maxSteps,1.0,10.0);
 	}
 	glMatrixMode(GL_MODELVIEW);
 }
@@ -112,25 +111,107 @@ void render(){
 	gluLookAt(0.0,0.0,5.0,0.0,0.0,0.0,0.0,1.0,0.0);
 
 	//renderGrid();
-	//ejesCoordenada(30);
-	glColor3f(1.0f,1.0f,0.0f);	
-	b.dibujar();
-	
+	ejesCoordenada(50);
+
+	//variables para llevar la suma
+	float x=-35.0;
+	float y=30.0;
+
+	glPushMatrix();
+		// Push del borde marron
+		glPushMatrix();
+			glColor3f(0.45f,0.26f,0.10f);
+			glLineWidth(5.0f);
+			glPushMatrix();
+				dibujarBorde();
+			glPopMatrix();
+		glPopMatrix();
+
+		// Push para dibujar los cuadrados
+		glPushMatrix();
+			for (int i = 0; i < 30; i++)
+			{
+				if ((i==1)||(i==3)||(i==11)||(i==15)||(i==19)||(i==28)){
+					glColor3f(1.0f,0.0f,1.0f);
+					//total[i].setXY(x+despl,y);
+					total[i].dibujar(x,y);
+				}
+				else{
+					glColor3f(1.0f,0.5f,0.0f);
+					//total[i].setXY(x+despl,y);
+					total[i].dibujar(x,y);
+				}
+				x = x + 10.0;
+				if ((i==5)||(i==11)||(i==17)||(i==23)){
+					y = y - 5.0;
+					if ((i==11)||(i==23)){
+						x = -35.0;
+					}
+					else{
+						x = -40.0;
+					}
+				}
+			}
+		glPopMatrix();
+	glPopMatrix();
+
 	glutSwapBuffers();
 }
 void teclado(unsigned char key, int x, int y){
-	b.setXY(b.getX()-1,b.getY()+1);
+
 }
 
 void cambiar(int a){
+	
+	despl+=vel;
+	cout<<total[5].getX()<<"\n";
+	if (total[5].getX()>=49){
+		vel = -vel*1.2;
+	}
 
-	b.setXY(b.getX()+1,b.getY()-1);
-	cout<<b.getX()<<"\n";
+	for (int i = 0; i < 30; i++)
+	{
+		total[i].setXY(total[i].getX()+vel,total[i].getY());
+	}
 	render();
-	glutTimerFunc(50,cambiar,0);
+	glutTimerFunc(500,cambiar,0);
 }
 
 int main (int argc, char** argv) {
+
+	for (int i = 0; i < 30; i++)
+	{
+		bloque b = bloque(2.0,7.0);
+		total[i] = b;
+	}
+
+	float x=-35.0;
+	float y=30.0;
+
+
+	for (int i = 0; i < 30; i++)
+			{
+				if ((i==1)||(i==3)||(i==11)||(i==15)||(i==19)||(i==28)){
+					//glColor3f(1.0f,0.0f,1.0f);
+					total[i].setXY(x,y);
+					//total[i].dibujar(x+despl,y);
+				}
+				else{
+					//glColor3f(1.0f,0.5f,0.0f);
+					total[i].setXY(x,y);
+					//total[i].dibujar(x+despl,y);
+				}
+				x = x + 10.0;
+				if ((i==5)||(i==11)||(i==17)||(i==23)){
+					y = y - 5.0;
+					if ((i==11)||(i==23)){
+						x = -35.0;
+					}
+					else{
+						x = -40.0;
+					}
+				}
+			}
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
@@ -143,7 +224,6 @@ int main (int argc, char** argv) {
 	glutDisplayFunc(render);
 	glutKeyboardFunc(teclado); 
 	glutTimerFunc(500,cambiar,0);
-	
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
 		fprintf(stderr, "GLEW error");
