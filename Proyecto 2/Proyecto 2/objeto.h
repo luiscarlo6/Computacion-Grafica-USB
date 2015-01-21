@@ -10,6 +10,11 @@ protected:
 	float y;
 
 public:
+	//setters,getter
+	void setXY(float x, float y);
+	float getX();
+	float getY();
+
 	objeto(void);
 	objeto(float coord_x, float coord_y);
 

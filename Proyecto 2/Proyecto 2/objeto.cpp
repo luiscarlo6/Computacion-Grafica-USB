@@ -14,10 +14,22 @@ objeto::objeto(float coord_x, float coord_y)
 
 }
 
+void objeto::setXY(float xNew, float yNew){
+	x = xNew;
+	y = yNew;
+}
+
+float objeto::getX(){
+	return x;
+}
+float objeto::getY(){
+	return y;
+}
+
 void objeto::dibujar()
 {
 	glPointSize(4.0f);
 	glBegin(GL_POINTS);
-		glVertex2f(x, y);
+		glVertex2f(0.0, 0.0);
 	glEnd();
 }
