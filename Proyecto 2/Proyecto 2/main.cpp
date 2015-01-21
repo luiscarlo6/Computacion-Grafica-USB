@@ -3,16 +3,18 @@
 #include <iostream>
 #include "objeto.h"
 #include "bloque.h"
+#include "bala.h"
 
 using namespace std;
 
-#define DEF_maxSteps 25.0f
+#define DEF_maxSteps 50.0f
 #define DEF_floorGridScale	1.0f
 #define DEF_floorGridXSteps	DEF_maxSteps
 #define DEF_floorGridZSteps	DEF_maxSteps
 
 objeto o = objeto(2.0,2.0);
 bloque b = bloque(-2.0,-2.0,1.0,3.0);
+bala  d = bala(-2.0,2.0,5.0);
 
 void changeViewport(int w, int h) {
 	float aspectratio;
@@ -135,10 +137,11 @@ void render(){
 	gluLookAt (0.0, 0.0, DEF_maxSteps, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
 	//renderGrid();
-	ejesCoordenada(30);
-
+	//ejesCoordenada(30);
+	glColor3f(1.0f,1.0f,0.0f);	
 	o.dibujar();
 	b.dibujar();
+	d.dibujar();
 
 	glutSwapBuffers();
 }

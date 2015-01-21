@@ -79,11 +79,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bala.cpp" />
     <ClCompile Include="bloque.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="objeto.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bala.h" />
     <ClInclude Include="bloque.h" />
     <ClInclude Include="objeto.h" />
   </ItemGroup>

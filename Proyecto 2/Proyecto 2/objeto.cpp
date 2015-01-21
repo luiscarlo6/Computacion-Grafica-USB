@@ -16,8 +16,7 @@ objeto::objeto(float coord_x, float coord_y)
 void objeto::dibujar()
 {
 	glPointSize(4.0f);
-	glBegin(GL_POINTS);
-		glColor3f(1.0f,1.0f,1.0f);		
+	glBegin(GL_POINTS);	
 		glVertex2f(x, y);
 	glEnd();
 }

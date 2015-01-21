@@ -1,8 +1,5 @@
 #pragma once
 #include "objeto.h"
-#include <GL\glew.h>
-#include <GL\freeglut.h>
-#include <iostream>
 
 class bloque :
 	public objeto
