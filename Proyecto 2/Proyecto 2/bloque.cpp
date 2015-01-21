@@ -7,14 +7,16 @@ bloque::bloque(void)
 
 bloque::bloque(float coord_x, float coord_y)
 {
-	objeto(coord_x,coord_y);
+	x = coord_x;
+	y = coord_y;
 	alto = 1.0;
 	largo = 1.0;
 }
 
 bloque::bloque(float coord_x, float coord_y, float a, float l)
 {
-	objeto(coord_x,coord_y);
+	x = coord_x;
+	y = coord_y;
 	alto = a;
 	largo = l;
 }

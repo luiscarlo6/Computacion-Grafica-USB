@@ -14,7 +14,7 @@ using namespace std;
 
 objeto o = objeto(2.0,2.0);
 bloque b = bloque(-2.0,-2.0,1.0,3.0);
-bala  d = bala(-2.0,2.0,5.0);
+bala  d = bala(0.0,5.0,2.0);
 
 void changeViewport(int w, int h) {
 	float aspectratio;

@@ -8,12 +8,14 @@ bala::bala(void)
 
 bala::bala(float coord_x, float coord_y)
 {
-	objeto(coord_x,coord_y);
+	x = coord_x;
+	y = coord_y;
 	radio = 1.0;
 }
 bala::bala(float coord_x, float coord_y, float r)
 {
-	objeto(coord_x,coord_y);
+	x = coord_x;
+	y = coord_y;
 	radio = r;
 }
 
@@ -28,8 +30,8 @@ void bala::dibujar()
 	glBegin(GL_LINE_LOOP);
 		for (int i = 0; i < n; i++)
 		{
-			x = (GLfloat) radio * cos(angle) + x;
-			y = (GLfloat) radio * sin(angle) + y;
+			xBorde = (GLfloat) radio * cos(angle) + this->x;
+			yBorde = (GLfloat) radio * sin(angle) + this->y;
 			//glVertex3f(0.0f,0.0f,0.0f);
 			glVertex3f(xBorde,yBorde,0.0f);
 			angle += 2*pi/n;
