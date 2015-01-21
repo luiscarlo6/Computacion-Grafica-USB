@@ -10,6 +10,8 @@ bloque::bloque(float a, float l)
 {
 	alto = a;
 	largo = l;
+	esMorado = false;
+	existe = true;
 }
 
 void bloque::setXY(float xNew, float yNew){
@@ -36,8 +38,31 @@ float bloque::getY(){
 	return y;
 }
 
-void bloque::dibujar(float a, float b)
+void bloque::setMorado(bool m)
+{
+	esMorado = m;
+}
+
+bool bloque::getMorado()
+{
+	return esMorado;
+}
+
+void bloque::setExiste(bool e)
+{
+	existe = e;
+}
+
+bool bloque::getExiste()
+{
+	return existe;
+}
+
+
+void bloque::dibujar()
 {	
+	if (!existe)
+		return;
 	glPushMatrix();
 	glTranslatef(x,y,0.0);
 		glBegin(GL_POLYGON);

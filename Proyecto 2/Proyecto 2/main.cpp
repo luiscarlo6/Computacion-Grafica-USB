@@ -135,25 +135,13 @@ void render(){
 		glPushMatrix();
 			for (int i = 0; i < 30; i++)
 			{
-				if ((i==1)||(i==3)||(i==11)||(i==15)||(i==19)||(i==28)){
+				if (total[i].getMorado()){
 					glColor3f(1.0f,0.0f,1.0f);
-					//total[i].setXY(x+despl,y);
-					total[i].dibujar(x,y);
+					total[i].dibujar();
 				}
 				else{
 					glColor3f(1.0f,0.5f,0.0f);
-					//total[i].setXY(x+despl,y);
-					total[i].dibujar(x,y);
-				}
-				x = x + 10.0;
-				if ((i==5)||(i==11)||(i==17)||(i==23)){
-					y = y - 5.0;
-					if ((i==11)||(i==23)){
-						x = -35.0;
-					}
-					else{
-						x = -40.0;
-					}
+					total[i].dibujar();
 				}
 			}
 		glPopMatrix();
@@ -166,30 +154,8 @@ void render(){
 			for (int i = 0; i < 24; i++)
 			{
 				glColor3f(0.36f,0.15f,0.10f);
-				defensa[i].setXY(x,y);
-				defensa[i].dibujar(x,y);
-				if ((i==3)||(i==7)){
-					x = x + 10.0;				
-				}
-				if ((i==13)||(i==15)){
-					x = x + 10.0;
-				}
-				if ((i==19)||(i==21)){
-					x = x + 20.0;
-				}
-				if ((12<=i) && (i<18)){
-					x = x + 10.0;
-				}
-				else{
-					x = x + 5.0;
-				}
-				if ((i==11) || (i==17)){
-					y = y + 3.0;
-					if (i==11)
-						x = -35.0;
-					else
-						x = -33.0;
-				}
+				//defensa[i].setXY(x,y);
+				defensa[i].dibujar();
 			}
 		glPopMatrix();
 	glPopMatrix();
@@ -200,19 +166,18 @@ void teclado(unsigned char key, int x, int y){
 
 }
 
-void cambiar(int a){
+void movEnemigos(int a){
 	
 	cout<<total[5].getX()<<"\n";
 	if (total[5].getX()>=46 || total[6].getX()<=-46){
-		//vel = -vel*1.25;
 		vel=-vel;
-		time = time*0.9;
+		time = time*0.8;
 		for (int i = 0; i < 30; i++)
 		{
-			total[i].setXY(total[i].getX(),total[i].getY()-3);
+			total[i].setXY(total[i].getX(),total[i].getY()-5);
 		}
 		render();
-		glutTimerFunc(time,cambiar,0);
+		glutTimerFunc(time,movEnemigos,0);
 	}
 
 	for (int i = 0; i < 30; i++)
@@ -220,7 +185,7 @@ void cambiar(int a){
 		total[i].setXY(total[i].getX()+vel,total[i].getY());
 	}
 	render();
-	glutTimerFunc(time,cambiar,0);
+	glutTimerFunc(time,movEnemigos,0);
 }
 
 int main (int argc, char** argv) {
@@ -246,14 +211,11 @@ int main (int argc, char** argv) {
 	for (int i = 0; i < 30; i++)
 	{
 		if ((i==1)||(i==3)||(i==11)||(i==15)||(i==19)||(i==28)){
-			//glColor3f(1.0f,0.0f,1.0f);
 			total[i].setXY(x,y);
-			//total[i].dibujar(x+despl,y);
+			total[i].setMorado(true);
 		}
 		else{
-			//glColor3f(1.0f,0.5f,0.0f);
 			total[i].setXY(x,y);
-			//total[i].dibujar(x+despl,y);
 		}
 		x = x + 10.0;
 		if ((i==5)||(i==11)||(i==17)||(i==23)){
@@ -266,11 +228,14 @@ int main (int argc, char** argv) {
 			}
 		}
 	}
+
+	// reseteo x e y
+	x = -38.0;
+	y = -35.0;
+	
 	for (int i = 0; i < 24; i++)
 	{
-		glColor3f(0.36f,0.15f,0.10f);
 		defensa[i].setXY(x,y);
-//		defensa[i].dibujar(x,y);
 		if ((i==3)||(i==7)){
 			x = x + 10.0;				
 		}
@@ -305,7 +270,7 @@ int main (int argc, char** argv) {
 	glutReshapeFunc(changeViewport);
 	glutDisplayFunc(render);
 	glutKeyboardFunc(teclado); 
-	glutTimerFunc(500,cambiar,0);
+	glutTimerFunc(500,movEnemigos,0);
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
 		fprintf(stderr, "GLEW error");
