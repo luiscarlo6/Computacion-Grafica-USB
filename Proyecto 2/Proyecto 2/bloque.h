@@ -18,6 +18,6 @@ public:
 	bloque(void);
 	bloque(float a, float l);
 
-	virtual void dibujar(float x, float y);
+	virtual void dibujar(float a, float b);
 };
 

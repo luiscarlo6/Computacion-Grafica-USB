@@ -13,7 +13,8 @@ using namespace std;
 #define DEF_floorGridZSteps	DEF_maxSteps
 
 // creacion de los objetos
-bloque total[30]; // Posicion de los morados: 1, 3, 11, 15, 19, 28
+bloque total[30]; // Bloques enemigos. Posicion de los morados: 1, 3, 11, 15, 19, 28
+bloque defensa[24];
 
 void changeViewport(int w, int h) {
 	glViewport(0,0,w,h);
@@ -126,7 +127,7 @@ void render(){
 			glPopMatrix();
 		glPopMatrix();
 
-		// Push para dibujar los cuadrados
+		// Push para dibujar los bloques enemigos
 		glPushMatrix();
 			for (int i = 0; i < 30; i++)
 			{
@@ -152,6 +153,42 @@ void render(){
 				}
 			}
 		glPopMatrix();
+
+		// reseteo x e y
+		x = -38.0;
+		y = -35.0;
+		// Push para dibujar los bloques defensa
+		glPushMatrix();
+			for (int i = 0; i < 24; i++)
+			{
+				glColor3f(0.36f,0.15f,0.10f);
+				defensa[i].setXY(x,y);
+				defensa[i].dibujar(x,y);
+				if ((i==3)||(i==7)){
+					x = x + 10.0;				
+				}
+				if ((i==13)||(i==15)){
+					x = x + 10.0;
+				}
+				if ((i==19)||(i==21)){
+					x = x + 20.0;
+				}
+				if ((12<=i) && (i<18)){
+					x = x + 10.0;
+				}
+				else{
+					x = x + 5.0;
+				}
+				if ((i==11) || (i==17)){
+					y = y + 3.0;
+					if (i==11)
+						x = -35.0;
+					else
+						x = -33.0;
+				}
+			}
+		glPopMatrix();
+
 	glPopMatrix();
 
 	glutSwapBuffers();
@@ -159,10 +196,18 @@ void render(){
 
 int main (int argc, char** argv) {
 
+	// inicializacion de los bloques enemigos
 	for (int i = 0; i < 30; i++)
 	{
 		bloque b = bloque(2.0,7.0);
 		total[i] = b;
+	}
+
+	// inicializacion de los bloques defensa
+	for (int i = 0; i < 24; i++)
+	{
+		bloque b = bloque(1.0,3.0);
+		defensa[i] = b;
 	}
 
 	glutInit(&argc, argv);

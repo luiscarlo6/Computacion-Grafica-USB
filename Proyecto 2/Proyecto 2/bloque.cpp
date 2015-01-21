@@ -25,15 +25,17 @@ float bloque::getY(){
 	return y;
 }
 
-void bloque::dibujar(float x, float y)
+void bloque::dibujar(float a, float b)
 {	
 	glPushMatrix();
-	glTranslatef(x,y,0.0);
-		glBegin(GL_POLYGON);
-			glVertex2f(-largo/2,alto/2); 
-			glVertex2f(largo/2,alto/2); 
-			glVertex2f(largo/2,-alto/2); 
-			glVertex2f(-largo/2,-alto/2); 
-		glEnd();
+		glTranslatef(a,b,0.0);
+		glPushMatrix();
+			glBegin(GL_POLYGON);
+				glVertex2f(-largo/2,alto/2); 
+				glVertex2f(largo/2,alto/2); 
+				glVertex2f(largo/2,-alto/2); 
+				glVertex2f(-largo/2,-alto/2); 
+			glEnd();
+		glPopMatrix();
 	glPopMatrix();
 }
