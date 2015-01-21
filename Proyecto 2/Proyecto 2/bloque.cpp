@@ -48,15 +48,6 @@ bool bloque::getMorado()
 	return esMorado;
 }
 
-void bloque::setExiste(bool e)
-{
-	existe = e;
-}
-
-bool bloque::getExiste()
-{
-	return existe;
-}
 
 
 void bloque::dibujar()

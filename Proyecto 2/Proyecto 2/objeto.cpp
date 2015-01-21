@@ -11,6 +11,7 @@ objeto::objeto(float coord_x, float coord_y)
 {
 	x = coord_x;
 	y = coord_y;
+	existe = true;
 
 }
 
@@ -37,6 +38,17 @@ float objeto::getX(){
 float objeto::getY(){
 	return y;
 }
+
+void objeto::setExiste(bool e)
+{
+	existe = e;
+}
+
+bool objeto::getExiste()
+{
+	return existe;
+}
+
 
 void objeto::dibujar()
 {
