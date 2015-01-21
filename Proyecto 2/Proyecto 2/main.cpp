@@ -114,7 +114,7 @@ void render(){
 
 	//variables para llevar la suma
 	float x=-35.0;
-	float y=35.0;
+	float y=30.0;
 
 	glPushMatrix();
 		// Push del borde marron
