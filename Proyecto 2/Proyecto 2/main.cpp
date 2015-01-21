@@ -163,10 +163,13 @@ void teclado(unsigned char key, int x, int y){
 
 void cambiar(int a){
 	
-	despl+=vel;
 	cout<<total[5].getX()<<"\n";
-	if (total[5].getX()>=49){
-		vel = -vel*1.2;
+	if (total[5].getX()>=46 || total[6].getX()<=-46){
+		vel = -vel*1.25;
+		for (int i = 0; i < 30; i++)
+		{
+			total[i].setXY(total[i].getX(),total[i].getY()-3);
+		}
 	}
 
 	for (int i = 0; i < 30; i++)
