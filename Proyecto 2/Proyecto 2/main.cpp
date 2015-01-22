@@ -108,6 +108,17 @@ void dibujarBorde(){
 	glEnd();
 }
 
+void verifColisiones()
+{
+	for (int i = 0; i < 30; i++)
+	{
+		for (int j = 0; j < 24; j++)
+		{
+			if (total[i].colisionConCuadrado(defensa[j]))
+				defensa[j].setExiste(false);
+		}
+	}
+}
 void render(){
 	glClearColor(0.0,0.0,0.0,0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -130,9 +141,10 @@ void render(){
 			glPopMatrix();
 		glPopMatrix();
 		
+		verifColisiones();
 		// Push para dibujar los bloques enemigos
 		glPushMatrix();
-			for (int i = 0; i < 30; i++)
+			for (int i = 0; i < 6; i++)
 			{
 				if (total[i].getMorado()){
 					glColor3f(1.0f,0.0f,1.0f);
@@ -179,7 +191,7 @@ void teclado(unsigned char key, int x, int y){
 
 // funcion para mover automaticamente los bloques enemigos
 void movEnemigos(int a){	
-	cout<<total[5].getX()<<"\n";
+	
 	// 5 es el ultimo de la primera linea a mano derecha
 	// 6 es el primero de la segunada linea a mano izquierda
 	if (total[5].getX()>=46 || total[6].getX()<=-46){

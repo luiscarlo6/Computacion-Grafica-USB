@@ -12,6 +12,7 @@ class bloque :
 		bool existe;
 	// metodos
 	public:
+		//sets y gets
 		void setXY(float xNew, float yNew);
 		void setMorado(bool m);
 		bool getMorado();
@@ -19,10 +20,11 @@ class bloque :
 		float getY();
 		void setExiste(bool e);
 		bool getExiste();
-
+		//constructores
 		bloque(void);
 		bloque(float a, float l);
 
-		virtual void dibujar();
+		bool colisionConCuadrado(bloque b);
+		void dibujar();
 };
 

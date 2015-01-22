@@ -71,4 +71,19 @@ void bloque::dibujar()
 	}
 }
 
+bool bloque::colisionConCuadrado(bloque b)
+{
+	//lados del bloque
+	float izq = x - largo/2;
+	float der = x + largo/2;
+	float arr = y + alto/2;
+	float abj = y - alto/2;
+
+	float b_izq = b.getX() - largo/2;
+	float b_der = b.getX() + largo/2;
+	float b_arr = b.getY() + alto/2;
+	float b_abj = b.getY() - alto/2;	
+
+	return der >= b_izq && izq <= b_der && arr >= b_abj && abj <= b_arr ;
+}
 
