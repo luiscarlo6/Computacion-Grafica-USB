@@ -4,13 +4,15 @@
 class bala :
 	public objeto
 {
+	//atributos
+	protected:
+		float radio;
 
-protected:
-	float radio;
-public:
-	bala(void);
-	bala(float r);
+	//metodos
+	public:
+		bala(void);
+		bala(float r);
 
-	virtual void dibujar();
+		virtual void dibujar();
 };
 

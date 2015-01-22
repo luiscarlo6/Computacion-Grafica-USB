@@ -4,21 +4,25 @@
 class bloque :
 	public objeto
 {
-protected:
-	float alto;
-	float largo;
-	bool esMorado;
-	bool existe;
-public:
-	void setXY(float xNew, float yNew);
-	void setMorado(bool m);
-	bool getMorado();
-	float getX();
-	float getY();
+	//atributos
+	protected:
+		float alto;
+		float largo;
+		bool esMorado;
+		bool existe;
+	// metodos
+	public:
+		void setXY(float xNew, float yNew);
+		void setMorado(bool m);
+		bool getMorado();
+		float getX();
+		float getY();
+		void setExiste(bool e);
+		bool getExiste();
 
-	bloque(void);
-	bloque(float a, float l);
+		bloque(void);
+		bloque(float a, float l);
 
-	virtual void dibujar();
+		virtual void dibujar();
 };
 

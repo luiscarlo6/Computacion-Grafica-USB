@@ -5,6 +5,7 @@
 #include "objeto.h"
 #include "bloque.h"
 #include "bala.h"
+#include "nave.h"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ using namespace std;
 // creacion de los objetos
 bloque total[30]; // Bloques enemigos. Posicion de los morados: 1, 3, 11, 15, 19, 28
 bloque defensa[24];
+nave jugadores[2]; 
 float vel = 1.0;
 float despl = 0.0;
 int time = 500;
@@ -115,12 +117,9 @@ void render(){
 	gluLookAt(0.0,0.0,5.0,0.0,0.0,0.0,0.0,1.0,0.0);
 
 	//renderGrid();
-	ejesCoordenada(50);
+	//ejesCoordenada(50);
 
-	//variables para llevar la suma
-	float x=-35.0;
-	float y=30.0;
-
+	// Push inicial
 	glPushMatrix();
 		// Push del borde marron
 		glPushMatrix();
@@ -130,7 +129,7 @@ void render(){
 				dibujarBorde();
 			glPopMatrix();
 		glPopMatrix();
-
+		
 		// Push para dibujar los bloques enemigos
 		glPushMatrix();
 			for (int i = 0; i < 30; i++)
@@ -146,41 +145,60 @@ void render(){
 			}
 		glPopMatrix();
 
-		// reseteo x e y
-		x = -38.0;
-		y = -35.0;
 		// Push para dibujar los bloques defensa
 		glPushMatrix();
 			for (int i = 0; i < 24; i++)
 			{
 				glColor3f(0.36f,0.15f,0.10f);
-				//defensa[i].setXY(x,y);
 				defensa[i].dibujar();
 			}
 		glPopMatrix();
+
+		// Push para dibujar las naves
+		glPushMatrix();
+			for (int i = 0; i < 2; i++)
+			{
+				if (i==0){
+					glColor3f(0.5f,0.5f,0.5f);
+				}
+				else{
+					glColor3f(0.2f,0.65f,1.0f);
+				}
+				jugadores[i].dibujar();
+			}
+		glPopMatrix();
+
 	glPopMatrix();
 
 	glutSwapBuffers();
 }
+
 void teclado(unsigned char key, int x, int y){
 
 }
 
-void movEnemigos(int a){
-	
+// funcion para mover automaticamente los bloques enemigos
+void movEnemigos(int a){	
 	cout<<total[5].getX()<<"\n";
+	// 5 es el ultimo de la primera linea a mano derecha
+	// 6 es el primero de la segunada linea a mano izquierda
 	if (total[5].getX()>=46 || total[6].getX()<=-46){
 		vel=-vel;
+<<<<<<< HEAD
 		time = time*0.95;
+=======
+		time = time*0.8;
+>>>>>>> b8b106aed599c4dd0ce7cde6679d9e6da24801cd
 		// se actualizan las componentes de y en 5 mas abajo de las originales
 		for (int i = 0; i < 30; i++)
 		{
-			total[i].setXY(total[i].getX(),total[i].getY()-5);
+			total[i].setXY(total[i].getX(),total[i].getY()-3);
 		}
 		render();
 		glutTimerFunc(time,movEnemigos,0);
 	}
 
+	// se actualizan las componentes de x segun la velocidad
 	for (int i = 0; i < 30; i++)
 	{
 		total[i].setXY(total[i].getX()+vel,total[i].getY());
@@ -189,8 +207,8 @@ void movEnemigos(int a){
 	glutTimerFunc(time,movEnemigos,0);
 }
 
-int main (int argc, char** argv) {
-
+int main (int argc, char** argv) 
+{
 	// inicializacion de los bloques enemigos
 	for (int i = 0; i < 30; i++)
 	{
@@ -205,10 +223,11 @@ int main (int argc, char** argv) {
 		defensa[i] = b;
 	}
 
+	// variables para llevar la suma de las posiciones que deben tener los bloques
 	float x=-35.0;
 	float y=30.0;
 
-
+	// actualizacion de los bloques enemigos
 	for (int i = 0; i < 30; i++)
 	{
 		if ((i==1)||(i==3)||(i==11)||(i==15)||(i==19)||(i==28)){
@@ -219,8 +238,10 @@ int main (int argc, char** argv) {
 			total[i].setXY(x,y);
 		}
 		x = x + 10.0;
+		// para dibujar la siguiente linea de bloques enemigos de arriba hacia abajo
 		if ((i==5)||(i==11)||(i==17)||(i==23)){
 			y = y - 5.0;
+			// para definir si va mas a la izquierda de la primera linea
 			if ((i==11)||(i==23)){
 				x = -35.0;
 			}
@@ -233,31 +254,61 @@ int main (int argc, char** argv) {
 	// reseteo x e y
 	x = -38.0;
 	y = -35.0;
-	
+	// actualizacion de los bloques defensa
 	for (int i = 0; i < 24; i++)
 	{
 		defensa[i].setXY(x,y);
-		if ((i==3)||(i==7)){
+		// para definir la distancia que debe haber entre los conjuntos de bloques defensa
+		if ((i==3)||(i==7)||(i==13)||(i==15)){
 			x = x + 10.0;				
-		}
-		if ((i==13)||(i==15)){
-			x = x + 10.0;
 		}
 		if ((i==19)||(i==21)){
 			x = x + 20.0;
 		}
+		// distancia intermedia de los bloques defensa del medio
 		if ((12<=i) && (i<18)){
 			x = x + 10.0;
 		}
 		else{
 			x = x + 5.0;
 		}
+		//actualizacion para dibujar los bloques defensa de abajo hacia arriba
 		if ((i==11) || (i==17)){
 			y = y + 3.0;
 			if (i==11)
 				x = -35.0;
 			else
 				x = -33.0;
+		}
+	}
+
+	// inicializacion de los jugadores
+	for (int i = 0; i < 2; i++)
+	{
+		nave n;
+		if (i==0){
+			n = nave(14.0,6.0);
+		}
+		else{
+			n = nave(10.0,4.0f);
+		}
+		jugadores[i] = n;
+	}
+
+	//actualizacion de las posiciones de los jugadores
+	for (int i = 0; i < 2; i++)
+	{
+		if (i==0){
+			//reseteo de x e y
+			x=-45.0;
+			y=38.0;
+			jugadores[i].setXY(x,y);
+		}
+		else{
+			//reseteo de x e y
+			x=-40.0;
+			y=-46.0;
+			jugadores[i].setXY(x,y);
 		}
 	}
 

@@ -48,21 +48,27 @@ bool bloque::getMorado()
 	return esMorado;
 }
 
-
+void bloque::setExiste(bool e)
+{
+	existe = e;
+}
+bool bloque::getExiste(){
+	return existe;
+}
 
 void bloque::dibujar()
 {	
-	if (!existe)
-		return;
-	glPushMatrix();
-	glTranslatef(x,y,0.0);
-		glBegin(GL_POLYGON);
-			glVertex2f(-largo/2,alto/2); 
-			glVertex2f(largo/2,alto/2); 
-			glVertex2f(largo/2,-alto/2); 
-			glVertex2f(-largo/2,-alto/2); 
-		glEnd();
-	glPopMatrix();
+	if (existe){
+		glPushMatrix();
+			glTranslatef(x,y,0.0);
+			glBegin(GL_POLYGON);
+				glVertex2f(-largo/2,alto/2); 
+				glVertex2f(largo/2,alto/2); 
+				glVertex2f(largo/2,-alto/2); 
+				glVertex2f(-largo/2,-alto/2); 
+			glEnd();
+		glPopMatrix();
+	}
 }
 
 

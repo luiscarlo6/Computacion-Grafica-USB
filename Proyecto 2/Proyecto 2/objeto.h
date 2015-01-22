@@ -5,21 +5,24 @@
 
 class objeto
 {
-protected:
-	float x;
-	float y;
-	bool existe;
-public:
-	//setters,getter
-	void setXY(float x, float y);
-	float getX();
-	float getY();
-	void setExiste(bool e);
-	bool getExiste();
+	//atributos
+	protected:
+		float x;
+		float y;
+		bool existe;
 
-	objeto(void);
-	objeto(float coord_x, float coord_y);
+	//metodos
+	public:
+		//setters,getter
+		void setXY(float x, float y);
+		float getX();
+		float getY();
+		void setExiste(bool e);
+		bool getExiste();
 
-	virtual void dibujar();
+		objeto(void);
+		objeto(float coord_x, float coord_y);
+
+		virtual void dibujar();
 };
 
