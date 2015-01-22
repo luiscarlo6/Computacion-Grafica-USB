@@ -1,5 +1,6 @@
 #pragma once
 #include "objeto.h"
+#include "bloque.h"
 
 class bala :
 	public objeto
@@ -17,6 +18,7 @@ class bala :
 		float getX();
 		float getY();
 
-		virtual void dibujar();
+		void dibujar();
+		bool colisionConBloque(bloque b);
 };
 

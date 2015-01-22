@@ -100,7 +100,7 @@ void dibujarBorde(){
 
 void finalizarJuego(){
 	
-	glutTimerFunc(5000,exit,0);
+	glutTimerFunc(15000,exit,0);
 
 }
 void verifColisiones()
@@ -116,6 +116,31 @@ void verifColisiones()
 		if (total[i].colisionConNave(jugadores[1]))
 			finalizarJuego();
 	}
+
+	for (std::list<bala>::iterator it=balasbuenas.begin(); it != balasbuenas.end(); ++it){
+		
+		for (int i = 0; i < 24; i++)
+		{
+			if((*it).colisionConBloque(defensa[i])){
+				defensa[i].setExiste(false);
+				(*it).setExiste(false);
+			}
+		}
+
+		for (int i = 0; i < 30; i++)
+		{
+
+			if((*it).colisionConBloque(total[i])){
+				if(total[i].getMorado())
+					total[i].setMorado(false);
+				else
+					total[i].setExiste(false);
+				(*it).setExiste(false);
+			}
+		}
+	}
+
+
 }
 void render(){
 	glClearColor(0.0,0.0,0.0,0.0);
@@ -323,7 +348,6 @@ void invadersInit()
 void disparar(int a){
 	for (std::list<bala>::iterator it=balasbuenas.begin(); it != balasbuenas.end(); ++it){
 		(*it).setXY((*it).getX(),(*it).getY()+1);
-		cout<<(*it).getY()<<" ";
 	}
 	render();
 	glutTimerFunc(5,disparar,0);
@@ -363,7 +387,6 @@ int main (int argc, char** argv)
 	}
 	
 	glutMainLoop();
-	cout<<"HOLA";
 	return 0;
 
 }

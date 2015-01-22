@@ -59,3 +59,18 @@ void bala::dibujar()
 	}
 
 }
+
+bool bala::colisionConBloque(bloque b)
+{
+	float izq = x - radio;
+	float der = x + radio;
+	float arr = y + radio;
+	float abj = y - radio;
+
+	float b_izq = b.getX() - b.getLargo()/2;
+	float b_der = b.getX() + b.getLargo()/2;
+	float b_arr = b.getY() + b.getAlto()/2;
+	float b_abj = b.getY() - b.getAlto()/2;	
+
+	return (arr>=b_abj && izq<=b_der && der>=b_izq && abj<=b_arr && existe && b.getExiste());
+}
