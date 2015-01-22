@@ -12,6 +12,7 @@ bloque::bloque(float a, float l)
 	largo = l;
 	esMorado = false;
 	existe = true;
+	disparado = false;
 }
 
 void bloque::setXY(float xNew, float yNew){
@@ -46,6 +47,16 @@ void bloque::setMorado(bool m)
 bool bloque::getMorado()
 {
 	return esMorado;
+}
+
+void bloque::setDisparado(bool m)
+{
+	disparado = m;
+}
+
+bool bloque::getDisparado()
+{
+	return disparado;
 }
 
 void bloque::setExiste(bool e)

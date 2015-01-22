@@ -20,5 +20,6 @@ class bala :
 
 		void dibujar();
 		bool colisionConBloque(bloque b);
+		bool colisionConNave(nave n);
 };
 

@@ -11,6 +11,7 @@ class bloque :
 		float largo;
 		bool esMorado;
 		bool existe;
+		bool disparado;
 	// metodos
 	public:
 		//sets y gets
@@ -23,6 +24,8 @@ class bloque :
 		bool getExiste();
 		float getLargo();
 		float getAlto();
+		bool getDisparado();
+		void setDisparado(bool d);
 		//constructores
 		bloque(void);
 		bloque(float a, float l);
