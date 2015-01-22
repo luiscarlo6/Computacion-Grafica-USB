@@ -1,5 +1,6 @@
 #pragma once
 #include "objeto.h"
+#include "nave.h"
 
 class bloque :
 	public objeto
@@ -26,6 +27,7 @@ class bloque :
 		bloque(void);
 		bloque(float a, float l);
 
+		bool colisionConNave(nave n);
 		bool colisionConCuadrado(bloque b);
 		void dibujar();
 };

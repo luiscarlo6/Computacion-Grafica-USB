@@ -14,6 +14,8 @@ class nave:
 		void setXY(float cx, float cy);
 		float getX();
 		float getY();
+		float getAltura();
+		float getBase();
 
 		nave(void);
 		nave(float b, float a);

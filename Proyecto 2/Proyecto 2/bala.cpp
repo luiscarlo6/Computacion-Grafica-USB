@@ -11,6 +11,30 @@ bala::bala(float r)
 	radio = r;
 }
 
+void bala::setXY(float xNew, float yNew){
+	if (xNew>=50)
+		x=50;
+	else if (xNew<=-50)
+		x=-50;
+	else
+		x = xNew;
+	
+	if (yNew>=50)
+		y=50;
+	else if (yNew<=-50)
+		y=-50;
+	else
+		y = yNew;
+}
+
+float bala::getX(){
+	return x;
+}
+
+float bala::getY(){
+	return y;
+}
+
 void bala::dibujar()
 {
 	float pi = 3.14159265358979323846;

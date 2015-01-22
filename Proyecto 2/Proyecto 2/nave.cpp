@@ -36,6 +36,17 @@ float nave::getY(){
 	return y;
 }
 
+float nave::getBase()
+{
+	return base;
+}
+
+float nave::getAltura()
+{
+	return altura;
+}
+
+
 void nave::dibujar()
 {
 	if (existe){

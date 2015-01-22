@@ -1,6 +1,7 @@
 #include <GL\glew.h>
 #include <GL\freeglut.h>
 #include <iostream>
+#include <list>
 
 #include "objeto.h"
 #include "bloque.h"
@@ -18,6 +19,7 @@ using namespace std;
 bloque total[30]; // Bloques enemigos. Posicion de los morados: 1, 3, 11, 15, 19, 28
 bloque defensa[24];
 nave jugadores[2]; 
+list<bala> balasbuenas;
 bala esfera;
 float vel = 1.0;
 float despl = 0.0;
@@ -27,12 +29,13 @@ bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 
 
  void seleccionTecla(unsigned char tecla){
 	// la nave del jugador dispara las esferas
-	if (tecla==' '){
+	if (tecla==' '){		
 		esfera = bala(0.5);
 		// se le asigna a la esfera la posicion del jugador
 		esfera.setXY(jugadores[1].getX(),jugadores[1].getY());
 		printf("jugador x=%f y=%f\n",jugadores[1].getX(),jugadores[1].getY());
 		printf("esfera x=%f y=%f\n",esfera.getX(),esfera.getY());
+		balasbuenas.push_back(esfera);
 	}
 	else if (tecla=='z'){
 		// la nave se mueve hacia la izquierda
@@ -138,6 +141,11 @@ void dibujarBorde(){
 	glEnd();
 }
 
+void finalizarJuego(){
+	
+	glutTimerFunc(5000,exit,0);
+
+}
 void verifColisiones()
 {
 	for (int i = 0; i < 30; i++)
@@ -147,6 +155,9 @@ void verifColisiones()
 			if (total[i].colisionConCuadrado(defensa[j]))
 				defensa[j].setExiste(false);
 		}
+
+		if (total[i].colisionConNave(jugadores[1]))
+			finalizarJuego();
 	}
 }
 void render(){
@@ -212,10 +223,10 @@ void render(){
 
 		// Push para las balas
 		glPushMatrix();
-			if (esfera.getExiste()){
-				glColor3f(1.0f,1.0f,1.0f);
-				esfera.dibujar();					
-			}
+				for (std::list<bala>::iterator it=balasbuenas.begin(); it != balasbuenas.end(); ++it){
+					glColor3f(1.0,0.0,0.0);
+					(*it).dibujar();
+				}
 		glPopMatrix();
 
 	glPopMatrix();
@@ -230,7 +241,7 @@ void movEnemigos(int a){
 	// 6 es el primero de la segunada linea a mano izquierda
 	if (total[5].getX()>=46 || total[6].getX()<=-46){
 		vel=-vel;
-		time = time*0.95;
+		time = time*0.97;
 		// se actualizan las componentes de y en 5 mas abajo de las originales
 		for (int i = 0; i < 30; i++)
 		{
@@ -249,7 +260,7 @@ void movEnemigos(int a){
 	glutTimerFunc(time,movEnemigos,0);
 }
 
-int main (int argc, char** argv) 
+void invadersInit()
 {
 	// inicializacion de los bloques enemigos
 	for (int i = 0; i < 30; i++)
@@ -354,7 +365,22 @@ int main (int argc, char** argv)
 		}
 	}
 
+}
+
+void disparar(int a){
+	for (std::list<bala>::iterator it=balasbuenas.begin(); it != balasbuenas.end(); ++it){
+		(*it).setXY((*it).getX(),(*it).getY()+1);
+		cout<<(*it).getY()<<" ";
+	}
+	render();
+	glutTimerFunc(5,disparar,0);
+}
+
+int main (int argc, char** argv) 
+{
+	invadersInit();
 	glutInit(&argc, argv);
+	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 
 	glutInitWindowSize(800,600);
@@ -368,6 +394,7 @@ int main (int argc, char** argv)
 	glutKeyboardUpFunc(teclaLiberada);
 
 	glutTimerFunc(500,movEnemigos,0);
+	glutTimerFunc(5,disparar,0);
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
 		fprintf(stderr, "GLEW error");
@@ -375,6 +402,7 @@ int main (int argc, char** argv)
 	}
 	
 	glutMainLoop();
+	cout<<"HOLA";
 	return 0;
 
 }
