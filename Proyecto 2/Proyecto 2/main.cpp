@@ -22,6 +22,7 @@ bala esfera;
 float vel = 1.0;
 float despl = 0.0;
 int time = 500;
+int tiempo = 500;
 
 bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 256 (0-255)
 bool* keySpecialStates = new bool[246];
@@ -141,7 +142,7 @@ void render(){
 		glPushMatrix();
 			for (int i = 0; i < 2; i++)
 			{
-				if (i==0){
+				if ((i==0) && jugadores[i].getExiste()){
 					glColor3f(0.5f,0.5f,0.5f);
 				}
 				else{
@@ -188,6 +189,20 @@ void movEnemigos(int a){
 	}
 	render();
 	glutTimerFunc(time,movEnemigos,0);
+}
+
+// funcion que lleva el movimiento de la nave
+void movNave(int a){
+	float velocidad = 1.0;
+	tiempo = tiempo * 0.95;
+	// se actualizan las componentes del eje x de la nave
+	jugadores[0].setXY(jugadores[0].getX()+velocidad,jugadores[0].getY());
+	if (jugadores[0].getX()==42){
+		jugadores[0].setExiste(false);
+		render();
+		return;
+	}
+	glutTimerFunc(tiempo,movNave,0);
 }
 
 int main (int argc, char** argv) 
@@ -289,7 +304,7 @@ int main (int argc, char** argv)
 		}
 		else{
 			//reseteo de x e y
-			x=-40.0;
+			x=0.0;
 			y=-44.0;
 			jugadores[i].setXY(x,y);
 		}
@@ -317,7 +332,15 @@ int main (int argc, char** argv)
 	glutSpecialFunc(keySpecial); // GLUT usa el metodo "keySpecial" para la presion de las teclas especiales  
 	glutSpecialUpFunc(keySpecialUp); // GLUT usa el metodo "keySpecialUp" para los eventos especiales de la tecla de arriba  
 
+	// timer para los bloques enemigos
 	glutTimerFunc(500,movEnemigos,0);
+
+	// timer para la nave enemiga
+	glutTimerFunc(1000,movNave,0);
+	
+	if (jugadores[0].getExiste()==false){
+		jugadores[0].setExiste(true);
+	}
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
 		fprintf(stderr, "GLEW error");
@@ -325,6 +348,10 @@ int main (int argc, char** argv)
 	}
 	
 	glutMainLoop();
+
+	// para que repita el movimiento
+	glutTimerFunc(5000,movNave,0);
+
 	return 0;
 
 }
