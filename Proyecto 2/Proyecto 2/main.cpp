@@ -18,9 +18,39 @@ using namespace std;
 bloque total[30]; // Bloques enemigos. Posicion de los morados: 1, 3, 11, 15, 19, 28
 bloque defensa[24];
 nave jugadores[2]; 
+bala esfera;
 float vel = 1.0;
 float despl = 0.0;
 int time = 500;
+
+bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 256 (0-255) 
+
+ void seleccionTecla(unsigned char tecla){
+	// la nave del jugador dispara las esferas
+	if (tecla==' '){
+		esfera = bala(0.5);
+		// se le asigna a la esfera la posicion del jugador
+		esfera.setXY(jugadores[1].getX(),jugadores[1].getY());
+		printf("jugador x=%f y=%f\n",jugadores[1].getX(),jugadores[1].getY());
+		printf("esfera x=%f y=%f\n",esfera.getX(),esfera.getY());
+	}
+	else if (tecla=='z'){
+		// la nave se mueve hacia la izquierda
+	}
+	else if (tecla=='q'){
+		//rota 10 grados el circulo verde en sentido horario
+	}
+	glutPostRedisplay(); // funcion para actualizar el display al momento de un cambio
+ }
+
+ void teclaPresionada(unsigned char tecla, int x, int y){
+	estadoTeclas[tecla] = true; // Coloca el estado actual de la tecla presionada
+	seleccionTecla(tecla);
+ }
+
+ void teclaLiberada (unsigned char tecla, int x, int y) {
+	 estadoTeclas[tecla] = false; // Coloca el estado actual de la tecla no presionada
+ }
 
 void changeViewport(int w, int h) {
 	glViewport(0,0,w,h);
@@ -180,13 +210,17 @@ void render(){
 			}
 		glPopMatrix();
 
+		// Push para las balas
+		glPushMatrix();
+			if (esfera.getExiste()){
+				glColor3f(1.0f,1.0f,1.0f);
+				esfera.dibujar();					
+			}
+		glPopMatrix();
+
 	glPopMatrix();
 
 	glutSwapBuffers();
-}
-
-void teclado(unsigned char key, int x, int y){
-
 }
 
 // funcion para mover automaticamente los bloques enemigos
@@ -295,10 +329,10 @@ int main (int argc, char** argv)
 	{
 		nave n;
 		if (i==0){
-			n = nave(14.0,6.0);
+			n = nave(14.0,7.0);
 		}
 		else{
-			n = nave(10.0,4.0f);
+			n = nave(10.0,5.0f);
 		}
 		jugadores[i] = n;
 	}
@@ -308,14 +342,14 @@ int main (int argc, char** argv)
 	{
 		if (i==0){
 			//reseteo de x e y
-			x=-45.0;
-			y=38.0;
+			x=-40.0;
+			y=42.0;
 			jugadores[i].setXY(x,y);
 		}
 		else{
 			//reseteo de x e y
 			x=-40.0;
-			y=-46.0;
+			y=-44.0;
 			jugadores[i].setXY(x,y);
 		}
 	}
@@ -329,7 +363,10 @@ int main (int argc, char** argv)
 
 	glutReshapeFunc(changeViewport);
 	glutDisplayFunc(render);
-	glutKeyboardFunc(teclado); 
+
+	glutKeyboardFunc(teclaPresionada);
+	glutKeyboardUpFunc(teclaLiberada);
+
 	glutTimerFunc(500,movEnemigos,0);
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
