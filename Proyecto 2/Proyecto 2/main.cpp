@@ -193,16 +193,19 @@ void movEnemigos(int a){
 
 // funcion que lleva el movimiento de la nave
 void movNave(int a){
-	float velocidad = 1.0;
-	tiempo = tiempo * 0.95;
+	float velocidad = 5.0;
+	tiempo = tiempo;
 	// se actualizan las componentes del eje x de la nave
-	jugadores[0].setXY(jugadores[0].getX()+velocidad,jugadores[0].getY());
-	if (jugadores[0].getX()==42){
+	jugadores[0].setEnemigoXY(jugadores[0].getX()+velocidad,jugadores[0].getY());
+	if (jugadores[0].getX()>60){
+		jugadores[0].setEnemigoXY(-60.0,42.0);
 		jugadores[0].setExiste(false);
-		render();
-		return;
+		glutTimerFunc(5000,movNave,0);
 	}
-	glutTimerFunc(tiempo,movNave,0);
+	else{
+		jugadores[0].setExiste(true);
+		glutTimerFunc(tiempo,movNave,0);
+	}
 }
 
 int main (int argc, char** argv) 
@@ -298,9 +301,9 @@ int main (int argc, char** argv)
 	{
 		if (i==0){
 			//reseteo de x e y
-			x=-40.0;
+			x=-60.0;
 			y=42.0;
-			jugadores[i].setXY(x,y);
+			jugadores[i].setEnemigoXY(x,y);
 		}
 		else{
 			//reseteo de x e y
@@ -349,8 +352,7 @@ int main (int argc, char** argv)
 	
 	glutMainLoop();
 
-	// para que repita el movimiento
-	glutTimerFunc(5000,movNave,0);
+	// para que repita el movimiento glutTimerFunc(5000,movNave,0);
 
 	return 0;
 

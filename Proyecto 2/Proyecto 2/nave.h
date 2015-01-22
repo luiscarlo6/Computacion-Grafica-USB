@@ -12,6 +12,7 @@ class nave:
 	//metodos
 	public:
 		void setXY(float cx, float cy);
+		void setEnemigoXY(float cx, float cy);
 		float getX();
 		float getY();
 
