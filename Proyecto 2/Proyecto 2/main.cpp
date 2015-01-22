@@ -184,11 +184,7 @@ void movEnemigos(int a){
 	// 6 es el primero de la segunada linea a mano izquierda
 	if (total[5].getX()>=46 || total[6].getX()<=-46){
 		vel=-vel;
-<<<<<<< HEAD
 		time = time*0.95;
-=======
-		time = time*0.8;
->>>>>>> b8b106aed599c4dd0ce7cde6679d9e6da24801cd
 		// se actualizan las componentes de y en 5 mas abajo de las originales
 		for (int i = 0; i < 30; i++)
 		{
