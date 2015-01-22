@@ -18,9 +18,41 @@ using namespace std;
 bloque total[30]; // Bloques enemigos. Posicion de los morados: 1, 3, 11, 15, 19, 28
 bloque defensa[24];
 nave jugadores[2]; 
+bala esfera;
 float vel = 1.0;
 float despl = 0.0;
 int time = 500;
+
+bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 256 (0-255) 
+
+ void seleccionTecla(unsigned char tecla){
+	// la nave del jugador dispara las esferas
+	if (tecla==' '){
+		printf("Presione la barra espaciadora\n");
+		// se crea la esfera
+		esfera = bala(5.0);
+		// se le asigna a la esfera la posicion del jugador
+		esfera.setXY(jugadores[1].getX(),jugadores[1].getY()+20);
+		glColor3f(1.0f,0.0f,1.0f);
+		esfera.dibujar();
+	}
+	else if (tecla=='z'){
+		// la nave se mueve hacia la izquierda
+	}
+	else if (tecla=='q'){
+		//rota 10 grados el circulo verde en sentido horario
+	}
+	glutPostRedisplay(); // funcion para actualizar el display al momento de un cambio
+ }
+
+ void teclaPresionada(unsigned char tecla, int x, int y){
+	estadoTeclas[tecla] = true; // Coloca el estado actual de la tecla presionada
+	seleccionTecla(tecla);
+ }
+
+ void teclaLiberada (unsigned char tecla, int x, int y) {
+	 estadoTeclas[tecla] = false; // Coloca el estado actual de la tecla no presionada
+ }
 
 void changeViewport(int w, int h) {
 	glViewport(0,0,w,h);
@@ -173,10 +205,6 @@ void render(){
 	glutSwapBuffers();
 }
 
-void teclado(unsigned char key, int x, int y){
-
-}
-
 // funcion para mover automaticamente los bloques enemigos
 void movEnemigos(int a){	
 	cout<<total[5].getX()<<"\n";
@@ -317,7 +345,10 @@ int main (int argc, char** argv)
 
 	glutReshapeFunc(changeViewport);
 	glutDisplayFunc(render);
-	glutKeyboardFunc(teclado); 
+
+	glutKeyboardFunc(teclaPresionada);
+	glutKeyboardUpFunc(teclaLiberada);
+
 	glutTimerFunc(500,movEnemigos,0);
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {

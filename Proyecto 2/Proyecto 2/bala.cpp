@@ -30,14 +30,14 @@ void bala::dibujar()
 		}
 	glEnd();
 
-	glBegin(GL_LINE_LOOP);
-	for (int i = 0; i < n; i++)
-	{
-		xBorde = (GLfloat) radio * cos(angle);
-		yBorde = (GLfloat) radio * sin(angle);
-		glVertex3f(0.0f,0.0f,0.0f);
-		glVertex3f(xBorde,yBorde,0.0f);
-		angle += 2*pi/n;
-	}
-	glEnd();
+/*	glBegin(GL_LINE_LOOP);
+		for (int i = 0; i < n; i++)
+		{
+			xBorde = (GLfloat) radio * cos(angle);
+			yBorde = (GLfloat) radio * sin(angle);
+			glVertex3f(0.0f,0.0f,0.0f);
+			glVertex3f(xBorde,yBorde,0.0f);
+			angle += 2*pi/n;
+		}
+	glEnd();*/
 }
