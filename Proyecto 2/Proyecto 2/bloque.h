@@ -20,6 +20,8 @@ class bloque :
 		float getY();
 		void setExiste(bool e);
 		bool getExiste();
+		float getLargo();
+		float getAlto();
 		//constructores
 		bloque(void);
 		bloque(float a, float l);

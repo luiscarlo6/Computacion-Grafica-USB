@@ -144,7 +144,7 @@ void render(){
 		verifColisiones();
 		// Push para dibujar los bloques enemigos
 		glPushMatrix();
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 30; i++)
 			{
 				if (total[i].getMorado()){
 					glColor3f(1.0f,0.0f,1.0f);

@@ -56,6 +56,15 @@ bool bloque::getExiste(){
 	return existe;
 }
 
+float bloque::getLargo()
+{
+	return largo;
+}
+float bloque::getAlto()
+{
+	return alto;
+}
+
 void bloque::dibujar()
 {	
 	if (existe){
@@ -79,10 +88,10 @@ bool bloque::colisionConCuadrado(bloque b)
 	float arr = y + alto/2;
 	float abj = y - alto/2;
 
-	float b_izq = b.getX() - largo/2;
-	float b_der = b.getX() + largo/2;
-	float b_arr = b.getY() + alto/2;
-	float b_abj = b.getY() - alto/2;	
+	float b_izq = b.getX() - b.getLargo()/2;
+	float b_der = b.getX() + b.getLargo()/2;
+	float b_arr = b.getY() + b.getAlto()/2;
+	float b_abj = b.getY() - b.getAlto()/2;	
 
 	return der >= b_izq && izq <= b_der && arr >= b_abj && abj <= b_arr ;
 }
