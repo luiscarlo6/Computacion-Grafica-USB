@@ -154,16 +154,19 @@ void render(){
 			}
 		glPopMatrix();
 
-		//no los quiere dibujar :(
-		glBegin(GL_TRIANGLES);
-				glVertex2f(0.0f, 0.0f); // V0
-				glVertex2f(1.0f, 1.0f); // V1
-				glVertex2f(2.0f, 0.0f); // V2
-		glEnd();
-
-		jugadores[0].setXY(0.0,0.0);
-		jugadores[0].dibujar();
-
+		// Push para dibujar las naves
+		glPushMatrix();
+			for (int i = 0; i < 2; i++)
+			{
+				if (i==0){
+					glColor3f(0.5f,0.5f,0.5f);
+				}
+				else{
+					glColor3f(0.2f,0.65f,1.0f);
+				}
+				jugadores[i].dibujar();
+			}
+		glPopMatrix();
 
 	glPopMatrix();
 
@@ -278,9 +281,33 @@ int main (int argc, char** argv)
 	// inicializacion de los jugadores
 	for (int i = 0; i < 2; i++)
 	{
-		nave n = nave(2.0,1.0);
+		nave n;
+		if (i==0){
+			n = nave(14.0,6.0);
+		}
+		else{
+			n = nave(10.0,4.0f);
+		}
 		jugadores[i] = n;
 	}
+
+	//actualizacion de las posiciones de los jugadores
+	for (int i = 0; i < 2; i++)
+	{
+		if (i==0){
+			//reseteo de x e y
+			x=-45.0;
+			y=38.0;
+			jugadores[i].setXY(x,y);
+		}
+		else{
+			//reseteo de x e y
+			x=-40.0;
+			y=-46.0;
+			jugadores[i].setXY(x,y);
+		}
+	}
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 

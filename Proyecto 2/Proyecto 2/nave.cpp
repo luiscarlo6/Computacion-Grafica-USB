@@ -42,9 +42,9 @@ void nave::dibujar()
 		glPushMatrix();
 			glTranslatef(x,y,0.0);
 			glBegin(GL_TRIANGLES);
-				  glVertex2f(base-base, 0.0f); // V0
-				  glVertex2f(base/2, altura); // V1
-				  glVertex2f(base, 0.0f); // V2
+				  glVertex2f(0.0f, 0.0f);
+				  glVertex2f(base/2, altura); 
+				  glVertex2f(base, 0.0f);
 			glEnd();
 		glPopMatrix();
 	}
