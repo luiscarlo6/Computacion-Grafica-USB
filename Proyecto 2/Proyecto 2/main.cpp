@@ -24,7 +24,7 @@ list<bala> balasbuenas,balasmalas;
 bala esfera;
 float vel = 1.0;
 float despl = 0.0;
-int tiempo = 500;
+int tiempoMovEnemigos = 500;
 int score = 0;
 
 bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 256 (0-255)
@@ -100,9 +100,20 @@ void dibujarBorde(){
 
 void finalizarJuego(){
 	cout<<"Puntuacion: "<<score<<endl;
-	glutTimerFunc(15000,exit,0);
+	glutTimerFunc(1000,exit,0);
 
 }
+
+void verifEnemigos(){
+	bool seacabo = true;
+	for (int i = 0; i < 30; i++)
+	{
+		seacabo = seacabo && !total[i].getExiste();
+	}
+	if (seacabo)
+		finalizarJuego();
+}
+
 void verifColisiones()
 {
 	for (int i = 0; i < 30; i++)
@@ -192,7 +203,7 @@ void render(){
 				dibujarBorde();
 			glPopMatrix();
 		glPopMatrix();
-		
+		verifEnemigos();
 		verifColisiones();
 		// Push para dibujar los bloques enemigos
 		glPushMatrix();
@@ -259,14 +270,14 @@ void movEnemigos(int a){
 	// 6 es el primero de la segunada linea a mano izquierda
 	if (total[5].getX()>=46 || total[6].getX()<=-46){
 		vel=-vel;
-		tiempo = tiempo*0.97;
+		tiempoMovEnemigos = tiempoMovEnemigos*0.97;
 		// se actualizan las componentes de y en 5 mas abajo de las originales
 		for (int i = 0; i < 30; i++)
 		{
 			total[i].setXY(total[i].getX(),total[i].getY()-3);
 		}
 		render();
-		glutTimerFunc(tiempo,movEnemigos,0);
+		glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
 	}
 
 	// se actualizan las componentes de x segun la velocidad
@@ -275,7 +286,7 @@ void movEnemigos(int a){
 		total[i].setXY(total[i].getX()+vel,total[i].getY());
 	}
 	render();
-	glutTimerFunc(tiempo,movEnemigos,0);
+	glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
 }
 
 void invadersInit()
