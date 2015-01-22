@@ -28,13 +28,11 @@ bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 
  void seleccionTecla(unsigned char tecla){
 	// la nave del jugador dispara las esferas
 	if (tecla==' '){
-		printf("Presione la barra espaciadora\n");
-		// se crea la esfera
-		esfera = bala(5.0);
+		esfera = bala(0.5);
 		// se le asigna a la esfera la posicion del jugador
-		esfera.setXY(jugadores[1].getX(),jugadores[1].getY()+20);
-		glColor3f(1.0f,0.0f,1.0f);
-		esfera.dibujar();
+		esfera.setXY(jugadores[1].getX(),jugadores[1].getY());
+		printf("jugador x=%f y=%f\n",jugadores[1].getX(),jugadores[1].getY());
+		printf("esfera x=%f y=%f\n",esfera.getX(),esfera.getY());
 	}
 	else if (tecla=='z'){
 		// la nave se mueve hacia la izquierda
@@ -197,6 +195,14 @@ void render(){
 					glColor3f(0.2f,0.65f,1.0f);
 				}
 				jugadores[i].dibujar();
+			}
+		glPopMatrix();
+
+		// Push para las balas
+		glPushMatrix();
+			if (esfera.getExiste()){
+				glColor3f(1.0f,1.0f,1.0f);
+				esfera.dibujar();					
 			}
 		glPopMatrix();
 
