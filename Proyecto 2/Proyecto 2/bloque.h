@@ -1,5 +1,6 @@
 #pragma once
 #include "objeto.h"
+#include "nave.h"
 
 class bloque :
 	public objeto
@@ -10,8 +11,10 @@ class bloque :
 		float largo;
 		bool esMorado;
 		bool existe;
+		bool disparado;
 	// metodos
 	public:
+		//sets y gets
 		void setXY(float xNew, float yNew);
 		void setMorado(bool m);
 		bool getMorado();
@@ -19,10 +22,16 @@ class bloque :
 		float getY();
 		void setExiste(bool e);
 		bool getExiste();
-
+		float getLargo();
+		float getAlto();
+		bool getDisparado();
+		void setDisparado(bool d);
+		//constructores
 		bloque(void);
 		bloque(float a, float l);
 
-		virtual void dibujar();
+		bool colisionConNave(nave n);
+		bool colisionConCuadrado(bloque b);
+		void dibujar();
 };
 

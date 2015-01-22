@@ -23,6 +23,6 @@ class objeto
 		objeto(void);
 		objeto(float coord_x, float coord_y);
 
-		virtual void dibujar();
+		void dibujar();
 };
 

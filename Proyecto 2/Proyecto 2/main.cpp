@@ -1,6 +1,8 @@
 #include <GL\glew.h>
 #include <GL\freeglut.h>
 #include <iostream>
+#include <list>
+#include <time.h>
 
 #include "objeto.h"
 #include "bloque.h"
@@ -18,32 +20,36 @@ using namespace std;
 bloque total[30]; // Bloques enemigos. Posicion de los morados: 1, 3, 11, 15, 19, 28
 bloque defensa[24];
 nave jugadores[2]; 
+list<bala> balasbuenas,balasmalas;
 bala esfera;
 float vel = 1.0;
 float despl = 0.0;
-int time = 500;
-int tiempo = 500;
+int tiempo = 25;
+int tiempoMovEnemigos = 500;
+int tiempoDisparos = 5;
+int tiempoDispEnemigos = 1;
+int score = 0;
 
 bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 256 (0-255)
 bool* keySpecialStates = new bool[246];
 
- void seleccionTecla(unsigned char tecla){
+void seleccionTecla(unsigned char tecla){
 	// la nave del jugador dispara las esferas
-	if (tecla==' '){
-		// se crea el objeto esfera
+	if (tecla==' '){		
 		esfera = bala(0.5);
 		// se le asigna a la esfera la posicion del jugador
 		esfera.setXY(jugadores[1].getX(),jugadores[1].getY());
+		balasbuenas.push_back(esfera);
 	}
 	glutPostRedisplay(); // funcion para actualizar el display al momento de un cambio
  }
 
- void teclaPresionada(unsigned char tecla, int x, int y){
+void teclaPresionada(unsigned char tecla, int x, int y){
 	estadoTeclas[tecla] = true; // Coloca el estado actual de la tecla presionada
 	seleccionTecla(tecla);
  }
 
- void teclaLiberada (unsigned char tecla, int x, int y) {
+void teclaLiberada (unsigned char tecla, int x, int y) {
 	 estadoTeclas[tecla] = false; // Coloca el estado actual de la tecla no presionada
  }
 
@@ -95,6 +101,102 @@ void dibujarBorde(){
 	glEnd();
 }
 
+void finalizarJuego(){
+	cout<<"Puntuacion: "<<score<<endl;
+	glutTimerFunc(1000,exit,0);
+
+}
+
+void verifEnemigos(){
+	bool seacabo = true;
+	for (int i = 0; i < 30; i++)
+	{
+		seacabo = seacabo && !total[i].getExiste();
+	}
+	if (seacabo)
+		finalizarJuego();
+}
+
+void verifColisiones()
+{
+	//enemigos con defensas y jugador
+	for (int i = 0; i < 30; i++)
+	{
+		for (int j = 0; j < 24; j++)
+		{
+			if (total[i].colisionConCuadrado(defensa[j])){
+				defensa[j].setExiste(false);
+				score-=30;
+			}
+		}
+
+		if (total[i].colisionConNave(jugadores[1])){
+			jugadores[1].setExiste(false);
+			finalizarJuego();
+		}
+	}
+	//balas del jugador con bloques, defensas y nave superior
+	for (std::list<bala>::iterator it=balasbuenas.begin(); it != balasbuenas.end(); ++it){
+		
+		for (int i = 0; i < 24; i++)
+		{
+			if((*it).colisionConBloque(defensa[i])){
+				defensa[i].setExiste(false);
+				(*it).setExiste(false);
+				score-=30;
+			}
+		}
+
+		for (int i = 0; i < 30; i++)
+		{
+
+			if((*it).colisionConBloque(total[i])){
+				if(total[i].getMorado()){
+					if(!total[i].getDisparado())
+						total[i].setDisparado(true);
+					else{
+						total[i].setExiste(false);
+						score += 200;
+					}
+				}
+				else{
+					total[i].setExiste(false);
+					(*it).setExiste(false);
+					score+=100;
+				}
+			}
+		}
+
+		if ((*it).colisionConNave(jugadores[0])){
+			jugadores[0].setExiste(false);
+			(*it).setExiste(false);
+			score+=300;
+		}
+
+	}
+
+	//balas enemigas con defensas y jugador
+	for (std::list<bala>::iterator it=balasmalas.begin(); it != balasmalas.end(); ++it){
+		
+		for (int i = 0; i < 24; i++)
+		{
+			if((*it).colisionConBloque(defensa[i])){
+				defensa[i].setExiste(false);
+				(*it).setExiste(false);
+				score-=30;
+			}
+		}
+		if ((*it).colisionConNave(jugadores[1])){
+			jugadores[1].setExiste(false);
+			(*it).setExiste(false);
+			finalizarJuego();
+		}
+
+	}
+
+
+}
+
 void render(){
 	glClearColor(0.0,0.0,0.0,0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -113,7 +215,8 @@ void render(){
 				dibujarBorde();
 			glPopMatrix();
 		glPopMatrix();
-		
+		verifEnemigos();
+		verifColisiones();
 		// Push para dibujar los bloques enemigos
 		glPushMatrix();
 			for (int i = 0; i < 30; i++)
@@ -144,20 +247,29 @@ void render(){
 			{
 				if ((i==0) && jugadores[i].getExiste()){
 					glColor3f(0.5f,0.5f,0.5f);
+					jugadores[i].dibujar();
 				}
 				else{
 					glColor3f(0.2f,0.65f,1.0f);
+					jugadores[i].dibujar();
 				}
-				jugadores[i].dibujar();
+				
 			}
 		glPopMatrix();
 
 		// Push para las balas
 		glPushMatrix();
-			if (esfera.getExiste()){
-				glColor3f(1.0f,1.0f,1.0f);
-				esfera.dibujar();					
-			}
+				for (std::list<bala>::iterator it=balasbuenas.begin(); it != balasbuenas.end(); ++it){
+					glColor3f(1.0,0.0,0.0);
+					(*it).dibujar();
+				}
+		glPopMatrix();
+
+		glPushMatrix();
+		for (std::list<bala>::iterator it=balasmalas.begin(); it != balasmalas.end(); ++it){
+					glColor3f(0.0,1.0,0.0);
+					(*it).dibujar();
+				}
 		glPopMatrix();
 
 	glPopMatrix();
@@ -167,19 +279,19 @@ void render(){
 
 // funcion para mover automaticamente los bloques enemigos
 void movEnemigos(int a){	
-	cout<<total[5].getX()<<"\n";
+	
 	// 5 es el ultimo de la primera linea a mano derecha
 	// 6 es el primero de la segunada linea a mano izquierda
 	if (total[5].getX()>=46 || total[6].getX()<=-46){
 		vel=-vel;
-		time = time*0.8;
+		tiempoMovEnemigos = tiempoMovEnemigos*0.97;
 		// se actualizan las componentes de y en 5 mas abajo de las originales
 		for (int i = 0; i < 30; i++)
 		{
 			total[i].setXY(total[i].getX(),total[i].getY()-3);
 		}
 		render();
-		glutTimerFunc(time,movEnemigos,0);
+		glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
 	}
 
 	// se actualizan las componentes de x segun la velocidad
@@ -188,27 +300,29 @@ void movEnemigos(int a){
 		total[i].setXY(total[i].getX()+vel,total[i].getY());
 	}
 	render();
-	glutTimerFunc(time,movEnemigos,0);
+	glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
 }
 
 // funcion que lleva el movimiento de la nave
 void movNave(int a){
-	float velocidad = 5.0;
+	jugadores[0].setExiste(true);
+	float velocidad = 1.0;
 	tiempo = tiempo;
 	// se actualizan las componentes del eje x de la nave
 	jugadores[0].setEnemigoXY(jugadores[0].getX()+velocidad,jugadores[0].getY());
 	if (jugadores[0].getX()>60){
 		jugadores[0].setEnemigoXY(-60.0,42.0);
 		jugadores[0].setExiste(false);
+		render();
 		glutTimerFunc(5000,movNave,0);
 	}
 	else{
 		jugadores[0].setExiste(true);
+		render();
 		glutTimerFunc(tiempo,movNave,0);
 	}
 }
-
-int main (int argc, char** argv) 
+void invadersInit()
 {
 	// inicializacion de los bloques enemigos
 	for (int i = 0; i < 30; i++)
@@ -312,14 +426,44 @@ int main (int argc, char** argv)
 			jugadores[i].setXY(x,y);
 		}
 	}
+	jugadores[0].setExiste(false);
+}
 
+void disparar(int a){
+	for (std::list<bala>::iterator it=balasbuenas.begin(); it != balasbuenas.end(); ++it){
+		(*it).setXY((*it).getX(),(*it).getY()+1);
+	}
+	render();
+	for (std::list<bala>::iterator it=balasmalas.begin(); it != balasmalas.end(); ++it){
+		(*it).setXY((*it).getX(),(*it).getY()-0.2);
+	}
+	glutTimerFunc(tiempoDisparos,disparar,0);
+}
+
+void crearBalaMala(int a)
+{
+	esfera = bala(0.5);
+	// se le asigna a la esfera la posicion del jugador
+	int i = rand()%30;
+	while(!total[i].getExiste()){
+		i = rand()%30;
+	}
+	esfera.setXY(total[i].getX(),total[i].getY());
+	balasmalas.push_back(esfera);
+	glutTimerFunc(tiempoDispEnemigos*1000,crearBalaMala,0);
+}
+
+int main (int argc, char** argv) 
+{
+	srand(time(NULL));
+	invadersInit();
 	// inicializacion del arreglo que lleva las teclas especiales
 	for (int i = 0; i < 246; i++)
 	{
 		keySpecialStates[i] = false;
 	}
-
 	glutInit(&argc, argv);
+	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 
 	glutInitWindowSize(800,600);
@@ -337,13 +481,11 @@ int main (int argc, char** argv)
 
 	// timer para los bloques enemigos
 	glutTimerFunc(500,movEnemigos,0);
-
 	// timer para la nave enemiga
-	glutTimerFunc(1000,movNave,0);
-	
-	if (jugadores[0].getExiste()==false){
-		jugadores[0].setExiste(true);
-	}
+	glutTimerFunc(5000,movNave,0);
+	glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
+	glutTimerFunc(tiempoDisparos,disparar,0);
+	glutTimerFunc(tiempoDispEnemigos*1000,crearBalaMala,0);
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
 		fprintf(stderr, "GLEW error");
