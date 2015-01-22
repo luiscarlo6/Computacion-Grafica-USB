@@ -1,8 +1,11 @@
 #include <GL\glew.h>
 #include <GL\freeglut.h>
+#include <GL\glut.h>
 #include <iostream>
 #include <list>
 #include <time.h>
+#include <windows.h>
+#include <string.h>
 
 #include "objeto.h"
 #include "bloque.h"
@@ -29,6 +32,8 @@ int tiempoMovEnemigos = 500;
 int tiempoDisparos = 5;
 int tiempoDispEnemigos = 1;
 int score = 0;
+char quote[3][15]; // para dibujar el texto
+int numberOfQuotes=0;
 
 bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 256 (0-255)
 bool* keySpecialStates = new bool[246];
@@ -151,7 +156,6 @@ void verifColisiones()
 		{
 
 			if((*it).colisionConBloque(total[i])){
-				(*it).setExiste(false);
 				if(total[i].getMorado()){
 					if(!total[i].getDisparado())
 						total[i].setDisparado(true);
@@ -162,6 +166,7 @@ void verifColisiones()
 				}
 				else{
 					total[i].setExiste(false);
+					(*it).setExiste(false);
 					score+=100;
 				}
 			}
@@ -198,6 +203,7 @@ void verifColisiones()
 }
 
 void render(){
+	int l,lenghOfQuote,i;
 	glClearColor(0.0,0.0,0.0,0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -271,7 +277,24 @@ void render(){
 					(*it).dibujar();
 				}
 		glPopMatrix();
-
+		
+		// Push para dibujar las letras
+		for(  l=0;l<numberOfQuotes;l++)
+		{
+			lenghOfQuote = (int)strlen(quote[l]);
+			glPushMatrix();
+				//glTranslatef(-(lenghOfQuote*37), -(l*200), 0.0);
+				glPushMatrix();
+					glScalef(0.05f,0.05f,0.0f);
+					for (i = 0; i < lenghOfQuote; i++)
+					{
+						//glColor3f((UpwardsScrollVelocity/10)+300+(l*10),(UpwardsScrollVelocity/10)+300+(l*10),0.0);
+						glColor3f(1.0f,1.0f,0.0f);
+						glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, quote[l][i]);
+					}
+				glPopMatrix();
+			glPopMatrix();
+		}
 	glPopMatrix();
 
 	glutSwapBuffers();
@@ -282,20 +305,16 @@ void movEnemigos(int a){
 	
 	// 5 es el ultimo de la primera linea a mano derecha
 	// 6 es el primero de la segunada linea a mano izquierda
-	for (int j = 0; j < 30; j++)
-	{
-		if ((total[j].getX()+total[j].getLargo()/2>=50 || total[j].getX()-total[j].getLargo()/2<=-50)&&total[j].getExiste()){
-			vel=-vel;
-			tiempoMovEnemigos = tiempoMovEnemigos*0.97;
-			// se actualizan las componentes de y en 5 mas abajo de las originales
-			for (int i = 0; i < 30; i++)
-			{
-				total[i].setXY(total[i].getX(),total[i].getY()-3);
-			}
-			render();
-			glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
-			break;
+	if (total[5].getX()>=46 || total[6].getX()<=-46){
+		vel=-vel;
+		tiempoMovEnemigos = tiempoMovEnemigos*0.97;
+		// se actualizan las componentes de y en 5 mas abajo de las originales
+		for (int i = 0; i < 30; i++)
+		{
+			total[i].setXY(total[i].getX(),total[i].getY()-3);
 		}
+		render();
+		glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
 	}
 
 	// se actualizan las componentes de x segun la velocidad
@@ -326,7 +345,6 @@ void movNave(int a){
 		glutTimerFunc(tiempo,movNave,0);
 	}
 }
-
 void invadersInit()
 {
 	// inicializacion de los bloques enemigos
@@ -462,6 +480,11 @@ int main (int argc, char** argv)
 {
 	srand(time(NULL));
 	invadersInit();
+	// Manejo de los string por pantalla
+    strcpy(quote[0],"Puntaje: ");
+    strcpy(quote[1],"Perdiste.");
+    strcpy(quote[2],"Ganaste");
+	numberOfQuotes=1;
 	// inicializacion del arreglo que lleva las teclas especiales
 	for (int i = 0; i < 246; i++)
 	{
