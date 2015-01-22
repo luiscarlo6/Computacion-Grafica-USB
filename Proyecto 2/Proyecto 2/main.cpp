@@ -317,10 +317,10 @@ int main (int argc, char** argv)
 	{
 		nave n;
 		if (i==0){
-			n = nave(14.0,6.0);
+			n = nave(14.0,7.0);
 		}
 		else{
-			n = nave(10.0,4.0f);
+			n = nave(10.0,5.0f);
 		}
 		jugadores[i] = n;
 	}
