@@ -13,10 +13,10 @@ nave::nave(float b, float a)
 }
 
 void nave::setXY(float cx, float cy){
-	if (cx>=50)
-		x=50;
-	else if (cx<=-50)
-		x=-50;
+	if (cx>=(50-(base/2)))
+		x=50-(base/2);
+	else if (cx<=(-50+(base/2)))
+		x=-50+(base/2);
 	else
 		x = cx;
 	
