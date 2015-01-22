@@ -19,13 +19,19 @@ void bala::dibujar()
 	float angle = 0;
 	int n = 20;
 
-	glBegin(GL_POLYGON);
-		for (int i = 0; i < n; i++)
-		{
-			xBorde = (GLfloat) radio * cos(angle);
-			yBorde = (GLfloat) radio * sin(angle);
-			glVertex3f(xBorde,yBorde,0.0f);
-			angle += 2*pi/n;
-		}
-	glEnd();
+	if(existe){
+		glPushMatrix();
+			glTranslatef(x,y,0.0);
+			glBegin(GL_POLYGON);
+				for (int i = 0; i < n; i++)
+				{
+					xBorde = (GLfloat) radio * cos(angle);
+					yBorde = (GLfloat) radio * sin(angle);
+					glVertex2f(xBorde,yBorde);
+					angle += 2*pi/n;
+				}
+			glEnd();
+		glPopMatrix();
+	}
+
 }

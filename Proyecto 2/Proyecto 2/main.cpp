@@ -330,14 +330,14 @@ int main (int argc, char** argv)
 	{
 		if (i==0){
 			//reseteo de x e y
-			x=-45.0;
-			y=38.0;
+			x=-40.0;
+			y=42.0;
 			jugadores[i].setXY(x,y);
 		}
 		else{
 			//reseteo de x e y
 			x=-40.0;
-			y=-46.0;
+			y=-44.0;
 			jugadores[i].setXY(x,y);
 		}
 	}
