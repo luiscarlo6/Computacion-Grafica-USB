@@ -25,7 +25,8 @@ float vel = 1.0;
 float despl = 0.0;
 int time = 500;
 
-bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 256 (0-255) 
+bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 256 (0-255)
+bool* keySpecialStates = new bool[246];
 
  void seleccionTecla(unsigned char tecla){
 	// la nave del jugador dispara las esferas
@@ -36,12 +37,6 @@ bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 
 		printf("jugador x=%f y=%f\n",jugadores[1].getX(),jugadores[1].getY());
 		printf("esfera x=%f y=%f\n",esfera.getX(),esfera.getY());
 		balasbuenas.push_back(esfera);
-	}
-	else if (tecla=='z'){
-		// la nave se mueve hacia la izquierda
-	}
-	else if (tecla=='q'){
-		//rota 10 grados el circulo verde en sentido horario
 	}
 	glutPostRedisplay(); // funcion para actualizar el display al momento de un cambio
  }
@@ -54,6 +49,28 @@ bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 
  void teclaLiberada (unsigned char tecla, int x, int y) {
 	 estadoTeclas[tecla] = false; // Coloca el estado actual de la tecla no presionada
  }
+
+void keySpecialOperations(void) {
+	// If the left arrow key has been pressed  
+	if (keySpecialStates[GLUT_KEY_LEFT]) {
+		// Perform left arrow key operations
+		jugadores[1].setXY(jugadores[1].getX()-1,jugadores[1].getY());
+	} 
+	if (keySpecialStates[GLUT_KEY_RIGHT]) {
+		// Perform right arrow key operations
+		jugadores[1].setXY(jugadores[1].getX()+1,jugadores[1].getY());
+	} 
+	glutPostRedisplay(); // funcion para actualizar el display al momento de un cambio
+}  
+
+void keySpecial (int key, int x, int y) {
+	keySpecialStates[key] = true;
+	keySpecialOperations();
+}
+
+void keySpecialUp (int key, int x, int y) {
+	keySpecialStates[key] = false;
+}
 
 void changeViewport(int w, int h) {
 	glViewport(0,0,w,h);
@@ -69,66 +86,6 @@ void changeViewport(int w, int h) {
 		glOrtho(-DEF_maxSteps*aspectratio,DEF_maxSteps*aspectratio,-DEF_maxSteps,DEF_maxSteps,1.0,10.0);
 	}
 	glMatrixMode(GL_MODELVIEW);
-}
-
-void renderGrid(){
-	int loopX, loopZ;
-	GLfloat zExtent, xExtent, xLocal, zLocal;
-
-	glPushMatrix(); 
-		glColor3f( 0.8f, 0.8f, 0.8f);
-		glBegin( GL_LINES );
-			zExtent = DEF_floorGridScale * DEF_floorGridZSteps;
-			for(loopX = -DEF_floorGridXSteps; loopX <= DEF_floorGridXSteps; loopX++ )
-			{
-			xLocal = DEF_floorGridScale * loopX;
-			glVertex3f( xLocal, -zExtent, 0.0f );
-			glVertex3f( xLocal, zExtent,  0.0f );
-			}
-			xExtent = DEF_floorGridScale * DEF_floorGridXSteps;
-			for(loopZ = -DEF_floorGridZSteps; loopZ <= DEF_floorGridZSteps; loopZ++ )
-			{
-			zLocal = DEF_floorGridScale * loopZ;
-			glVertex3f( -xExtent, zLocal, 0.0f );
-			glVertex3f(  xExtent, zLocal, 0.0f );
-			}
-		glEnd();
-    glPopMatrix();
-}
-
-void ejesCoordenada(float limite) {
-
-	glLineWidth(2.5);
-
-	glBegin(GL_LINES);
-		glColor3f(1.0,0.0,0.0);
-		glVertex2f(0,limite);
-		glVertex2f(0,-limite);
-		glColor3f(0.0,0.0,1.0);
-		glVertex2f(limite,0);
-		glVertex2f(-limite,0);
-	glEnd();
-	glLineWidth(1.5);
-	int i;
-	glColor3f(0.0,1.0,0.0);
-	glBegin(GL_LINES);
-		for(i = -limite; i <=limite; i++){
-			if (i!=0) {		
-				if ((i%2)==0){	
-					glVertex2f(i,0.4);
-					glVertex2f(i,-0.4);
-					glVertex2f(0.4,i);
-					glVertex2f(-0.4,i);
-				}else{
-					glVertex2f(i,0.2);
-					glVertex2f(i,-0.2);
-					glVertex2f(0.2,i);
-					glVertex2f(-0.2,i);
-				}
-			}
-		} 
-	glEnd();
-	glLineWidth(1.0);
 }
 
 // para dibujar el borde marron
@@ -167,9 +124,6 @@ void render(){
 	glLoadIdentity();
 	// esta funcion te localiza la camara en la consola
 	gluLookAt(0.0,0.0,5.0,0.0,0.0,0.0,0.0,1.0,0.0);
-
-	//renderGrid();
-	//ejesCoordenada(50);
 
 	// Push inicial
 	glPushMatrix();
@@ -364,7 +318,6 @@ void invadersInit()
 			jugadores[i].setXY(x,y);
 		}
 	}
-
 }
 
 void disparar(int a){
@@ -379,6 +332,11 @@ void disparar(int a){
 int main (int argc, char** argv) 
 {
 	invadersInit();
+	// inicializacion del arreglo que lleva las teclas especiales
+	for (int i = 0; i < 246; i++)
+	{
+		keySpecialStates[i] = false;
+	}
 	glutInit(&argc, argv);
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
@@ -392,6 +350,9 @@ int main (int argc, char** argv)
 
 	glutKeyboardFunc(teclaPresionada);
 	glutKeyboardUpFunc(teclaLiberada);
+
+	glutSpecialFunc(keySpecial); // GLUT usa el metodo "keySpecial" para la presion de las teclas especiales  
+	glutSpecialUpFunc(keySpecialUp); // GLUT usa el metodo "keySpecialUp" para los eventos especiales de la tecla de arriba  
 
 	glutTimerFunc(500,movEnemigos,0);
 	glutTimerFunc(5,disparar,0);
