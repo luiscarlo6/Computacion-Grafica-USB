@@ -25,12 +25,14 @@ bala esfera;
 float vel = 1.0;
 float despl = 0.0;
 int tiempoMovEnemigos = 500;
+int tiempoDisparos = 5;
+int tiempoDispEnemigos = 1;
 int score = 0;
 
 bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 256 (0-255)
 bool* keySpecialStates = new bool[246];
 
- void seleccionTecla(unsigned char tecla){
+void seleccionTecla(unsigned char tecla){
 	// la nave del jugador dispara las esferas
 	if (tecla==' '){		
 		esfera = bala(0.5);
@@ -41,12 +43,12 @@ bool* keySpecialStates = new bool[246];
 	glutPostRedisplay(); // funcion para actualizar el display al momento de un cambio
  }
 
- void teclaPresionada(unsigned char tecla, int x, int y){
+void teclaPresionada(unsigned char tecla, int x, int y){
 	estadoTeclas[tecla] = true; // Coloca el estado actual de la tecla presionada
 	seleccionTecla(tecla);
  }
 
- void teclaLiberada (unsigned char tecla, int x, int y) {
+void teclaLiberada (unsigned char tecla, int x, int y) {
 	 estadoTeclas[tecla] = false; // Coloca el estado actual de la tecla no presionada
  }
 
@@ -116,6 +118,7 @@ void verifEnemigos(){
 
 void verifColisiones()
 {
+	//enemigos con defensas y jugador
 	for (int i = 0; i < 30; i++)
 	{
 		for (int j = 0; j < 24; j++)
@@ -131,7 +134,7 @@ void verifColisiones()
 			finalizarJuego();
 		}
 	}
-
+	//balas del jugador con bloques, defensas y nave superior
 	for (std::list<bala>::iterator it=balasbuenas.begin(); it != balasbuenas.end(); ++it){
 		
 		for (int i = 0; i < 24; i++)
@@ -163,8 +166,15 @@ void verifColisiones()
 			}
 		}
 
+		if ((*it).colisionConNave(jugadores[0])){
+			jugadores[0].setExiste(false);
+			(*it).setExiste(false);
+			score+=300;
+		}
+
 	}
 
+	//balas enemigas con defensas y jugador
 	for (std::list<bala>::iterator it=balasmalas.begin(); it != balasmalas.end(); ++it){
 		
 		for (int i = 0; i < 24; i++)
@@ -185,6 +195,7 @@ void verifColisiones()
 
 
 }
+
 void render(){
 	glClearColor(0.0,0.0,0.0,0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -403,7 +414,7 @@ void disparar(int a){
 	for (std::list<bala>::iterator it=balasmalas.begin(); it != balasmalas.end(); ++it){
 		(*it).setXY((*it).getX(),(*it).getY()-0.2);
 	}
-	glutTimerFunc(5,disparar,0);
+	glutTimerFunc(tiempoDisparos,disparar,0);
 }
 
 void crearBalaMala(int a)
@@ -416,7 +427,7 @@ void crearBalaMala(int a)
 	}
 	esfera.setXY(total[i].getX(),total[i].getY());
 	balasmalas.push_back(esfera);
-	glutTimerFunc(2000,crearBalaMala,0);
+	glutTimerFunc(tiempoDispEnemigos*1000,crearBalaMala,0);
 }
 
 int main (int argc, char** argv) 
@@ -445,9 +456,9 @@ int main (int argc, char** argv)
 	glutSpecialFunc(keySpecial); // GLUT usa el metodo "keySpecial" para la presion de las teclas especiales  
 	glutSpecialUpFunc(keySpecialUp); // GLUT usa el metodo "keySpecialUp" para los eventos especiales de la tecla de arriba  
 
-	glutTimerFunc(500,movEnemigos,0);
-	glutTimerFunc(5,disparar,0);
-	glutTimerFunc(2000,crearBalaMala,0);
+	glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
+	glutTimerFunc(tiempoDisparos,disparar,0);
+	glutTimerFunc(tiempoDispEnemigos*1000,crearBalaMala,0);
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
 		fprintf(stderr, "GLEW error");
