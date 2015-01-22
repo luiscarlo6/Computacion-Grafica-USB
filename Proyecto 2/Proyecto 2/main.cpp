@@ -171,7 +171,8 @@ void movEnemigos(int a){
 	cout<<total[5].getX()<<"\n";
 	if (total[5].getX()>=46 || total[6].getX()<=-46){
 		vel=-vel;
-		time = time*0.8;
+		time = time*0.95;
+		// se actualizan las componentes de y en 5 mas abajo de las originales
 		for (int i = 0; i < 30; i++)
 		{
 			total[i].setXY(total[i].getX(),total[i].getY()-5);
