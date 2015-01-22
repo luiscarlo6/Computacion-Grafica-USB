@@ -214,8 +214,6 @@ void render(){
 				dibujarBorde();
 			glPopMatrix();
 		glPopMatrix();
-		verifEnemigos();
-		verifColisiones();
 		// Push para dibujar los bloques enemigos
 		glPushMatrix();
 			for (int i = 0; i < 30; i++)
@@ -270,6 +268,9 @@ void render(){
 					(*it).dibujar();
 				}
 		glPopMatrix();
+
+		verifEnemigos();
+		verifColisiones();
 
 	glPopMatrix();
 
