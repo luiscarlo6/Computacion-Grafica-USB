@@ -29,19 +29,8 @@ void nave::setXY(float cx, float cy){
 }
 
 void nave::setEnemigoXY(float cx, float cy){
-/*	if (cx>=(49-(base/2)))
-		x=49-(base/2);
-	else if (cx<=(-49+(base/2)))
-		x=-49+(base/2);
-	else*/
-		x = cx;
-/*	
-	if (cy>=50)
-		y=50;
-	else if (cy<=-50)
-		y=-50;
-	else
-	*/	y = cy;
+	x = cx;
+	y = cy;
 }
 
 float nave::getX(){
@@ -61,7 +50,6 @@ float nave::getAltura()
 {
 	return altura;
 }
-
 
 void nave::dibujar()
 {

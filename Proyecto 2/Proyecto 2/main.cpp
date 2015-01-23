@@ -33,6 +33,8 @@ int tiempoDispEnemigos = 1;
 int tiempoNaveEnemiga = 1;
 int score = 0;
 char quote[50], str[20]; // para dibujar el texto
+bool fin = false; //saber si es fin de juego
+bool gano = false; // saber si gano
 
 bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 256 (0-255)
 bool* keySpecialStates = new bool[246];
@@ -117,8 +119,8 @@ void textoPuntaje(){
 
 void finalizarJuego(){
 	cout<<"Puntuacion: "<<score<<endl;
-	glutTimerFunc(1000,exit,0);
-
+	fin = true;
+	//glutTimerFunc(1000,exit,0);
 }
 
 void verifEnemigos(){
@@ -127,8 +129,10 @@ void verifEnemigos(){
 	{
 		seacabo = seacabo && !total[i].getExiste();
 	}
-	if (seacabo)
+	if (seacabo){
+		gano = true;
 		finalizarJuego();
+	}
 }
 
 void verifColisiones()
@@ -194,8 +198,7 @@ void verifColisiones()
 	}
 
 	//balas enemigas con defensas y jugador
-	for (std::list<bala>::iterator it=balasmalas.begin(); it != balasmalas.end(); ++it){
-		
+	for (std::list<bala>::iterator it=balasmalas.begin(); it != balasmalas.end(); ++it){		
 		for (int i = 0; i < 24; i++)
 		{
 			if((*it).colisionConBloque(defensa[i])){
@@ -215,6 +218,10 @@ void verifColisiones()
 
 void render(){
 	int lenghOfQuote,i;
+	char finJuego[50],perdiste[50],ganaste[50];
+	strcpy(finJuego,"Fin del juego.");
+	strcpy(perdiste,"Perdiste.");
+	strcpy(ganaste,"Ganaste");
 	glClearColor(0.0,0.0,0.0,0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -222,7 +229,7 @@ void render(){
 	// esta funcion te localiza la camara en la consola
 	gluLookAt(0.0,0.0,5.0,0.0,0.0,0.0,0.0,1.0,0.0);
 
-	// Push inicial
+	//Push inicial
 	glPushMatrix();
 		// Push del borde marron
 		glPushMatrix();
@@ -232,64 +239,9 @@ void render(){
 				dibujarBorde();
 			glPopMatrix();
 		glPopMatrix();
-		// Push para dibujar los bloques enemigos
+		// Push para dibujar las letras del puntaje
 		glPushMatrix();
-			for (int i = 0; i < 30; i++)
-			{
-				if (total[i].getMorado()){
-					glColor3f(1.0f,0.0f,1.0f);
-					total[i].dibujar();
-				}
-				else{
-					glColor3f(1.0f,0.5f,0.0f);
-					total[i].dibujar();
-				}
-			}
-		glPopMatrix();
-
-		// Push para dibujar los bloques defensa
-		glPushMatrix();
-			for (int i = 0; i < 24; i++)
-			{
-				glColor3f(0.36f,0.15f,0.10f);
-				defensa[i].dibujar();
-			}
-		glPopMatrix();
-
-		// Push para dibujar las naves
-		glPushMatrix();
-			for (int i = 0; i < 2; i++)
-			{
-				if ((i==0)){
-					glColor3f(0.5f,0.5f,0.5f);
-					jugadores[i].dibujar();
-				}
-				else{
-					glColor3f(0.2f,0.65f,1.0f);
-					jugadores[i].dibujar();
-				}
-				
-			}
-		glPopMatrix();
-
-		// Push para las balas
-		glPushMatrix();
-				for (std::list<bala>::iterator it=balasbuenas.begin(); it != balasbuenas.end(); ++it){
-					glColor3f(1.0,0.0,0.0);
-					(*it).dibujar();
-				}
-		glPopMatrix();
-
-		glPushMatrix();
-		for (std::list<bala>::iterator it=balasmalas.begin(); it != balasmalas.end(); ++it){
-					glColor3f(0.0,1.0,0.0);
-					(*it).dibujar();
-				}
-		glPopMatrix();
-
-		// Push para dibujar las letras
-		glPushMatrix();
-			glTranslatef(0.0f,45.0f,0.0f);
+			glTranslatef(-5.0f,45.0f,0.0f);
 			glPushMatrix();
 				glScalef(0.06f,0.04f,0.0f);
 				for (i = 0; i < strlen(quote); i++)
@@ -299,11 +251,113 @@ void render(){
 				}
 			glPopMatrix();
 		glPopMatrix();
-
-		verifEnemigos();
-		verifColisiones();
 	glPopMatrix();
+	if (fin==false){
+		// Push inicial del objetos del juego
+		glPushMatrix();
+			// Push para dibujar los bloques enemigos
+			glPushMatrix();
+				for (int i = 0; i < 30; i++)
+				{
+					if (total[i].getMorado()){
+						glColor3f(1.0f,0.0f,1.0f);
+						total[i].dibujar();
+					}
+					else{
+						glColor3f(1.0f,0.5f,0.0f);
+						total[i].dibujar();
+					}
+				}
+			glPopMatrix();
 
+			// Push para dibujar los bloques defensa
+			glPushMatrix();
+				for (int i = 0; i < 24; i++)
+				{
+					glColor3f(0.36f,0.15f,0.10f);
+					defensa[i].dibujar();
+				}
+			glPopMatrix();
+
+			// Push para dibujar las naves
+			glPushMatrix();
+				for (int i = 0; i < 2; i++)
+				{
+					if ((i==0)){
+						glColor3f(0.5f,0.5f,0.5f);
+						jugadores[i].dibujar();
+					}
+					else{
+						glColor3f(0.2f,0.65f,1.0f);
+						jugadores[i].dibujar();
+					}	
+				}
+			glPopMatrix();
+
+			// Push para las balas buenas
+			glPushMatrix();
+					for (std::list<bala>::iterator it=balasbuenas.begin(); it != balasbuenas.end(); ++it){
+						glColor3f(1.0,0.0,0.0);
+						(*it).dibujar();
+					}
+			glPopMatrix();
+
+			// Push para las balas malas
+			glPushMatrix();
+				for (std::list<bala>::iterator it=balasmalas.begin(); it != balasmalas.end(); ++it){
+							glColor3f(0.0,1.0,0.0);
+							(*it).dibujar();
+						}
+			glPopMatrix();
+
+			verifEnemigos();
+			verifColisiones();
+		glPopMatrix();
+	}
+	else{
+		if (gano==false){
+			glPushMatrix();
+				// Push dibujar letras fin del juego
+				glPushMatrix();
+					glTranslatef(-35.0f,0.0f,0.0f);
+					glPushMatrix();
+						glScalef(0.08f,0.06f,0.0f);
+						for (i = 0; i < strlen(finJuego); i++)
+						{
+							glColor3f(1.0f,1.0f,0.0f);
+							glutStrokeCharacter(GLUT_STROKE_ROMAN, finJuego[i]);
+						}
+					glPopMatrix();
+					// Push de las letras del perdiste
+					glTranslatef(15.0f,-10.0f,0.0f);
+					glPushMatrix();
+						glScalef(0.08f,0.06f,0.0f);
+						for (i = 0; i < strlen(perdiste); i++)
+						{
+							glColor3f(1.0f,1.0f,0.0f);
+							glutStrokeCharacter(GLUT_STROKE_ROMAN, perdiste[i]);
+						}
+					glPopMatrix();
+				glPopMatrix();
+			glPopMatrix();
+		}
+		else{
+			glPushMatrix();
+				// Push para dibujar ganaste
+				glPushMatrix();
+					glTranslatef(-20.0f,0.0f,0.0f);
+					glPushMatrix();
+						glScalef(0.09f,0.06f,0.0f);
+						for (i = 0; i < strlen(ganaste); i++)
+						{
+							glColor3f(1.0f,1.0f,0.0f);
+							glutStrokeCharacter(GLUT_STROKE_ROMAN, ganaste[i]);
+						}
+					glPopMatrix();
+				glPopMatrix();
+			glPopMatrix();
+		}
+	}
 	glutSwapBuffers();
 }
 
@@ -466,7 +520,6 @@ void invadersInit()
 			jugadores[i].setXY(x,y);
 		}
 	}
-	//inicializacion de la imagen del texto
 	// Manejo de los string por pantalla
 	textoPuntaje();
 }
