@@ -118,9 +118,8 @@ void textoPuntaje(){
 }
 
 void finalizarJuego(){
-	cout<<"Puntuacion: "<<score<<endl;
 	fin = true;
-	//glutTimerFunc(1000,exit,0);
+	glutTimerFunc(3000,exit,0);
 }
 
 void verifEnemigos(){
@@ -148,7 +147,6 @@ void verifColisiones()
 				textoPuntaje();
 			}
 		}
-
 		if (total[i].colisionConNave(jugadores[1])){
 			jugadores[1].setExiste(false);
 			finalizarJuego();
@@ -156,7 +154,6 @@ void verifColisiones()
 	}
 	//balas del jugador con bloques, defensas y nave superior
 	for (std::list<bala>::iterator it=balasbuenas.begin(); it != balasbuenas.end(); ++it){
-		
 		for (int i = 0; i < 24; i++)
 		{
 			if((*it).colisionConBloque(defensa[i])){
@@ -166,7 +163,6 @@ void verifColisiones()
 				textoPuntaje();
 			}
 		}
-
 		for (int i = 0; i < 30; i++)
 		{
 			if((*it).colisionConBloque(total[i])){
@@ -187,14 +183,12 @@ void verifColisiones()
 				}
 			}
 		}
-
 		if ((*it).colisionConNave(jugadores[0])){
 			jugadores[0].setExiste(false);
 			(*it).setExiste(false);
 			score+=300;
 			textoPuntaje();
 		}
-
 	}
 
 	//balas enemigas con defensas y jugador
@@ -221,7 +215,7 @@ void render(){
 	char finJuego[50],perdiste[50],ganaste[50];
 	strcpy(finJuego,"Fin del juego.");
 	strcpy(perdiste,"Perdiste.");
-	strcpy(ganaste,"Ganaste");
+	strcpy(ganaste,"Ganaste.");
 	glClearColor(0.0,0.0,0.0,0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -252,6 +246,7 @@ void render(){
 			glPopMatrix();
 		glPopMatrix();
 	glPopMatrix();
+
 	if (fin==false){
 		// Push inicial del objetos del juego
 		glPushMatrix();
@@ -269,7 +264,6 @@ void render(){
 					}
 				}
 			glPopMatrix();
-
 			// Push para dibujar los bloques defensa
 			glPushMatrix();
 				for (int i = 0; i < 24; i++)
@@ -278,7 +272,6 @@ void render(){
 					defensa[i].dibujar();
 				}
 			glPopMatrix();
-
 			// Push para dibujar las naves
 			glPushMatrix();
 				for (int i = 0; i < 2; i++)
@@ -293,7 +286,6 @@ void render(){
 					}	
 				}
 			glPopMatrix();
-
 			// Push para las balas buenas
 			glPushMatrix();
 					for (std::list<bala>::iterator it=balasbuenas.begin(); it != balasbuenas.end(); ++it){
@@ -301,7 +293,6 @@ void render(){
 						(*it).dibujar();
 					}
 			glPopMatrix();
-
 			// Push para las balas malas
 			glPushMatrix();
 				for (std::list<bala>::iterator it=balasmalas.begin(); it != balasmalas.end(); ++it){
@@ -309,7 +300,6 @@ void render(){
 							(*it).dibujar();
 						}
 			glPopMatrix();
-
 			verifEnemigos();
 			verifColisiones();
 		glPopMatrix();
@@ -363,7 +353,6 @@ void render(){
 
 // funcion para mover automaticamente los bloques enemigos
 void movEnemigos(int a){	
-
 	// 5 es el ultimo de la primera linea a mano derecha
 	// 6 es el primero de la segunada linea a mano izquierda
 	for (int j = 0; j < 30; j++)
@@ -381,7 +370,6 @@ void movEnemigos(int a){
 			break;
 		}
 	}
-
 	// se actualizan las componentes de x segun la velocidad
 	for (int i = 0; i < 30; i++)
 	{
@@ -423,18 +411,15 @@ void invadersInit()
 		bloque b = bloque(2.0,7.0);
 		total[i] = b;
 	}
-
 	// inicializacion de los bloques defensa
 	for (int i = 0; i < 24; i++)
 	{
 		bloque b = bloque(1.0,3.0);
 		defensa[i] = b;
 	}
-
 	// variables para llevar la suma de las posiciones que deben tener los bloques
 	float x=-35.0;
 	float y=30.0;
-
 	// actualizacion de los bloques enemigos
 	for (int i = 0; i < 30; i++)
 	{
@@ -458,7 +443,6 @@ void invadersInit()
 			}
 		}
 	}
-
 	// reseteo x e y
 	x = -38.0;
 	y = -35.0;
@@ -489,7 +473,6 @@ void invadersInit()
 				x = -33.0;
 		}
 	}
-
 	// inicializacion de los jugadores
 	for (int i = 0; i < 2; i++)
 	{
@@ -503,7 +486,6 @@ void invadersInit()
 		}
 		jugadores[i] = n;
 	}
-
 	//actualizacion de las posiciones de los jugadores
 	for (int i = 0; i < 2; i++)
 	{
@@ -588,8 +570,5 @@ int main (int argc, char** argv)
 	
 	glutMainLoop();
 
-	// para que repita el movimiento glutTimerFunc(5000,movNave,0);
-
 	return 0;
-
 }
