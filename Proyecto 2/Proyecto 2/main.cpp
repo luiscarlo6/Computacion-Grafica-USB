@@ -6,7 +6,7 @@
 #include <time.h>
 #include <windows.h>
 #include <string.h>
-
+#include <stdio.h>
 #include "objeto.h"
 #include "bloque.h"
 #include "bala.h"
@@ -32,8 +32,7 @@ int tiempoMovEnemigos = 500;
 int tiempoDisparos = 5;
 int tiempoDispEnemigos = 1;
 int score = 0;
-char quote[3][15]; // para dibujar el texto
-int numberOfQuotes=0;
+char quote[50], str[20]; // para dibujar el texto
 
 bool* estadoTeclas = new bool[256]; // Crea un arreglo de booleanos de longitud 256 (0-255)
 bool* keySpecialStates = new bool[246];
@@ -106,6 +105,16 @@ void dibujarBorde(){
 	glEnd();
 }
 
+void textoPuntaje(){
+	strcpy(quote,"");
+	char copia[20];
+	strcpy(copia,"Puntaje: ");
+	// se actualiza el string
+	sprintf(str, "%d", score); //para copiar el puntaje
+	strncat(copia,str,(strlen(copia)+strlen(str)));
+	strncpy(quote,copia,(strlen(copia)+strlen(str)));
+}
+
 void finalizarJuego(){
 	cout<<"Puntuacion: "<<score<<endl;
 	glutTimerFunc(1000,exit,0);
@@ -132,6 +141,7 @@ void verifColisiones()
 			if (total[i].colisionConCuadrado(defensa[j])){
 				defensa[j].setExiste(false);
 				score-=30;
+				textoPuntaje();
 			}
 		}
 
@@ -149,6 +159,7 @@ void verifColisiones()
 				defensa[i].setExiste(false);
 				(*it).setExiste(false);
 				score-=30;
+				textoPuntaje();
 			}
 		}
 
@@ -162,12 +173,14 @@ void verifColisiones()
 					else{
 						total[i].setExiste(false);
 						score += 200;
+						textoPuntaje();
 					}
 				}
 				else{
 					total[i].setExiste(false);
 					(*it).setExiste(false);
 					score+=100;
+					textoPuntaje();
 				}
 			}
 		}
@@ -176,6 +189,7 @@ void verifColisiones()
 			jugadores[0].setExiste(false);
 			(*it).setExiste(false);
 			score+=300;
+			textoPuntaje();
 		}
 
 	}
@@ -189,6 +203,7 @@ void verifColisiones()
 				defensa[i].setExiste(false);
 				(*it).setExiste(false);
 				score-=30;
+				textoPuntaje();
 			}
 		}
 		if ((*it).colisionConNave(jugadores[1])){
@@ -196,14 +211,11 @@ void verifColisiones()
 			(*it).setExiste(false);
 			finalizarJuego();
 		}
-
 	}
-
-
 }
 
 void render(){
-	int l,lenghOfQuote,i;
+	int lenghOfQuote,i;
 	glClearColor(0.0,0.0,0.0,0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -279,22 +291,17 @@ void render(){
 		glPopMatrix();
 		
 		// Push para dibujar las letras
-		for(  l=0;l<numberOfQuotes;l++)
-		{
-			lenghOfQuote = (int)strlen(quote[l]);
+		glPushMatrix();
+			glTranslatef(0.0f,45.0f,0.0f);
 			glPushMatrix();
-				//glTranslatef(-(lenghOfQuote*37), -(l*200), 0.0);
-				glPushMatrix();
-					glScalef(0.05f,0.05f,0.0f);
-					for (i = 0; i < lenghOfQuote; i++)
-					{
-						//glColor3f((UpwardsScrollVelocity/10)+300+(l*10),(UpwardsScrollVelocity/10)+300+(l*10),0.0);
-						glColor3f(1.0f,1.0f,0.0f);
-						glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, quote[l][i]);
-					}
-				glPopMatrix();
+				glScalef(0.06f,0.04f,0.0f);
+				for (i = 0; i < strlen(quote); i++)
+				{
+					glColor3f(1.0f,1.0f,0.0f);
+					glutStrokeCharacter(GLUT_STROKE_ROMAN, quote[i]);
+				}
 			glPopMatrix();
-		}
+		glPopMatrix();
 	glPopMatrix();
 
 	glutSwapBuffers();
@@ -345,6 +352,7 @@ void movNave(int a){
 		glutTimerFunc(tiempo,movNave,0);
 	}
 }
+
 void invadersInit()
 {
 	// inicializacion de los bloques enemigos
@@ -450,6 +458,9 @@ void invadersInit()
 		}
 	}
 	jugadores[0].setExiste(false);
+	//inicializacion de la imagen del texto
+	// Manejo de los string por pantalla
+	textoPuntaje();
 }
 
 void disparar(int a){
@@ -480,12 +491,7 @@ int main (int argc, char** argv)
 {
 	srand(time(NULL));
 	invadersInit();
-	// Manejo de los string por pantalla
-    strcpy(quote[0],"Puntaje: ");
-    strcpy(quote[1],"Perdiste.");
-    strcpy(quote[2],"Ganaste");
-	numberOfQuotes=1;
-	// inicializacion del arreglo que lleva las teclas especiales
+ 	// inicializacion del arreglo que lleva las teclas especiales
 	for (int i = 0; i < 246; i++)
 	{
 		keySpecialStates[i] = false;
