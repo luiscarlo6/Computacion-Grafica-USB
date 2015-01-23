@@ -17,8 +17,11 @@ class bala :
 		void setXY(float xNew, float yNew);
 		float getX();
 		float getY();
+		float getRadio();
 
 		void dibujar();
+
+		bool colisionConBala(bala b);
 		bool colisionConBloque(bloque b);
 		bool colisionConNave(nave n);
 };

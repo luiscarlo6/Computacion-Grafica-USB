@@ -119,7 +119,7 @@ void textoPuntaje(){
 
 void finalizarJuego(){
 	fin = true;
-	glutTimerFunc(3000,exit,0);
+	//glutTimerFunc(3000,exit,0);
 }
 
 void verifEnemigos(){
@@ -183,6 +183,14 @@ void verifColisiones()
 				}
 			}
 		}
+		/*for (std::list<bala>::iterator it2=balasmalas.begin(); it2 != balasmalas.end(); ++it){		
+			if((*it).colisionConBala((*it2))){
+				(*it).setExiste(false);
+				(*it2).setExiste(false);
+			}
+		}*/
+
+
 		if ((*it).colisionConNave(jugadores[0])){
 			jugadores[0].setExiste(false);
 			(*it).setExiste(false);
@@ -522,8 +530,12 @@ void crearBalaMala(int a)
 	esfera = bala(0.5);
 	// se le asigna a la esfera la posicion del jugador
 	int i = rand()%30;
+	int j = 0;
 	while(!total[i].getExiste()){
 		i = rand()%30;
+		j++;
+		if (j>=30)
+			break; 
 	}
 	esfera.setXY(total[i].getX(),total[i].getY());
 	balasmalas.push_back(esfera);

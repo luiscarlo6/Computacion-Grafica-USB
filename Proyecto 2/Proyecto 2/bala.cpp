@@ -39,6 +39,10 @@ float bala::getY(){
 	return y;
 }
 
+float bala:: getRadio(){
+	return radio;
+}
+
 void bala::dibujar()
 {
 	float pi = 3.14159265358979323846;
@@ -93,4 +97,11 @@ bool bala::colisionConNave(nave n)
 	float n_der = n.getX() + n.getBase()/2;
 
 	return arr>=n_abj && izq<=n_der && der>=n_izq && abj<=n_arr && existe && n.getExiste();
+}
+
+bool bala::colisionConBala(bala b)
+{
+	float distance = sqrt(pow(abs(b.getX()- x),2) + pow(abs(b.getY() - y),2));
+	
+	return ((radio + b.getRadio()) > distance) && existe && b.getExiste();
 }
