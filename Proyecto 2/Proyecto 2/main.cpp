@@ -166,6 +166,7 @@ void verifColisiones()
 		for (int i = 0; i < 30; i++)
 		{
 			if((*it).colisionConBloque(total[i])){
+				(*it).setExiste(false);
 				if(total[i].getMorado()){
 					if(!total[i].getDisparado())
 						total[i].setDisparado(true);
@@ -177,7 +178,6 @@ void verifColisiones()
 				}
 				else{
 					total[i].setExiste(false);
-					(*it).setExiste(false);
 					score+=100;
 					textoPuntaje();
 				}
@@ -309,19 +309,23 @@ void render(){
 
 // funcion para mover automaticamente los bloques enemigos
 void movEnemigos(int a){	
-	
+
 	// 5 es el ultimo de la primera linea a mano derecha
 	// 6 es el primero de la segunada linea a mano izquierda
-	if (total[5].getX()>=46 || total[6].getX()<=-46){
-		vel=-vel;
-		tiempoMovEnemigos = tiempoMovEnemigos*0.97;
-		// se actualizan las componentes de y en 5 mas abajo de las originales
-		for (int i = 0; i < 30; i++)
-		{
-			total[i].setXY(total[i].getX(),total[i].getY()-3);
+	for (int j = 0; j < 30; j++)
+	{
+		if ((total[j].getX()+total[j].getLargo()/2>=50 || total[j].getX()-total[j].getLargo()/2<=-50)&&total[j].getExiste()){
+			vel=-vel;
+			tiempoMovEnemigos = tiempoMovEnemigos*0.97;
+			// se actualizan las componentes de y en 5 mas abajo de las originales
+			for (int i = 0; i < 30; i++)
+			{
+				total[i].setXY(total[i].getX(),total[i].getY()-3);
+			}
+			render();
+			glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
+			break;
 		}
-		render();
-		glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
 	}
 
 	// se actualizan las componentes de x segun la velocidad
