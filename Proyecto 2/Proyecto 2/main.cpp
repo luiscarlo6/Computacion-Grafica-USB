@@ -326,6 +326,8 @@ void movEnemigos(int a){
 			glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
 			break;
 		}
+		render();
+		glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
 	}
 
 	// se actualizan las componentes de x segun la velocidad
