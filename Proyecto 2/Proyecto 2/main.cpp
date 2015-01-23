@@ -11,7 +11,6 @@
 #include "bloque.h"
 #include "bala.h"
 #include "nave.h"
-
 using namespace std;
 
 #define DEF_maxSteps 51.0f
@@ -31,6 +30,7 @@ int tiempo = 25;
 int tiempoMovEnemigos = 500;
 int tiempoDisparos = 5;
 int tiempoDispEnemigos = 1;
+int tiempoNaveEnemiga = 1;
 int score = 0;
 char quote[50], str[20]; // para dibujar el texto
 
@@ -165,7 +165,6 @@ void verifColisiones()
 
 		for (int i = 0; i < 30; i++)
 		{
-
 			if((*it).colisionConBloque(total[i])){
 				if(total[i].getMorado()){
 					if(!total[i].getDisparado())
@@ -233,8 +232,6 @@ void render(){
 				dibujarBorde();
 			glPopMatrix();
 		glPopMatrix();
-		verifEnemigos();
-		verifColisiones();
 		// Push para dibujar los bloques enemigos
 		glPushMatrix();
 			for (int i = 0; i < 30; i++)
@@ -263,7 +260,7 @@ void render(){
 		glPushMatrix();
 			for (int i = 0; i < 2; i++)
 			{
-				if ((i==0) && jugadores[i].getExiste()){
+				if ((i==0)){
 					glColor3f(0.5f,0.5f,0.5f);
 					jugadores[i].dibujar();
 				}
@@ -289,7 +286,7 @@ void render(){
 					(*it).dibujar();
 				}
 		glPopMatrix();
-		
+
 		// Push para dibujar las letras
 		glPushMatrix();
 			glTranslatef(0.0f,45.0f,0.0f);
@@ -302,6 +299,9 @@ void render(){
 				}
 			glPopMatrix();
 		glPopMatrix();
+
+		verifEnemigos();
+		verifColisiones();
 	glPopMatrix();
 
 	glutSwapBuffers();
@@ -333,9 +333,12 @@ void movEnemigos(int a){
 	glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
 }
 
+void aparecerNave(int a){
+	jugadores[0].setExiste(true);
+}
+
 // funcion que lleva el movimiento de la nave
 void movNave(int a){
-	jugadores[0].setExiste(true);
 	float velocidad = 1.0;
 	tiempo = tiempo;
 	// se actualizan las componentes del eje x de la nave
@@ -344,10 +347,11 @@ void movNave(int a){
 		jugadores[0].setEnemigoXY(-60.0,42.0);
 		jugadores[0].setExiste(false);
 		render();
-		glutTimerFunc(5000,movNave,0);
+		glutTimerFunc(tiempoNaveEnemiga*1000,aparecerNave,0);
+		glutTimerFunc(tiempoNaveEnemiga*1000,movNave,0);
+		return;
 	}
 	else{
-		jugadores[0].setExiste(true);
 		render();
 		glutTimerFunc(tiempo,movNave,0);
 	}
@@ -434,6 +438,7 @@ void invadersInit()
 		nave n;
 		if (i==0){
 			n = nave(14.0,7.0);
+			n.setExiste(false);
 		}
 		else{
 			n = nave(10.0,5.0f);
@@ -457,7 +462,6 @@ void invadersInit()
 			jugadores[i].setXY(x,y);
 		}
 	}
-	jugadores[0].setExiste(false);
 	//inicializacion de la imagen del texto
 	// Manejo de los string por pantalla
 	textoPuntaje();
@@ -513,10 +517,9 @@ int main (int argc, char** argv)
 	glutSpecialFunc(keySpecial); // GLUT usa el metodo "keySpecial" para la presion de las teclas especiales  
 	glutSpecialUpFunc(keySpecialUp); // GLUT usa el metodo "keySpecialUp" para los eventos especiales de la tecla de arriba  
 
-	// timer para los bloques enemigos
-	glutTimerFunc(500,movEnemigos,0);
 	// timer para la nave enemiga
-	glutTimerFunc(5000,movNave,0);
+	glutTimerFunc(tiempoNaveEnemiga*1000,aparecerNave,0);
+	glutTimerFunc(tiempoNaveEnemiga*1000,movNave,0);
 	glutTimerFunc(tiempoMovEnemigos,movEnemigos,0);
 	glutTimerFunc(tiempoDisparos,disparar,0);
 	glutTimerFunc(tiempoDispEnemigos*1000,crearBalaMala,0);
