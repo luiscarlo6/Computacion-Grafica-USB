@@ -3,6 +3,7 @@
 #include <GL\glew.h>
 #include <GL\freeglut.h>
 #include <iostream>
+#include <math.h> 
 
 using namespace std;
 
@@ -38,7 +39,6 @@ void inicializarKnots(){
 		}
 	}
 }
-
 
 void changeViewport(int w, int h) {
 	
@@ -164,6 +164,18 @@ void Keyboard(unsigned char key, int x, int y)
 		case 'v':
 			D-=0.01;
 			break;
+		case 'q':
+			centro[0]+=0.1;
+			break;
+		case 'w':
+			centro[0]-=0.1;
+			break;
+		case 'e':
+			centro[2]+=0.1;
+			break;
+		case 'r':
+			centro[2]-=0.1;
+			break;
 		case '1':
 			pausa = !pausa;
 			break;
@@ -193,12 +205,12 @@ void controlPoints()
 	glBegin(GL_POINTS);
 	for (i = 0; i <21; i++) {
 		for (j = 0; j < 21; j++) {
-			if (i==10 && i==j)
-				glVertex3f(theCtrlPoints[i][j][0], 	theCtrlPoints[i][j][1], theCtrlPoints[i][j][2]);
-				//glColor3f(1.0f,0.0f,0.0f);
+			if (i-10==floor(centro[2]+0.5) && j-10==floor(centro[0]+0.5))
+				//glVertex3f(theCtrlPoints[i][j][0], 	theCtrlPoints[i][j][1], theCtrlPoints[i][j][2]);
+				glColor3f(1.0f,0.0f,0.0f);
 			else
 				glColor3f(1.0f,1.0f,0.0f);
-			//glVertex3f(theCtrlPoints[i][j][0], 	theCtrlPoints[i][j][1], theCtrlPoints[i][j][2]);
+			glVertex3f(-theCtrlPoints[i][j][0], 	theCtrlPoints[i][j][1], -theCtrlPoints[i][j][2]);
 		}
 	}
 	glEnd();
