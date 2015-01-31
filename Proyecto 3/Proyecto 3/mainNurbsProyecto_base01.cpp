@@ -9,97 +9,31 @@ using namespace std;
 #define DEF_floorGridScale	1.0
 #define DEF_floorGridXSteps	10.0
 #define DEF_floorGridZSteps	10.0
-
-
-void ejesCoordenada() {
-
-	glLineWidth(2.5);
-	glBegin(GL_LINES);
-	glColor3f(1.0,0.0,0.0);
-	glVertex2f(0,10);
-	glVertex2f(0,-10);
-	glColor3f(0.0,0.0,1.0);
-	glVertex2f(10,0);
-	glVertex2f(-10,0);
-	glEnd();
-
-	glLineWidth(1.5);
-	int i;
-	glColor3f(0.0,1.0,0.0);
-	glBegin(GL_LINES);
-	for(i = -10; i <=10; i++){
-		if (i!=0) {		
-			if ((i%2)==0){	
-				glVertex2f(i,0.4);
-				glVertex2f(i,-0.4);
-
-				glVertex2f(0.4,i);
-				glVertex2f(-0.4,i);
-			}else{
-				glVertex2f(i,0.2);
-				glVertex2f(i,-0.2);
-
-				glVertex2f(0.2,i);
-				glVertex2f(-0.2,i);
-
-			}
-		}
-	}
-
-	glEnd();
-
-	glLineWidth(1.0);
-}
-
-void renderGrid()
-{
-	GLfloat zExtent, xExtent, xLocal, zLocal;
-	int loopX, loopZ;
-	// Render Grid 
-	glDisable(GL_LIGHTING);
-	glLineWidth(1.0);
-	glPushMatrix();
-	glRotatef(90,1.0,0.0,0.0);
-	glColor3f( 0.0, 0.7, 0.7 );
-	glBegin( GL_LINES );
-	zExtent = DEF_floorGridScale * DEF_floorGridZSteps;
-	for(loopX = -DEF_floorGridXSteps; loopX <= DEF_floorGridXSteps; loopX++ )
-	{
-		xLocal = DEF_floorGridScale * loopX;
-		glVertex3f( xLocal, -zExtent, 0.0 );
-		glVertex3f( xLocal, zExtent,  0.0 );
-	}
-	xExtent = DEF_floorGridScale * DEF_floorGridXSteps;
-	for(loopZ = -DEF_floorGridZSteps; loopZ <= DEF_floorGridZSteps; loopZ++ )
-	{
-		zLocal = DEF_floorGridScale * loopZ;
-		glVertex3f( -xExtent, zLocal, 0.0 );
-		glVertex3f(  xExtent, zLocal, 0.0 );
-	}
-	glEnd();
-	ejesCoordenada();
-	glPopMatrix();
-	glEnable(GL_LIGHTING);
-	// Fin Grid
-}
-
+#define PI 3.14159265358979323846
 
 GLUnurbsObj *theNurb;
+float time = 1.0;
+GLfloat theCtrlPoints[21][21][3];
+GLfloat A;
+GLfloat centro[3] = {0.001f,0.0f,0.001f};
+GLfloat L;
+GLfloat S;
+GLfloat D;
+bool pausa;
+bool ola;
+float theKnots[25];  
 
-GLfloat ctlpoints[21][21][3];
-
-float knots[50];
-
-void inicializarNots(){
+void inicializarKnots(){
+	// Para hacer una curva clamped los primeros 4 elementos del vector knot son 0.0 y los ultimos 4 1.0
 	int i;
-	float p = 1.0/18.0;
-	for(i = 0; i < 50; i++) {
+	float p = 1.0/18.0;//factor de crecimiento del vector, pues los elementos deben ser crecientes de 0 a 1.
+	for(i = 0; i < 25; i++) {
 		if (i < 4) {
-			knots[i] = 0.0;
+			theKnots[i] = 0.0;
 		} else if (i > 20) {
-			knots[i] = 1.0;
+			theKnots[i] = 1.0;
 		} else {
-			knots[i] = p;
+			theKnots[i] = p;
 			p = p + 1.0/18.0;
 		}
 	}
@@ -127,9 +61,9 @@ void init_surface() {
 	for (f = 0; f < 21 ; f++) {
 		int x = 10;
 		for (c = 0; c < 21; c++) {
-			ctlpoints[f][c][0] = x;
-			ctlpoints[f][c][1] = 0.0;
-			ctlpoints[f][c][2] = z;
+			theCtrlPoints[f][c][0] = x;
+			theCtrlPoints[f][c][1] = 0.0;
+			theCtrlPoints[f][c][2] = z;
 			x--;
 		}
 		z--;
@@ -153,19 +87,101 @@ void init(){
    gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 15.0);
    gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL);
 
+	A = 0.2f;
+	L = 3.0f;
+	S = -0.1f;
+	D = 0.0f;
 	
+	pausa = false;
+	ola = true;
+
+}
+
+void circularWaves(float t){
+	GLfloat Gx, Gz; //componentes del vector Di de la Equation 1
+	GLfloat dotProduct;
+	GLfloat distCentro;
+	GLfloat w;
+	GLfloat phase_const;
+	for (int i = 0; i<21;i++)
+	{
+		for (int j = 0; j<21;j++){
+			distCentro = sqrt(pow(theCtrlPoints[i][j][0]-centro[0],2) + pow(theCtrlPoints[i][j][2]-centro[2],2));
+			Gx = ((theCtrlPoints[i][j][0]-centro[0])/distCentro);
+			Gz = ((theCtrlPoints[i][j][2]-centro[2])/distCentro);
+
+			//Producto Punto de Di con el punto (x,z)
+			dotProduct = Gx * theCtrlPoints[i][j][0] + Gz * theCtrlPoints[i][j][2];
+			w = (2*PI)/L;
+
+			phase_const = S * (2*PI)/L;
+
+			if (ola)
+				theCtrlPoints[i][j][1] = A * sin(dotProduct*w + t*phase_const);	
+			else
+				theCtrlPoints[i][j][1] = 0;
+		}
+	}
+	A = A - D;
+}
+
+void animacion(int value) {
+	
+	glutTimerFunc(10,animacion,1);
+	glutPostRedisplay();
+	if (pausa)
+		return;		
+	circularWaves(time);
+	time += 0.5;
 
 }
 
 void Keyboard(unsigned char key, int x, int y)
 {
-  switch (key)
-  {
-	case 27:             
-		exit (0);
-		break;
-	
-  }
+	switch (key)
+	{
+		case 'a':
+			A+=0.1;
+			break;
+		case 'z':
+			A-=0.1;
+			break;
+		case 's':
+			L+=0.1;
+			break;
+		case 'x':
+			L-=0.1;
+			break;
+		case 'd':
+			S+=0.1;
+			break;
+		case 'c':
+			S-=0.1;
+			break;
+		case 'f':
+			D+=0.01;
+			break;
+		case 'v':
+			D-=0.01;
+			break;
+		case '1':
+			pausa = !pausa;
+			break;
+		case '3':
+			ola = !ola;
+			break;
+		case 27:             
+			exit (0);
+			break;
+	}
+  cout<<"Valores de las variables"<<endl
+	  <<"-----------------------------------------"<<endl<<endl
+	  <<"Amplitud de la ola <A> = "<<A<<endl
+	  <<"Longitud de la ola <L> = "<<L<<endl
+	  <<"Velocidad = "<<S<<endl
+	  <<"Centro = ("<<centro[0]<<", "<<centro[2]<<")"<<endl
+	  <<"Decaimiento = "<<D<<endl
+	  <<"-----------------------------------------"<<endl;
 }
 
 void controlPoints()
@@ -177,7 +193,12 @@ void controlPoints()
 	glBegin(GL_POINTS);
 	for (i = 0; i <21; i++) {
 		for (j = 0; j < 21; j++) {
-			glVertex3f(ctlpoints[i][j][0], 	ctlpoints[i][j][1], ctlpoints[i][j][2]);
+			if (i==10 && i==j)
+				glVertex3f(theCtrlPoints[i][j][0], 	theCtrlPoints[i][j][1], theCtrlPoints[i][j][2]);
+				//glColor3f(1.0f,0.0f,0.0f);
+			else
+				glColor3f(1.0f,1.0f,0.0f);
+			//glVertex3f(theCtrlPoints[i][j][0], 	theCtrlPoints[i][j][1], theCtrlPoints[i][j][2]);
 		}
 	}
 	glEnd();
@@ -186,28 +207,20 @@ void controlPoints()
 
 }
 
-void render(){
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	
-
-	glLoadIdentity ();                       
-	gluLookAt (25.0, 12.0, 4.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	
-
+void LuzMaterial()
+{
 	// Luz y material
 
 	GLfloat mat_diffuse[] = { 0.6, 0.6, 0.9, 1.0 };
 	GLfloat mat_specular[] = { 0.8, 0.8, 1.0, 1.0 };
 	GLfloat mat_shininess[] = { 60.0 };
-	
+
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-	
 
-    GLfloat light_ambient[] = { 0.0, 0.0, 0.2, 1.0 };
+
+	GLfloat light_ambient[] = { 0.0, 0.0, 0.2, 1.0 };
 	GLfloat light_diffuse[] = { 0.8, 0.8, 0.8, 1.0 };
 	GLfloat light_specular[] = { 0.6, 0.6, 0.6, 1.0 };
 	GLfloat light_position[] = { -10.0, 5.0, 0.0, 1.0 };
@@ -215,8 +228,16 @@ void render(){
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);   
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position); 
+}
 
+void render(){
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity ();                       
+	gluLookAt (25.0, 12.0, 4.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	
+	LuzMaterial();
 	//renderGrid();
 	
 	//Suaviza las lineas
@@ -229,8 +250,8 @@ void render(){
 	gluBeginSurface(theNurb);
     
 	gluNurbsSurface(theNurb, 
-                   25, knots, 25, knots,
-                   21 * 3, 3, &ctlpoints[0][0][0], 
+                   25, theKnots, 25, theKnots,
+                   21 * 3, 3, &theCtrlPoints[0][0][0], 
                    4, 4, GL_MAP2_VERTEX_3);
 	/*
 
@@ -246,7 +267,7 @@ void render(){
 	
 	/* Muestra los puntos de control */
 	
-	//controlPoints();
+	controlPoints();
 
 
 	glDisable(GL_BLEND);
@@ -254,16 +275,6 @@ void render(){
 
 	glutSwapBuffers();
 }
-
-
-void animacion(int value) {
-	
-	glutTimerFunc(10,animacion,1);
-    glutPostRedisplay();
-	
-}
-
-
 
 int main (int argc, char** argv) {
 
@@ -273,15 +284,16 @@ int main (int argc, char** argv) {
 
 	glutInitWindowSize(960,540);
 
-	glutCreateWindow("Test Opengl");
+	glutCreateWindow("Proyecto 3");
 
 	init ();
-	inicializarNots();
+	inicializarKnots();
 
 	glutReshapeFunc(changeViewport);
 	glutDisplayFunc(render);
 	glutKeyboardFunc (Keyboard);
-		
+	glutTimerFunc(10,animacion,1);
+
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
 		fprintf(stderr, "GLEW error");
