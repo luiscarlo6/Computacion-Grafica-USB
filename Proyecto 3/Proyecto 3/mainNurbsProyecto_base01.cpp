@@ -3,6 +3,8 @@
 #include <GL\glew.h>
 #include <GL\freeglut.h>
 #include <iostream>
+#include <stdlib.h>
+#include <stdio.h>
 #include <math.h> 
 
 using namespace std;
@@ -11,6 +13,9 @@ using namespace std;
 #define DEF_floorGridXSteps	10.0
 #define DEF_floorGridZSteps	10.0
 #define PI 3.14159265358979323846
+#define B 0x100
+#define BM 0xff
+#define N 0x1000
 
 GLUnurbsObj *theNurb;
 float time = 1.0;
@@ -20,9 +25,27 @@ GLfloat centro[3] = {0.001f,0.0f,0.001f};
 GLfloat L;
 GLfloat S;
 GLfloat D;
+GLfloat Amplitud_Ruido;
+GLfloat Offset_ruido;
+GLfloat Altura_Ruido;
+GLfloat factorTurb;
 bool pausa;
 bool ola;
-float theKnots[25];  
+bool ruido;
+float theKnots[25];
+
+static int p[B + B + 2];
+static float g2[B + B + 2][2];
+static int start = 1;
+
+#define s_curve(t) ( t * t * (3. - 2. * t) )
+#define lerp(t, a, b) ( a + t * (b - a) )
+#define setup(i,b0,b1,r0,r1)\
+	t = vec[i] + N;\
+	b0 = ((int)t) & BM;\
+	b1 = (b0+1) & BM;\
+	r0 = t - (int)t;\
+	r1 = r0 - 1.;
 
 void inicializarKnots(){
 	// Para hacer una curva clamped los primeros 4 elementos del vector knot son 0.0 y los ultimos 4 1.0
@@ -41,21 +64,16 @@ void inicializarKnots(){
 }
 
 void changeViewport(int w, int h) {
-	
 	if (h==0)
-		h=1;
-
-	
+		h=1;	
    glViewport (0, 0, (GLsizei) w, (GLsizei) h); 
    glMatrixMode (GL_PROJECTION);
    glLoadIdentity ();
    gluPerspective(30, (GLfloat) w/(GLfloat) h, 1.0, 200.0);
    glMatrixMode (GL_MODELVIEW);
-
 }
 
 void init_surface() {
-	
 	int f,c;
 	int z = 10;
 	for (f = 0; f < 21 ; f++) {
@@ -71,10 +89,16 @@ void init_surface() {
 	
 }
 
+static void normalize2(GLfloat v[2])
+{
+	float s;
+
+	s = sqrt(v[0] * v[0] + v[1] * v[1]);
+	v[0] = v[0] / s;
+	v[1] = v[1] / s;
+}
+
 void init(){
-
-
-
    glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0);
    glEnable(GL_DEPTH_TEST);
@@ -91,18 +115,100 @@ void init(){
 	L = 3.0f;
 	S = -0.1f;
 	D = 0.0f;
+
+	Amplitud_Ruido = 0.01f;
+	Offset_ruido = 0.01f;
+	Altura_Ruido = 0.01f;
+	factorTurb = 1.0f;
 	
+	ruido = true;
 	pausa = false;
 	ola = true;
 
+	int i, j, k;
+
+	for (i = 0 ; i < B ; i++) {
+		p[i] = i;
+
+		for (j = 0 ; j < 2 ; j++)
+			g2[i][j] = (float)((rand() % (B + B)) - B) / B;
+		normalize2(g2[i]);
+	}
+
+	while (--i) {
+		k = p[i];
+		p[i] = p[j = rand() % B];
+		p[j] = k;
+	}
+
+	for (i = 0 ; i < B + 2 ; i++) {
+		p[B + i] = p[i];
+		for (j = 0 ; j < 2 ; j++)
+			g2[B + i][j] = g2[i][j];
+	}
 }
 
+GLfloat noise2(GLfloat vec[2])
+{
+	int bx0, bx1, by0, by1, b00, b10, b01, b11;
+	float rx0, rx1, ry0, ry1, *q, sx, sy, a, b, t, u, v;
+	int/*register*/ i, j;
+
+	if (start) {
+		start = 0;
+		init();
+	}
+
+	setup(0, bx0,bx1, rx0,rx1);
+	setup(1, by0,by1, ry0,ry1);
+
+	i = p[ bx0 ];
+	j = p[ bx1 ];
+
+	b00 = p[ i + by0 ];
+	b10 = p[ j + by0 ];
+	b01 = p[ i + by1 ];
+	b11 = p[ j + by1 ];
+
+	sx = s_curve(rx0);
+	sy = s_curve(ry0);
+
+#define at2(rx,ry) ( rx * q[0] + ry * q[1] )
+
+	q = g2[ b00 ] ; u = at2(rx0,ry0);
+	q = g2[ b10 ] ; v = at2(rx1,ry0);
+	a = lerp(sx, u, v);
+
+	q = g2[ b01 ] ; u = at2(rx0,ry1);
+	q = g2[ b11 ] ; v = at2(rx1,ry1);
+	b = lerp(sx, u, v);
+
+	return lerp(sy, a, b);
+}
+
+GLfloat turbulence(GLfloat x, GLfloat y, GLfloat size)
+{
+    GLfloat value = 0.0, initialSize = size;
+	GLfloat valor[2];
+
+    while(size >= 1)
+    {
+		valor[0] = x / size;
+		valor[1]= y / size;
+		value += noise2(valor) * size;
+        size /= 2.0;
+    }
+    
+    return(128.0 * value / initialSize);
+}
 void circularWaves(float t){
 	GLfloat Gx, Gz; //componentes del vector Di de la Equation 1
 	GLfloat dotProduct;
 	GLfloat distCentro;
 	GLfloat w;
 	GLfloat phase_const;
+	GLfloat n_noise[2];
+	GLfloat noise=0.0f;
 	for (int i = 0; i<21;i++)
 	{
 		for (int j = 0; j<21;j++){
@@ -116,10 +222,17 @@ void circularWaves(float t){
 
 			phase_const = S * (2*PI)/L;
 
+			if (ruido)
+			{
+				n_noise[0] = theCtrlPoints[i][j][0]*Amplitud_Ruido + Offset_ruido;
+				n_noise[1] = theCtrlPoints[i][j][2]*Amplitud_Ruido + Offset_ruido;
+				noise = Altura_Ruido * 0.005 * turbulence(n_noise[0],n_noise[1],factorTurb);
+			}
+
 			if (ola)
-				theCtrlPoints[i][j][1] = A * sin(dotProduct*w + t*phase_const);	
+				theCtrlPoints[i][j][1] = A * sin(dotProduct*w + t*phase_const) + noise;	
 			else
-				theCtrlPoints[i][j][1] = 0;
+				theCtrlPoints[i][j][1] = 0 + noise;
 		}
 	}
 	A = A - D;
@@ -164,6 +277,30 @@ void Keyboard(unsigned char key, int x, int y)
 		case 'v':
 			D-=0.01;
 			break;
+		case 'g':
+			Amplitud_Ruido+=0.01;
+			break;
+		case 'b':
+			Amplitud_Ruido-=0.01;
+			break;
+		case 'h':
+			Offset_ruido+=0.01;
+			break;
+		case 'n':
+			Offset_ruido-=0.01;
+			break;
+		case 'j':
+			Altura_Ruido+=0.01;
+			break;
+		case 'm':
+			Altura_Ruido-=0.01;
+			break;
+		case 't':
+			factorTurb+=1;
+			break;
+		case 'y':
+			factorTurb-=1;
+			break;
 		case 'q':
 			centro[0]+=0.1;
 			break;
@@ -179,6 +316,9 @@ void Keyboard(unsigned char key, int x, int y)
 		case '1':
 			pausa = !pausa;
 			break;
+		case '2':
+			ruido = !ruido;
+			break;
 		case '3':
 			ola = !ola;
 			break;
@@ -190,9 +330,13 @@ void Keyboard(unsigned char key, int x, int y)
 	  <<"-----------------------------------------"<<endl<<endl
 	  <<"Amplitud de la ola <A> = "<<A<<endl
 	  <<"Longitud de la ola <L> = "<<L<<endl
-	  <<"Velocidad = "<<S<<endl
+	  <<"Velocidad <S> = "<<S<<endl
 	  <<"Centro = ("<<centro[0]<<", "<<centro[2]<<")"<<endl
 	  <<"Decaimiento = "<<D<<endl
+	  <<"Amplitud Ruido = "<<Amplitud_Ruido<<endl
+	  <<"Offset Ruido = "<<Offset_ruido<<endl
+	  <<"Altura Ruido = "<<Altura_Ruido<<endl
+	  <<"Factor Turbulencia = "<<factorTurb<<endl
 	  <<"-----------------------------------------"<<endl;
 }
 
