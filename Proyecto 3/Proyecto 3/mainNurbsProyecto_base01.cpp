@@ -123,7 +123,7 @@ void init(){
 	factorCurva = 0.0f;
 	traslaCurva = 0.0f;
 	
-	ruido = false;
+	ruido = true;
 	pausa = false;
 	ola = true;
 
