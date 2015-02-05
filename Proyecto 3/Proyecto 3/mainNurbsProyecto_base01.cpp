@@ -110,9 +110,9 @@ void init(){
    gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 15.0);
    gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL);
 
-	A = 0.2f;
+	A = 0.5f;
 	L = 3.0f;
-	S = 0.1f;
+	S = -0.1f;
 	D = 0.0f;
 
 	Amplitud_Ruido = 30.0f;
@@ -123,7 +123,7 @@ void init(){
 	factorCurva = 0.0f;
 	traslaCurva = 0.0f;
 	
-	ruido = true;
+	ruido = false;
 	pausa = false;
 	ola = true;
 
@@ -211,6 +211,7 @@ void circularWaves(float t){
 	GLfloat phase_const;
 	GLfloat n_noise[2];
 	GLfloat noise=0.0f;
+	GLfloat decaimiento;
 	for (int i = 0; i<21;i++)
 	{
 		for (int j = 0; j<21;j++){
@@ -218,6 +219,7 @@ void circularWaves(float t){
 			Gx = ((theCtrlPoints[i][j][0]-centro[0])/distCentro);
 			Gz = ((theCtrlPoints[i][j][2]-centro[2])/distCentro);
 
+			decaimiento= 1/(distCentro*D +1);
 			//Producto Punto de Di con el punto (x,z)
 			dotProduct = Gx * theCtrlPoints[i][j][0] + Gz * theCtrlPoints[i][j][2];
 			w = (2*PI)/L;
@@ -232,7 +234,7 @@ void circularWaves(float t){
 			}
 
 			if (ola)
-				theCtrlPoints[i][j][1] = A * sin(dotProduct*w + t*phase_const) + noise;	
+				theCtrlPoints[i][j][1] = (A * sin(dotProduct*w + t*phase_const) + noise) * decaimiento;	
 			else
 				theCtrlPoints[i][j][1] = 0 + noise;
 
@@ -443,7 +445,7 @@ void render(){
 	
 	/* Muestra los puntos de control */
 	
-	controlPoints();
+	//controlPoints();
 
 
 	glDisable(GL_BLEND);
