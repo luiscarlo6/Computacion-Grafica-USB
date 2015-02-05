@@ -234,13 +234,9 @@ void circularWaves(float t){
 			}
 
 			if (ola)
-				theCtrlPoints[i][j][1] = (A * sin(dotProduct*w + t*phase_const) + noise) * decaimiento;	
+				theCtrlPoints[i][j][1] = (A * sin(dotProduct*w + t*phase_const) + noise) * decaimiento+pow(theCtrlPoints[i][j][2],2)*factorCurva;
 			else
-				theCtrlPoints[i][j][1] = 0 + noise;
-
-			if (factorCurva != 0.0){
-				//theCtrlPoints[i][j][0] = pow(theCtrlPoints[i][j][2],2) / (4*factorCurva);
-			}
+				theCtrlPoints[i][j][1] = 0 + noise+pow(theCtrlPoints[i][j][2],2)*factorCurva;
 		}
 	}
 	//A = A - D;
