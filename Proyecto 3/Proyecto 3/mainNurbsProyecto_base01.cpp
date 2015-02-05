@@ -3,8 +3,6 @@
 #include <GL\glew.h>
 #include <GL\freeglut.h>
 #include <iostream>
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h> 
 
 using namespace std;
@@ -29,6 +27,8 @@ GLfloat Amplitud_Ruido;
 GLfloat Offset_ruido;
 GLfloat Altura_Ruido;
 GLfloat factorTurb;
+GLfloat factorCurva;
+GLfloat traslaCurva;
 bool pausa;
 bool ola;
 bool ruido;
@@ -85,8 +85,7 @@ void init_surface() {
 			x--;
 		}
 		z--;
-	}
-	
+	}	
 }
 
 static void normalize2(GLfloat v[2])
@@ -113,13 +112,16 @@ void init(){
 
 	A = 0.2f;
 	L = 3.0f;
-	S = -0.1f;
+	S = 0.1f;
 	D = 0.0f;
 
 	Amplitud_Ruido = 30.0f;
 	Offset_ruido = 0.5f;
 	Altura_Ruido = 1.0f;
 	factorTurb = 16.0f;
+
+	factorCurva = 0.0f;
+	traslaCurva = 0.0f;
 	
 	ruido = true;
 	pausa = false;
@@ -152,7 +154,7 @@ GLfloat noise2(GLfloat vec[2])
 {
 	int bx0, bx1, by0, by1, b00, b10, b01, b11;
 	float rx0, rx1, ry0, ry1, *q, sx, sy, a, b, t, u, v;
-	int/*register*/ i, j;
+	int i, j;
 
 	if (start) {
 		start = 0;
@@ -233,9 +235,13 @@ void circularWaves(float t){
 				theCtrlPoints[i][j][1] = A * sin(dotProduct*w + t*phase_const) + noise;	
 			else
 				theCtrlPoints[i][j][1] = 0 + noise;
+
+			if (factorCurva != 0.0){
+				//theCtrlPoints[i][j][0] = pow(theCtrlPoints[i][j][2],2) / (4*factorCurva);
+			}
 		}
 	}
-	A = A - D;
+	//A = A - D;
 }
 
 void animacion(int value) {
@@ -296,10 +302,22 @@ void Keyboard(unsigned char key, int x, int y)
 			Altura_Ruido-=0.01;
 			break;
 		case 't':
-			factorTurb+=1;
+			factorTurb+=1.0;
 			break;
 		case 'y':
-			factorTurb-=1;
+			factorTurb-=1.0;
+			break;
+		case 'u':
+			factorCurva+=0.001;
+			break;
+		case 'i':
+			factorCurva-=0.001;
+			break;
+		case 'o':
+			traslaCurva+=0.1;
+			break;
+		case 'l':
+			traslaCurva-=0.1;
 			break;
 		case 'q':
 			centro[0]+=0.1;
@@ -337,6 +355,8 @@ void Keyboard(unsigned char key, int x, int y)
 	  <<"Offset Ruido <H/N> = "<<Offset_ruido<<endl
 	  <<"Altura Ruido <J/M> = "<<Altura_Ruido<<endl
 	  <<"Factor Turbulencia <T/Y>= "<<factorTurb<<endl
+	  <<"Factor Curvatura = "<<factorCurva<<endl
+	  <<"Traslacion Curvatura = "<<traslaCurva<<endl
 	  <<"-----------------------------------------"<<endl;
 }
 
@@ -354,7 +374,7 @@ void controlPoints()
 				glColor3f(1.0f,0.0f,0.0f);
 			else
 				glColor3f(1.0f,1.0f,0.0f);
-			glVertex3f(-theCtrlPoints[i][j][0], 	theCtrlPoints[i][j][1], -theCtrlPoints[i][j][2]);
+			glVertex3f(-theCtrlPoints[i][j][0], theCtrlPoints[i][j][1], -theCtrlPoints[i][j][2]);
 		}
 	}
 	glEnd();
