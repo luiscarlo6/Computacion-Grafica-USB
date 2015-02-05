@@ -227,7 +227,8 @@ void circularWaves(float t){
 
 			phase_const = S * (2*PI)/L;
 
-			parabola = pow(theCtrlPoints[i][j][2],2)*factorCurva;
+			parabola = pow((theCtrlPoints[i][j][2]+traslaCurva),2)*factorCurva;
+
 			if (ruido)
 			{
 				n_noise[0] = theCtrlPoints[i][j][0]*Amplitud_Ruido + Offset_ruido;
@@ -238,7 +239,7 @@ void circularWaves(float t){
 			if (ola)
 				theCtrlPoints[i][j][1] = (A * sin(dotProduct*w + t*phase_const) + noise) * decaimiento + parabola;
 			else
-				theCtrlPoints[i][j][1] = 0 + noise+parabola;
+				theCtrlPoints[i][j][1] = 0 + noise + parabola;
 		}
 	}
 }
@@ -345,17 +346,18 @@ void Keyboard(unsigned char key, int x, int y)
 	}
   cout<<"Valores de las variables"<<endl
 	  <<"-----------------------------------------"<<endl<<endl
-	  <<"Amplitud de la ola <A/Z> = "<<A<<endl
-	  <<"Longitud de la ola <S/X> = "<<L<<endl
-	  <<"Velocidad <D/C> = "<<S<<endl
-	  <<"Centro <Q/W/E/R>= ("<<centro[0]<<", "<<centro[2]<<")"<<endl
-	  <<"Decaimiento = <F/V>"<<D<<endl
-	  <<"Amplitud Ruido <G/B> = "<<Amplitud_Ruido<<endl
-	  <<"Offset Ruido <H/N> = "<<Offset_ruido<<endl
-	  <<"Altura Ruido <J/M> = "<<Altura_Ruido<<endl
-	  <<"Factor Turbulencia <T/Y>= "<<factorTurb<<endl
-	  <<"Factor Curvatura = "<<factorCurva<<endl
-	  <<"Traslacion Curvatura = "<<traslaCurva<<endl
+	  <<"Las letras que se encuentran entre [+/-] indican las teclas con los que se cambian los valores"<<endl
+	  <<"Amplitud de la ola <A> [A/Z] = "<<A<<endl
+	  <<"Longitud de la ola <L> [S/X] = "<<L<<endl
+	  <<"Velocidad <S> [D/C] = "<<S<<endl
+	  <<"Centro [Q/W] [E/R] = ("<<centro[0]<<", "<<centro[2]<<")"<<endl
+	  <<"Decaimiento [F/V] = "<<D<<endl
+	  <<"Amplitud Ruido [G/B] = "<<Amplitud_Ruido<<endl
+	  <<"Offset Ruido [H/N] = "<<Offset_ruido<<endl
+	  <<"Altura Ruido [J/M] = "<<Altura_Ruido<<endl
+	  <<"Factor Turbulencia [T/Y]= "<<factorTurb<<endl
+	  <<"Factor Curvatura [U/I] = "<<factorCurva<<endl
+	  <<"Traslacion Curvatura [O/L] = "<<traslaCurva<<endl
 	  <<"-----------------------------------------"<<endl;
 }
 
