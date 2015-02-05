@@ -212,6 +212,7 @@ void circularWaves(float t){
 	GLfloat n_noise[2];
 	GLfloat noise=0.0f;
 	GLfloat decaimiento;
+	GLfloat parabola;
 	for (int i = 0; i<21;i++)
 	{
 		for (int j = 0; j<21;j++){
@@ -226,6 +227,7 @@ void circularWaves(float t){
 
 			phase_const = S * (2*PI)/L;
 
+			parabola = pow(theCtrlPoints[i][j][2],2)*factorCurva;
 			if (ruido)
 			{
 				n_noise[0] = theCtrlPoints[i][j][0]*Amplitud_Ruido + Offset_ruido;
@@ -234,12 +236,11 @@ void circularWaves(float t){
 			}
 
 			if (ola)
-				theCtrlPoints[i][j][1] = (A * sin(dotProduct*w + t*phase_const) + noise) * decaimiento+pow(theCtrlPoints[i][j][2],2)*factorCurva;
+				theCtrlPoints[i][j][1] = (A * sin(dotProduct*w + t*phase_const) + noise) * decaimiento + parabola;
 			else
-				theCtrlPoints[i][j][1] = 0 + noise+pow(theCtrlPoints[i][j][2],2)*factorCurva;
+				theCtrlPoints[i][j][1] = 0 + noise+parabola;
 		}
 	}
-	//A = A - D;
 }
 
 void animacion(int value) {
