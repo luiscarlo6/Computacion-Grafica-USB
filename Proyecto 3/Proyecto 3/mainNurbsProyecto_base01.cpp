@@ -116,10 +116,10 @@ void init(){
 	S = -0.1f;
 	D = 0.0f;
 
-	Amplitud_Ruido = 0.01f;
-	Offset_ruido = 0.01f;
-	Altura_Ruido = 0.01f;
-	factorTurb = 1.0f;
+	Amplitud_Ruido = 30.0f;
+	Offset_ruido = 0.5f;
+	Altura_Ruido = 1.0f;
+	factorTurb = 16.0f;
 	
 	ruido = true;
 	pausa = false;
