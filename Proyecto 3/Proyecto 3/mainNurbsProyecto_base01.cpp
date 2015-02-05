@@ -328,15 +328,15 @@ void Keyboard(unsigned char key, int x, int y)
 	}
   cout<<"Valores de las variables"<<endl
 	  <<"-----------------------------------------"<<endl<<endl
-	  <<"Amplitud de la ola <A> = "<<A<<endl
-	  <<"Longitud de la ola <L> = "<<L<<endl
-	  <<"Velocidad <S> = "<<S<<endl
-	  <<"Centro = ("<<centro[0]<<", "<<centro[2]<<")"<<endl
-	  <<"Decaimiento = "<<D<<endl
-	  <<"Amplitud Ruido = "<<Amplitud_Ruido<<endl
-	  <<"Offset Ruido = "<<Offset_ruido<<endl
-	  <<"Altura Ruido = "<<Altura_Ruido<<endl
-	  <<"Factor Turbulencia = "<<factorTurb<<endl
+	  <<"Amplitud de la ola <A/Z> = "<<A<<endl
+	  <<"Longitud de la ola <S/X> = "<<L<<endl
+	  <<"Velocidad <D/C> = "<<S<<endl
+	  <<"Centro <Q/W/E/R>= ("<<centro[0]<<", "<<centro[2]<<")"<<endl
+	  <<"Decaimiento = <F/V>"<<D<<endl
+	  <<"Amplitud Ruido <G/B> = "<<Amplitud_Ruido<<endl
+	  <<"Offset Ruido <H/N> = "<<Offset_ruido<<endl
+	  <<"Altura Ruido <J/M> = "<<Altura_Ruido<<endl
+	  <<"Factor Turbulencia <T/Y>= "<<factorTurb<<endl
 	  <<"-----------------------------------------"<<endl;
 }
 
