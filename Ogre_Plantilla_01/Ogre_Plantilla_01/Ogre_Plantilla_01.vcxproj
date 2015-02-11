@@ -11,7 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\main_Clase05.cpp" />
+    <ClCompile Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\mainProyectoOgreI_base.cpp" />
+    <ClCompile Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Torreta.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Torreta.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{56FF2693-AC05-4CE6-ABC8-9881C8FF94BA}</ProjectGuid>

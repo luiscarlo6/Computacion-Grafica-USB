@@ -15,8 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\main_Clase05.cpp">
+    <ClCompile Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\mainProyectoOgreI_base.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Torreta.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Torreta.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
