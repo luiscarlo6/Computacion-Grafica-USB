@@ -9,17 +9,17 @@ Torreta::Torreta(Ogre::String nombre, Ogre::SceneManager* sm, Ogre::Real x, Ogre
 	Ogre::SceneNode* nodoArma = mSceneMgr->createSceneNode(nombre+"arma");
 
 	Ogre::Entity* entTorreta = mSceneMgr->createEntity("usb_cilindro02.mesh");
-	Ogre::Entity* entSuperior = mSceneMgr->createEntity("sphere.mesh");
+	Ogre::Entity* entSuperior = mSceneMgr->createEntity("usb_dodecaedro.mesh");
 	Ogre::Entity* entArma = mSceneMgr->createEntity("usb_cilindro.mesh");
 
 	entTorreta->setMaterialName("Torreta_text");
 	nodoTorreta->attachObject(entTorreta);
-	entSuperior->setMaterialName("Torreta_text1");
+	entSuperior->setMaterialName("Torreta_text");
 	nodoSuperior->attachObject(entSuperior);
 	entArma->setMaterialName("Torreta_text");
 	nodoArma->attachObject(entArma);
 
-	nodoSuperior->setScale(0.05,0.05,0.05);
+	nodoSuperior->setScale(0.6,0.6,0.6);
 	nodoSuperior->translate(0.0,10.0,0.0);
 
 	nodoArma->setScale(0.3,0.3,0.3);
