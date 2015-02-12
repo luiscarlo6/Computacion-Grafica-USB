@@ -1,0 +1,15 @@
+
+material Torreta_text
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				tex_address_mode mirror
+				texture textura_torreta.jpg
+			}
+		}
+	}
+}
