@@ -19,11 +19,17 @@ Helice::Helice(Ogre::String nombre, Ogre::SceneManager* sm, Ogre::Real x, Ogre::
 	Ogre::Entity* entPala3 = mSceneMgr->createEntity("usb_cubomod01.mesh");
 	Ogre::Entity* entPala4 = mSceneMgr->createEntity("usb_cubomod01.mesh");
 
+	entTapaDer->setMaterialName("Helice_text");
 	nodoHelice->attachObject(entTapaDer);	
+	entTapaIzq->setMaterialName("Helice_text");
 	nodoTapaIzq->attachObject(entTapaIzq);
+	entPala1->setMaterialName("Helice_text");
 	nodoPala1->attachObject(entPala1);
+	entPala2->setMaterialName("Helice_text");
 	nodoPala2->attachObject(entPala2);
+	entPala3->setMaterialName("Helice_text");
 	nodoPala3->attachObject(entPala3);
+	entPala4->setMaterialName("Helice_text");
 	nodoPala4->attachObject(entPala4);
 	
 	nodoPala1->setScale(1.5f,6.0f,0.5f);

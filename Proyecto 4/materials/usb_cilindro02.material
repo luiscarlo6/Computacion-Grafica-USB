@@ -8,19 +8,22 @@ material Torreta_text
 			texture_unit
 			{
 				tex_address_mode mirror
-				texture textura_torreta.jpg
+				texture textura_torreta.png
 			}
 		}
 	}
 }
-material Torreta_text1
+material Helice_text
 {
 	technique
 	{
 		pass
 		{
-			ambient 0.6 0.6 0.6 1
-			diffuse 1 0.983333 0 1
+			texture_unit
+			{
+				tex_address_mode mirror
+				texture textura_helice.jpg
+			}
 		}
 	}
 }
