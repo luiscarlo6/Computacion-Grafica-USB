@@ -147,6 +147,8 @@ public:
 		node01->attachObject(ent01);
 		*/
 
+		mSceneMgr->setSkyBox(true, "MySkyBox1");
+
 		Ogre::Entity* entEscenario01 = mSceneMgr->createEntity("EscenarioBase01","proyectoOgreI.mesh");
 		Ogre::SceneNode* nodeEscenario01 = mSceneMgr->createSceneNode("NodeMesh01");		
 		mSceneMgr->getRootSceneNode()->addChild(nodeEscenario01);

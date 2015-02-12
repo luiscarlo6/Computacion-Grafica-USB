@@ -18,5 +18,25 @@
     <ClCompile Include="mainProyectoOgreI_base.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Helice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Nave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Torreta.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Helice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Nave.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Torreta.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

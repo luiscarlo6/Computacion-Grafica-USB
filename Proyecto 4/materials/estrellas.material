@@ -1,0 +1,16 @@
+material MySkyBox1
+{
+   technique
+   {
+      pass
+      {
+         lighting on
+         depth_write off
+         texture_unit
+         {
+            cubic_texture estrellas.jpg estrellas.jpg estrellas.jpg estrellas.jpg estrellas.jpg estrellas.jpg separateUV
+            tex_address_mode clamp
+         }
+      }
+   }
+}

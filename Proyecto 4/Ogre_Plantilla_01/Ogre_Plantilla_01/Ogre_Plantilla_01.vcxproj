@@ -116,7 +116,15 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Helice.cpp" />
     <ClCompile Include="mainProyectoOgreI_base.cpp" />
+    <ClCompile Include="Nave.cpp" />
+    <ClCompile Include="Torreta.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Helice.h" />
+    <ClInclude Include="Nave.h" />
+    <ClInclude Include="Torreta.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

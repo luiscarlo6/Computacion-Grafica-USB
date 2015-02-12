@@ -13,3 +13,14 @@ material Torreta_text
 		}
 	}
 }
+material Torreta_text1
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.6 0.6 0.6 1
+			diffuse 1 0.983333 0 1
+		}
+	}
+}
