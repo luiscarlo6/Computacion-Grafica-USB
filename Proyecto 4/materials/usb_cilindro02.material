@@ -8,8 +8,32 @@ material Torreta_text
 			texture_unit
 			{
 				tex_address_mode mirror
+				texture textura_arma.jpg
+			}
+		}
+	}
+}
+material Torreta_text1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				tex_address_mode mirror
 				texture textura_torreta.jpg
 			}
+		}
+	}
+}
+material Torreta_text2
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.6 0.6 0.6 0
 		}
 	}
 }
