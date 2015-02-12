@@ -38,7 +38,6 @@ public:
 		_mouse = static_cast<OIS::Mouse*>(_man->createInputObject(OIS::OISMouse,false));
 		// Fin eventos
 
-
 		_cam = Cam;
 	}
 
@@ -158,17 +157,40 @@ public:
 		mSceneMgr->getRootSceneNode()->addChild(nodeEscenario01);
 		nodeEscenario01->attachObject(entEscenario01);
 
-
+		// create ManualObject
+		Ogre::ManualObject* manual = mSceneMgr->createManualObject("manual");
+		// specify the material (by name) and rendering type
+		manual->begin("BaseWhiteNoLighting", RenderOperation::OT_POINT_LIST); 
+		// define start and end point
+		manual->position(0, 0, 0);
+		manual->position(0, (5*80.0), 0);
+		manual->position(-(5*60.0), (5*60.0), 0);
+		manual->position(-(5*70.0), (5*70.0), 0);
+		manual->position(-(5*40.0), (5*110.0), 0);
+		manual->position(-(5*60.0), (5*130.0), 0);
+		manual->position(-(5*120.0), (5*70.0), 0);
+		manual->position(-(5*120.0), (5*20.0), 0);
+		manual->position(-(5*60.0), -(5*40.0), 0);
+		manual->position(-(5*40.0), -(5*20.0), 0);
+		manual->position(-(5*70.0), (5*20.0), 0);
+		manual->position(-(5*60.0), (5*30.0), 0);
+		// tell Ogre, your definition has finished
+		manual->end();
+ 
+		// add ManualObject to the RootSceneNode (so it will be visible)
+		mSceneMgr->getRootSceneNode()->attachObject(manual);
+		/*
 		nave = new Nave("nave", mSceneMgr,0,-1000);
-		mSceneMgr->getRootSceneNode()->addChild(nave->nodoNave);
+		mSceneMgr->getRootSceneNode()->addChild(nave->nodoNave);*/
 
+		//Helices
 		heli[0] = new Helice("helice1", mSceneMgr, 15300, -23750);
 		mSceneMgr->getRootSceneNode()->addChild(heli[0]->nodoHelice);
 
 		heli[1] = new Helice("helice2", mSceneMgr, -13300, -23750);
 		mSceneMgr->getRootSceneNode()->addChild(heli[1]->nodoHelice);
 
-		//Naves
+		//Torretas
 		torre[0] = new Torreta("torre0",mSceneMgr, -1700, -8600,0);
 		torre[1] = new Torreta("torre1",mSceneMgr, 1700, -15300,180);
 		torre[2] = new Torreta("torre2",mSceneMgr, 15500, -18900,90);
@@ -187,7 +209,7 @@ public:
 		mSceneMgr->getRootSceneNode()->addChild(torre[5]->nodoTorreta);
 		mSceneMgr->getRootSceneNode()->addChild(torre[6]->nodoTorreta);
 		mSceneMgr->getRootSceneNode()->addChild(torre[7]->nodoTorreta);
-		//Fin naves
+		//Fin Torretas
 	}
 
 };
