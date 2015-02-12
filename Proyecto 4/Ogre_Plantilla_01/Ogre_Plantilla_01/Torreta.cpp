@@ -1,8 +1,12 @@
 #include "Torreta.h"
 
-Torreta::Torreta(Ogre::String nombre, Ogre::SceneManager* sm, Ogre::Real x, Ogre::Real y){
+Torreta::Torreta(Ogre::String _nombre, Ogre::SceneManager* sm, Ogre::Real _x, Ogre::Real _z, Ogre::Real _r){
 
 	mSceneMgr = sm;
+	nombre = _nombre;
+	x = _x;
+	z = _z;
+	rotacion = _r;
 
 	nodoTorreta = mSceneMgr->createSceneNode(nombre);
 	Ogre::SceneNode* nodoSuperior = mSceneMgr->createSceneNode(nombre+"superior");
@@ -13,34 +17,22 @@ Torreta::Torreta(Ogre::String nombre, Ogre::SceneManager* sm, Ogre::Real x, Ogre
 	Ogre::Entity* entArma = mSceneMgr->createEntity("usb_cilindro.mesh");
 
 	entTorreta->setMaterialName("Torreta_text");
-	nodoTorreta->attachObject(entTorreta);
 	entSuperior->setMaterialName("Torreta_text");
-	nodoSuperior->attachObject(entSuperior);
 	entArma->setMaterialName("Torreta_text");
-	nodoArma->attachObject(entArma);
-
+	
+	nodoSuperior->attachObject(entSuperior);	
 	nodoSuperior->setScale(0.05,0.05,0.05);
 	nodoSuperior->translate(0.0,10.0,0.0);
 
+	nodoArma->attachObject(entArma);
 	nodoArma->setScale(0.3,0.3,0.3);
-	if(x<0){
-		nodoArma->translate(6.0,10.0,0.0);
-	}
-	else {
-		nodoArma->translate(-6.0,10.0,0.0);
-	}
+	nodoArma->translate(6.0,10.0,0.0);
 	nodoArma->rotate(Ogre::Vector3(0.0,0.0,1.0),Ogre::Radian(Ogre::Degree(90.0)));
 
+	nodoTorreta->attachObject(entTorreta);	
 	nodoTorreta->addChild(nodoSuperior);
 	nodoTorreta->addChild(nodoArma);
-	if (y<-18000){
-		if (((x>0)&&((x<10000)||(x>20000)))||((x<-10000)&&(x>-20000))){
-			nodoTorreta->rotate(Ogre::Vector3(0.0,1.0,0.0),Ogre::Radian(Ogre::Degree(90.0)));
-		}
-		else if (((x>10000)&&(x<20000))||((x<0)&&((x>-10000)||(x<-20000)))){
-			nodoTorreta->rotate(Ogre::Vector3(0.0,1.0,0.0),Ogre::Radian(Ogre::Degree(270.0)));
-		}
-	}
-	nodoTorreta->setPosition(x,-60,y); 
+	nodoTorreta->rotate(Ogre::Vector3(0.0,1.0,0.0),Ogre::Radian(Ogre::Degree(rotacion)));
+	nodoTorreta->setPosition(x,-60,z); 
 	nodoTorreta->setScale(50.0f,50.0f,50.0f);
 }

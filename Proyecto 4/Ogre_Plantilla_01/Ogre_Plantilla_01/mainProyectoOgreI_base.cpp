@@ -165,14 +165,14 @@ public:
 		mSceneMgr->getRootSceneNode()->addChild(heli[1]->nodoHelice);
 
 		//Naves
-		torre[0] = new Torreta("torre0",mSceneMgr, -1700, -8600);
-		torre[1] = new Torreta("torre1",mSceneMgr, 1700, -15300);
-		torre[2] = new Torreta("torre2",mSceneMgr, 15500, -18900);
-		torre[3] = new Torreta("torre3",mSceneMgr, 24000, -23500);
-		torre[4] = new Torreta("torre4",mSceneMgr, 8300, -23500);
-		torre[5] = new Torreta("torre5",mSceneMgr, -9980, -23500);
-		torre[6] = new Torreta("torre6",mSceneMgr, -23110, -23500);
-		torre[7] = new Torreta("torre7",mSceneMgr, -17050, -18900);
+		torre[0] = new Torreta("torre0",mSceneMgr, -1700, -8600,0);
+		torre[1] = new Torreta("torre1",mSceneMgr, 1700, -15300,180);
+		torre[2] = new Torreta("torre2",mSceneMgr, 15500, -18900,90);
+		torre[3] = new Torreta("torre3",mSceneMgr, 24000, -23500,-90);
+		torre[4] = new Torreta("torre4",mSceneMgr, 8300, -23500,-90);
+		torre[5] = new Torreta("torre5",mSceneMgr, -9980, -23500,-90);
+		torre[6] = new Torreta("torre6",mSceneMgr, -23110, -23500,-90);
+		torre[7] = new Torreta("torre7",mSceneMgr, -17050, -18900,90);
 
 
 		mSceneMgr->getRootSceneNode()->addChild(torre[0]->nodoTorreta);

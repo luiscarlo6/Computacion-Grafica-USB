@@ -7,7 +7,8 @@ class Torreta{
 	Ogre::SceneNode* nodoTorreta;
 	Ogre::String nombre;
 	Ogre::Real x,z;
+	Ogre::Real rotacion;
 
-	Torreta::Torreta(Ogre::String nombre, Ogre::SceneManager* sm, Ogre::Real x, Ogre::Real y);
+	Torreta::Torreta(Ogre::String nombre, Ogre::SceneManager* sm, Ogre::Real x, Ogre::Real z, Ogre::Real r);
 
 };
