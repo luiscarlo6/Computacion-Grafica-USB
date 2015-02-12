@@ -8,7 +8,7 @@ material Torreta_text
 			texture_unit
 			{
 				tex_address_mode mirror
-				texture textura_torreta.png
+				texture textura_torreta.jpg
 			}
 		}
 	}
