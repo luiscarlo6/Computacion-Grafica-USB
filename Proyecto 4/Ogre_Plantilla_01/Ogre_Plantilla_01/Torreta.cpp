@@ -35,16 +35,12 @@ Torreta::Torreta(Ogre::String _nombre, Ogre::SceneManager* sm, Ogre::Real _x, Og
 	nodoTorreta->rotate(Ogre::Vector3(0.0,1.0,0.0),Ogre::Radian(Ogre::Degree(rotacion)));
 	nodoTorreta->setPosition(x,-60,z); 
 	nodoTorreta->setScale(50.0f,50.0f,50.0f);
-
-
 	
 	Ogre::SceneNode* nodoLaser = mSceneMgr->createSceneNode("Laser_"+nombre);
-	//mSceneMgr->getRootSceneNode()->addChild(nodoLaser);
 	nodoArma->addChild(nodoLaser);
 	Ogre::Entity* laser = mSceneMgr->createEntity("entLaser_"+nombre,"usb_laser.mesh");
-	//laser->setMaterialName("MATERIAL PARA LASER");
+	laser->setMaterialName("Laser_text");
 	nodoLaser->attachObject(laser);	
-	//nodoLaser->setPosition(0.0,0.0,-2000.0);
 	nodoLaser->rotate(Ogre::Vector3(1.0,0.0,0.0),Ogre::Radian(Ogre::Degree(90.0)));
 	nodoLaser->setScale(40.0f,40.0f,40.0f);
 

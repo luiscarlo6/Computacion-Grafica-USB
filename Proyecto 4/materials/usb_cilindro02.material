@@ -51,3 +51,13 @@ material Helice_text
 		}
 	}
 }
+material Laser_text
+{
+	technique
+	{
+		pass
+		{
+			ambient 1.0 0.0 0.0 1
+		}
+	}
+}
