@@ -54,6 +54,10 @@ public:
 
 		float movSpeed = 1000.0f;
 
+		for( int i = 0 ; i < 8 ; ++i ){
+			torre[i]->animState->addTime(evt.timeSinceLastFrame);
+		}
+
 		if (_key->isKeyDown(OIS::KC_ESCAPE))
 			return false;
 

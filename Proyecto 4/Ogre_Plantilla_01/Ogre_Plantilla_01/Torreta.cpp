@@ -35,4 +35,37 @@ Torreta::Torreta(Ogre::String _nombre, Ogre::SceneManager* sm, Ogre::Real _x, Og
 	nodoTorreta->rotate(Ogre::Vector3(0.0,1.0,0.0),Ogre::Radian(Ogre::Degree(rotacion)));
 	nodoTorreta->setPosition(x,-60,z); 
 	nodoTorreta->setScale(50.0f,50.0f,50.0f);
+
+
+	
+	Ogre::SceneNode* nodoLaser = mSceneMgr->createSceneNode("Laser_"+nombre);
+	//mSceneMgr->getRootSceneNode()->addChild(nodoLaser);
+	nodoArma->addChild(nodoLaser);
+	Ogre::Entity* laser = mSceneMgr->createEntity("entLaser_"+nombre,"usb_laser.mesh");
+	//laser->setMaterialName("MATERIAL PARA LASER");
+	nodoLaser->attachObject(laser);	
+	//nodoLaser->setPosition(0.0,0.0,-2000.0);
+	nodoLaser->rotate(Ogre::Vector3(1.0,0.0,0.0),Ogre::Radian(Ogre::Degree(90.0)));
+	nodoLaser->setScale(40.0f,40.0f,40.0f);
+
+	Ogre::Animation* animation = mSceneMgr->createAnimation("LaserAnim"+nombre,1.0);
+	animation->setInterpolationMode(Animation::IM_SPLINE);
+	NodeAnimationTrack* track = animation->createNodeTrack(0,nodoLaser);
+
+	TransformKeyFrame* key;
+
+	key = track->createNodeKeyFrame(0.0f);
+	key->setTranslate(Ogre::Vector3(0.0,0.0,0.0));
+	key->setScale(Ogre::Vector3(0.5,0.5,0.5));
+	key->setRotation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(180.0)),Ogre::Vector3(0.0,0.0,1.0)));
+
+	key = track->createNodeKeyFrame(1.0f);
+	key->setTranslate(Ogre::Vector3(0.0,-500
+		,0.0));
+	key->setScale(Ogre::Vector3(0.5,0.5,0.5));
+	key->setRotation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(180.0)),Ogre::Vector3(0.0,0.0,1.0)));
+
+	animState = mSceneMgr->createAnimationState("LaserAnim"+nombre);
+	animState->setEnabled(true);
+	animState->setLoop(true);
 }
