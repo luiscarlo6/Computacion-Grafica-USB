@@ -11,10 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Helice.cpp" />
     <ClCompile Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\mainProyectoOgreI_base.cpp" />
+    <ClCompile Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Nave.cpp" />
     <ClCompile Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Torreta.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Helice.h" />
+    <ClInclude Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Nave.h" />
     <ClInclude Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Torreta.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -1,9 +1,15 @@
 #include "Ogre\ExampleApplication.h"
 #include "Torreta.h"
+#include "Nave.h"
+#include "Helice.h"
 
 Ogre::Light* light02;
 float r=1.0;
 Torreta* torre[8];
+Nave* nave;
+Helice* heli[2];
+float movi = -23500;
+
 
 class MyFrameListener :public Ogre::FrameListener{
 
@@ -68,16 +74,16 @@ public:
 			t += Ogre::Vector3(10,0,0);
 
 		if (_key->isKeyDown(OIS::KC_T))
-			tOgro += Ogre::Vector3(0,0,-10);
+			t += Ogre::Vector3(0,0,-1);
 
 		if (_key->isKeyDown(OIS::KC_G))
-			tOgro += Ogre::Vector3(0,0,10);
+			t += Ogre::Vector3(0,0,1);
 
 		if (_key->isKeyDown(OIS::KC_F))
-			tOgro += Ogre::Vector3(-10,0,0);
+			t += Ogre::Vector3(-1,0,0);
 
 		if (_key->isKeyDown(OIS::KC_H))
-			tOgro += Ogre::Vector3(10,0,0);
+			t += Ogre::Vector3(1,0,0);
 
 		if (_key->isKeyDown(OIS::KC_1))
 			r += 0.05;
@@ -90,6 +96,9 @@ public:
 		_cam->yaw(Ogre::Radian(rotX));
 		_cam->pitch(Ogre::Radian(rotY));
 		_cam->moveRelative(t*evt.timeSinceLastFrame*movSpeed);
+
+		heli[0]->nodoHelice->rotate(Ogre::Vector3(0.0,1.0,0.0),Ogre::Radian(Ogre::Degree(-1.0)));
+		heli[1]->nodoHelice->rotate(Ogre::Vector3(0.0,1.0,0.0),Ogre::Radian(Ogre::Degree(-1.0)));
 
 		return true;
 	}
@@ -129,20 +138,31 @@ public:
 	{
 
 		mSceneMgr->setAmbientLight(Ogre::ColourValue(1.0, 1.0, 1.0));
-		mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
-		
-		
+		mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);	
+
+		/*
 		Ogre::Entity* ent01 = mSceneMgr->createEntity("MyEntity1","ejes01.mesh");
 		Ogre::SceneNode* node01 = mSceneMgr->createSceneNode("Node01");
 		mSceneMgr->getRootSceneNode()->addChild(node01);
 		node01->attachObject(ent01);
-		
+		*/
 
 		Ogre::Entity* entEscenario01 = mSceneMgr->createEntity("EscenarioBase01","proyectoOgreI.mesh");
 		Ogre::SceneNode* nodeEscenario01 = mSceneMgr->createSceneNode("NodeMesh01");		
 		mSceneMgr->getRootSceneNode()->addChild(nodeEscenario01);
 		nodeEscenario01->attachObject(entEscenario01);
 
+
+		nave = new Nave("nave", mSceneMgr,0,-1000);
+		mSceneMgr->getRootSceneNode()->addChild(nave->nodoNave);
+
+		heli[0] = new Helice("helice1", mSceneMgr, 15300, -23750);
+		mSceneMgr->getRootSceneNode()->addChild(heli[0]->nodoHelice);
+
+		heli[1] = new Helice("helice2", mSceneMgr, -13300, -23750);
+		mSceneMgr->getRootSceneNode()->addChild(heli[1]->nodoHelice);
+
+		//Naves
 		torre[0] = new Torreta("torre0",mSceneMgr, -1700, -8600);
 		torre[1] = new Torreta("torre1",mSceneMgr, 1700, -15300);
 		torre[2] = new Torreta("torre2",mSceneMgr, 15500, -18900);
@@ -161,6 +181,7 @@ public:
 		mSceneMgr->getRootSceneNode()->addChild(torre[5]->nodoTorreta);
 		mSceneMgr->getRootSceneNode()->addChild(torre[6]->nodoTorreta);
 		mSceneMgr->getRootSceneNode()->addChild(torre[7]->nodoTorreta);
+		//Fin naves
 	}
 
 };
