@@ -17,8 +17,8 @@ Torreta::Torreta(Ogre::String _nombre, Ogre::SceneManager* sm, Ogre::Real _x, Og
 	Ogre::Entity* entArma = mSceneMgr->createEntity("usb_cilindro.mesh");
 
 	entTorreta->setMaterialName("Torreta_text");
-	entSuperior->setMaterialName("Torreta_text");
-	entArma->setMaterialName("Torreta_text");
+	entSuperior->setMaterialName("Torreta_text1");
+	entArma->setMaterialName("Torreta_text2");
 	
 	nodoSuperior->attachObject(entSuperior);	
 	nodoSuperior->setScale(0.05,0.05,0.05);
