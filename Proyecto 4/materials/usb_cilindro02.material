@@ -61,3 +61,14 @@ material Laser_text
 		}
 	}
 }
+material Nave_text
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.15 0.20 1.0 1
+			diffuse 1 0.983333 0 1
+		}
+	}
+}

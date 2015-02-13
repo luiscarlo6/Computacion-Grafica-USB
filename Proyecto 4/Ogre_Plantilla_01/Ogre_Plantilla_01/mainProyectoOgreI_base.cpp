@@ -157,31 +157,8 @@ public:
 		mSceneMgr->getRootSceneNode()->addChild(nodeEscenario01);
 		nodeEscenario01->attachObject(entEscenario01);
 
-		// create ManualObject
-		Ogre::ManualObject* manual = mSceneMgr->createManualObject("manual");
-		// specify the material (by name) and rendering type
-		manual->begin("BaseWhiteNoLighting", RenderOperation::OT_POINT_LIST); 
-		// define start and end point
-		manual->position(0, 0, 0);
-		manual->position(0, (5*80.0), 0);
-		manual->position(-(5*60.0), (5*60.0), 0);
-		manual->position(-(5*70.0), (5*70.0), 0);
-		manual->position(-(5*40.0), (5*110.0), 0);
-		manual->position(-(5*60.0), (5*130.0), 0);
-		manual->position(-(5*120.0), (5*70.0), 0);
-		manual->position(-(5*120.0), (5*20.0), 0);
-		manual->position(-(5*60.0), -(5*40.0), 0);
-		manual->position(-(5*40.0), -(5*20.0), 0);
-		manual->position(-(5*70.0), (5*20.0), 0);
-		manual->position(-(5*60.0), (5*30.0), 0);
-		// tell Ogre, your definition has finished
-		manual->end();
- 
-		// add ManualObject to the RootSceneNode (so it will be visible)
-		mSceneMgr->getRootSceneNode()->attachObject(manual);
-		/*
 		nave = new Nave("nave", mSceneMgr,0,-1000);
-		mSceneMgr->getRootSceneNode()->addChild(nave->nodoNave);*/
+		mSceneMgr->getRootSceneNode()->addChild(nave->nodoNave);
 
 		//Helices
 		heli[0] = new Helice("helice1", mSceneMgr, 15300, -23750);
@@ -199,7 +176,6 @@ public:
 		torre[5] = new Torreta("torre5",mSceneMgr, -9980, -23500,-90);
 		torre[6] = new Torreta("torre6",mSceneMgr, -23110, -23500,-90);
 		torre[7] = new Torreta("torre7",mSceneMgr, -17050, -18900,90);
-
 
 		mSceneMgr->getRootSceneNode()->addChild(torre[0]->nodoTorreta);
 		mSceneMgr->getRootSceneNode()->addChild(torre[1]->nodoTorreta);

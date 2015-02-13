@@ -9,5 +9,5 @@ class Nave{
 	Ogre::Real x,z;
 
 	Nave::Nave(Ogre::String nombre, Ogre::SceneManager* sm, Ogre::Real x, Ogre::Real y);
-
+	Ogre::ManualObject* Nave::crearAla(Ogre::String nombre, Ogre::SceneManager* sm);
 };
