@@ -5,6 +5,9 @@ material Torreta_text
 	{
 		pass
 		{
+			lighting on
+			ambient 1.0 1.0 1.0
+			diffuse 1.0 0.5 0.25
 			texture_unit
 			{
 				tex_address_mode mirror
@@ -19,6 +22,8 @@ material Torreta_text1
 	{
 		pass
 		{
+			ambient 1.0 1.0 1.0
+			diffuse 1.0 0.5 0.25
 			texture_unit
 			{
 				tex_address_mode mirror
@@ -34,6 +39,7 @@ material Torreta_text2
 		pass
 		{
 			ambient 0.6 0.6 0.6 0
+			diffuse 1.0 0.5 0.25
 		}
 	}
 }
@@ -66,9 +72,11 @@ material Nave_text
 	technique
 	{
 		pass
-		{
-			ambient 0.15 0.20 1.0 1
-			diffuse 1 0.983333 0 1
+		{	
+			lighting on
+			ambient 0.45 0.45 0.45 1
+			diffuse 1 0.9 0 1
+			specular 1 1 1 0
 		}
 	}
 }

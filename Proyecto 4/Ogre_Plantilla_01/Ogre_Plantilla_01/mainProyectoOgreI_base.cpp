@@ -23,7 +23,6 @@ public:
 
 	MyFrameListener(RenderWindow* win, Ogre::Camera* Cam ){
 
-		//Conf captura teclado y mouse
 		size_t windowHnd = 0;
 		std::stringstream windowsHndStr;
 		win->getCustomAttribute("WINDOW", &windowHnd);
@@ -32,12 +31,9 @@ public:
 		OIS::ParamList pl;
 		pl.insert(std::make_pair(std::string("WINDOW"), windowsHndStr.str()));
 
-		//Eventos
 		_man = OIS::InputManager::createInputSystem(pl);
 		_key = static_cast<OIS::Keyboard*>(_man->createInputObject(OIS::OISKeyboard,false));
 		_mouse = static_cast<OIS::Mouse*>(_man->createInputObject(OIS::OISMouse,false));
-		// Fin eventos
-
 		_cam = Cam;
 	}
 
@@ -64,45 +60,57 @@ public:
 		Ogre::Vector3 tOgro(0,0,0);
 
 
-		if (_key->isKeyDown(OIS::KC_W))
-			t += Ogre::Vector3(0,0,-10);
+		if (_key->isKeyDown(OIS::KC_W)){
+			//t += Ogre::Vector3(0,0,-10);
+			nave->moverAdelante();
+		}
 
 		if (_key->isKeyDown(OIS::KC_S))
-			t += Ogre::Vector3(0,0,10);
+			nave->moverAtras();
 
-		if (_key->isKeyDown(OIS::KC_A))
-			t += Ogre::Vector3(-10,0,0);
+		if (_key->isKeyDown(OIS::KC_A)){
+			//t += Ogre::Vector3(-10,0,0);
+			nave->moverIzquierda();
+		}
+		if (_key->isKeyDown(OIS::KC_D)){
+			//t += Ogre::Vector3(10,0,0);
+			nave->moverDerecha();	
+		}
 
-		if (_key->isKeyDown(OIS::KC_D))
-			t += Ogre::Vector3(10,0,0);
 
-		if (_key->isKeyDown(OIS::KC_T))
-			t += Ogre::Vector3(0,0,-1);
+		if(!(_key->isKeyDown(OIS::KC_D)) && !(_key->isKeyDown(OIS::KC_A))){
+			nave->arreglar();
+		}
 
-		if (_key->isKeyDown(OIS::KC_G))
-			t += Ogre::Vector3(0,0,1);
 
-		if (_key->isKeyDown(OIS::KC_F))
-			t += Ogre::Vector3(-1,0,0);
+		if (_key->isKeyDown(OIS::KC_UP)){
+			nave->moverArriba();
+		}
 
-		if (_key->isKeyDown(OIS::KC_H))
-			t += Ogre::Vector3(1,0,0);
+		if (_key->isKeyDown(OIS::KC_DOWN)){
+			nave->moverAbajo();
+		}
 
-		if (_key->isKeyDown(OIS::KC_1))
-			r += 0.05;
+		if (_key->isKeyDown(OIS::KC_RIGHT)){
+			nave->rotarDerecha();
+		}
 
-		if (_key->isKeyDown(OIS::KC_2))
-			r -= 0.05;
+		if (_key->isKeyDown(OIS::KC_LEFT)){
+			nave->rotarIzquierda();
+		}
+
+		if (_key->isKeyDown(OIS::KC_Q)){
+			std::cout<<nave->x<<" "<<nave->y<<" "<<nave->z<<std::endl;
+		}
 
 		float rotX = _mouse->getMouseState().X.rel * evt.timeSinceLastFrame* -1;
-		float rotY = _mouse->getMouseState().Y.rel * evt.timeSinceLastFrame * -1;
-		_cam->yaw(Ogre::Radian(rotX));
-		_cam->pitch(Ogre::Radian(rotY));
-		_cam->moveRelative(t*evt.timeSinceLastFrame*movSpeed);
-
+		float rotY = _mouse->getMouseState() .Y.rel * evt.timeSinceLastFrame * -1;
+		//_cam->yaw(Ogre::Radian(rotX));
+		//_cam->pitch(Ogre::Radian(rotY));
+		//_cam->moveRelative(t*evt.timeSinceLastFrame*movSpeed);
+		//_cam->lookAt(nave->nodoNave->_getDerivedPosition());
 		heli[0]->nodoHelice->rotate(Ogre::Vector3(0.0,1.0,0.0),Ogre::Radian(Ogre::Degree(-1.0)));
 		heli[1]->nodoHelice->rotate(Ogre::Vector3(0.0,1.0,0.0),Ogre::Radian(Ogre::Degree(-1.0)));
-
 		return true;
 	}
 
@@ -132,8 +140,8 @@ public:
 
 	void createCamera() {
 		mCamera = mSceneMgr->createCamera("MyCamera1");
-		mCamera->setPosition(100,50,100);
-		mCamera->lookAt(0,0,0);
+		mCamera->setPosition(Ogre::Vector3(0.0,300.0,2000.0));
+		mCamera->lookAt(Ogre::Vector3(0.0,0.0,0.0));
 		mCamera->setNearClipDistance(5);
 	}
 
@@ -157,7 +165,8 @@ public:
 		mSceneMgr->getRootSceneNode()->addChild(nodeEscenario01);
 		nodeEscenario01->attachObject(entEscenario01);
 
-		nave = new Nave("nave", mSceneMgr,0,-1000);
+		nave = new Nave(mSceneMgr, mCamera);
+
 		mSceneMgr->getRootSceneNode()->addChild(nave->nodoNave);
 
 		//Helices
