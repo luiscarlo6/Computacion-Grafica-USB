@@ -11,6 +11,18 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+static GLuint texPiso;
+int iheightPiso, iwidthPiso;
+unsigned char* Piso = NULL;
+
+static GLuint texConejo;
+int iheightConejo, iwidthConejo;
+unsigned char* Conejo = NULL;
+
+static GLuint texColumna;
+int iheightColumna, iwidthColumna;
+unsigned char* Columna = NULL;
+
 // the global Assimp scene object
 const aiScene* scene01 = NULL;
 const aiScene* scene02 = NULL;
@@ -51,13 +63,48 @@ void changeViewport(int w, int h) {
 }
 
 void init(){
-
-
 	
-   glEnable(GL_LIGHTING);
-   glEnable(GL_LIGHT0);
-   glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_DEPTH_TEST);
    
+   	glGenTextures(1, &texPiso);
+   	glBindTexture(GL_TEXTURE_2D, texPiso);
+
+   	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+   	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	Piso = glmReadPPM("texAO_plano.ppm", &iwidthPiso, &iheightPiso);
+
+   	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthPiso, iheightPiso, 0, GL_RGB, GL_UNSIGNED_BYTE, Piso);
+
+	glGenTextures(1, &texConejo);
+   	glBindTexture(GL_TEXTURE_2D, texConejo);
+
+   	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+   	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	Piso = glmReadPPM("texAO_bunny.ppm", &iwidthConejo, &iheightConejo);
+
+   	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthConejo, iheightConejo, 0, GL_RGB, GL_UNSIGNED_BYTE, Conejo);
+
+/*
+	glGenTextures(1, &texColumna);
+   	glBindTexture(GL_TEXTURE_2D, texColumna);
+
+   	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+   	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	Piso = glmReadPPM("texAO_columna.ppm", &iwidthColumna, &iheightColumna);
+
+   	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthConejo, iheightColumna, 0, GL_RGB, GL_UNSIGNED_BYTE, Columna);
+	*/
 
 }
 
@@ -67,19 +114,24 @@ void cargar_materiales(int idx) {
 
 	// Material Piso
 	if (idx == 0){	
-		
+		glEnable(GL_TEXTURE_2D);
+   		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+   		glBindTexture(GL_TEXTURE_2D, texPiso);
 	}
 
 	// Material Columna
-	if (idx == 1){
-		
-		
+	if (idx == 1){		
+		glEnable(GL_TEXTURE_2D);
+   		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+   		glBindTexture(GL_TEXTURE_2D, texColumna);
 	}
 
 	// Material Conejo
 	if (idx == 2){
-
 		
+		glEnable(GL_TEXTURE_2D);
+   		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+   		glBindTexture(GL_TEXTURE_2D, texConejo);
 		
 	}
 
@@ -163,14 +215,11 @@ void Keyboard(unsigned char key, int x, int y)
 
 
 void render(){
-	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 	glLoadIdentity ();                       
 	gluLookAt (0, 80, 250, 0.0, 15.0, 0.0, 0.0, 1.0, 0.0);
-
-	
 
 	//Suaviza las lineas
 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
