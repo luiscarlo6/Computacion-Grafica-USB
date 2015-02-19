@@ -122,7 +122,7 @@ void cargar_materiales(int idx) {
 	// Material Piso
 	if (idx == 0){	
 		glEnable(GL_TEXTURE_2D);
-   		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
    		glBindTexture(GL_TEXTURE_2D, texPiso);
 	}
 
@@ -135,7 +135,6 @@ void cargar_materiales(int idx) {
 
 	// Material Conejo
 	if (idx == 2){
-		
 		glEnable(GL_TEXTURE_2D);
    		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
    		glBindTexture(GL_TEXTURE_2D, texConejo);
@@ -211,10 +210,32 @@ void Keyboard(unsigned char key, int x, int y)
   switch (key)
   {
 	case 'w':
-		lightCutoff-=0.5f;
+		lightCutoff-=1.0f;
 		break;
 	case 'q':
-		lightCutoff+=0.5f;
+		lightCutoff+=1.0f;
+		break;
+	case 'a':
+		lightExponent+=1.0f;
+		break;
+	case 's':
+		lightExponent-=1.0f;
+		break;
+	case 'z':
+		break;
+	case 'x':
+		break;
+	case 'e':
+		lightPosition[0] += 1.0f;
+		break;
+	case 'd':
+		lightPosition[0] -= 1.0f;
+		break;
+	case 'r':
+		lightPosition[2] += 1.0f;
+		break;
+	case 'f':
+		lightPosition[2] -= 1.0f;
 		break;
 	case 27:             
 		exit (0);
@@ -235,7 +256,7 @@ void DibujarObjetos3D() {
    	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightDirection);
 	glLightfv (GL_LIGHT0, GL_SPECULAR, lightSpecular);
 	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, lightCutoff);
-   	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 25.0f);
+	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, lightExponent);
 	//glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mdiffuse1);
 }
 
