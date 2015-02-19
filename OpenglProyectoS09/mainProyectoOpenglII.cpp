@@ -122,7 +122,7 @@ void cargar_materiales(int idx) {
 	// Material Piso
 	if (idx == 0){	
 		glEnable(GL_TEXTURE_2D);
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    		glBindTexture(GL_TEXTURE_2D, texPiso);
 	}
 
