@@ -28,6 +28,14 @@ const aiScene* scene01 = NULL;
 const aiScene* scene02 = NULL;
 const aiScene* scene03 = NULL;
 
+GLfloat lightAmbient[] =  {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat lightDiffuse[] =  {0.6f, .6f, 1.0f, 1.0f};
+GLfloat lightPosition[] = {0.0f, 200.0f, 0.0f, 1.0f};
+GLfloat lightDirection[] = {0.0f,-1.0f, 0.0f};
+GLfloat lightSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat lightCutoff = 50.0f;
+GLfloat lightExponent = 25.0f;
+
 GLuint scene_list = 0;
 aiVector3D scene_min, scene_max, scene_center;
 
@@ -92,7 +100,7 @@ void init(){
 
    	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthConejo, iheightConejo, 0, GL_RGB, GL_UNSIGNED_BYTE, Conejo);
 
-/*
+
 	glGenTextures(1, &texColumna);
    	glBindTexture(GL_TEXTURE_2D, texColumna);
 
@@ -104,7 +112,6 @@ void init(){
 	Piso = glmReadPPM("texAO_columna.ppm", &iwidthColumna, &iheightColumna);
 
    	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthConejo, iheightColumna, 0, GL_RGB, GL_UNSIGNED_BYTE, Columna);
-	*/
 
 }
 
@@ -203,6 +210,12 @@ void Keyboard(unsigned char key, int x, int y)
 {
   switch (key)
   {
+	case 'w':
+		lightCutoff-=0.5f;
+		break;
+	case 'q':
+		lightCutoff+=0.5f;
+		break;
 	case 27:             
 		exit (0);
 		break;
@@ -213,6 +226,18 @@ void Keyboard(unsigned char key, int x, int y)
   glutPostRedisplay();
 }
 
+void DibujarObjetos3D() {
+
+   	
+   	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
+   	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
+   	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+   	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightDirection);
+	glLightfv (GL_LIGHT0, GL_SPECULAR, lightSpecular);
+	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, lightCutoff);
+   	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 25.0f);
+	//glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mdiffuse1);
+}
 
 void render(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -226,7 +251,7 @@ void render(){
 	glEnable( GL_LINE_SMOOTH );	
 	
 	
-
+	DibujarObjetos3D();
 	glPushMatrix();
 	glEnable(GL_NORMALIZE);
 	if(scene_list == 0) {
