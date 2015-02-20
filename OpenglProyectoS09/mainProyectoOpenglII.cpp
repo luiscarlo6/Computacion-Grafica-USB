@@ -36,6 +36,7 @@ GLfloat lightSpecular[] = { 0.1, 0.1, 0.1, 1.0 };
 GLfloat lightCutoff = 50.0f;
 GLfloat lightExponent = 25.0f;
 
+//todas las textutras
 GLfloat shininess = 70.0f;
 GLfloat ambiental[] = {0.3f, 0.3f, 0.3f, 1.0f};
 GLfloat specular[] = {0.2f, 0.2f, 0.2f, 1.0f};
@@ -102,7 +103,7 @@ void init(){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	Piso = glmReadPPM("texAO_bunny.ppm", &iwidthConejo, &iheightConejo);
+	Conejo = glmReadPPM("texAO_bunny.ppm", &iwidthConejo, &iheightConejo);
 
    	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthConejo, iheightConejo, 0, GL_RGB, GL_UNSIGNED_BYTE, Conejo);
 
@@ -115,7 +116,7 @@ void init(){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	Piso = glmReadPPM("texAO_columna.ppm", &iwidthColumna, &iheightColumna);
+	Columna = glmReadPPM("texAO_columna.ppm", &iwidthColumna, &iheightColumna);
 
    	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthColumna, iheightColumna, 0, GL_RGB, GL_UNSIGNED_BYTE, Columna);
 
@@ -142,7 +143,7 @@ void cargar_materiales(int idx) {
 	// Material Columna
 	if (idx == 1){		
 		glBindTexture( GL_TEXTURE_2D, texColumna );
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 		glMaterialfv(GL_FRONT, GL_AMBIENT, ambiental);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
@@ -153,16 +154,13 @@ void cargar_materiales(int idx) {
 	// Material Conejo
 	if (idx == 2){
 		glBindTexture( GL_TEXTURE_2D, texConejo );
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 		glMaterialfv(GL_FRONT, GL_AMBIENT, ambiental);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
 		glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 	}
-
-
-	
 
 }
 
@@ -264,6 +262,35 @@ void Keyboard(unsigned char key, int x, int y)
 		break;
 	case 'f':
 		lightPosition[2] -= 1.0f;
+		break;
+	case '1':
+		lightDiffuse[0]=1.0f;
+		lightDiffuse[1]=1.0f;
+		lightDiffuse[2]=1.0f;
+		break;
+	case '2':
+		//verde
+		lightDiffuse[0]=0.0f;
+		lightDiffuse[1]=1.0f;
+		lightDiffuse[2]=0.0f;
+		break;
+	case '3':
+		//azul
+		lightDiffuse[0]=0.0f;
+		lightDiffuse[1]=0.0f;
+		lightDiffuse[2]=0.61f;
+		break;
+	case '4':
+		//morado
+		lightDiffuse[0]=1.0f;
+		lightDiffuse[1]=0.0f;
+		lightDiffuse[2]=1.0f;
+		break;
+	case '5':
+		//naranja
+		lightDiffuse[0]=1.0f;
+		lightDiffuse[1]=0.5f;
+		lightDiffuse[2]=0.0f;
 		break;
 	case 27:             
 		exit (0);
