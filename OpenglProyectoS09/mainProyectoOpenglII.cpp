@@ -229,16 +229,16 @@ void Keyboard(unsigned char key, int x, int y)
   switch (key)
   {
 	case 'q':
-		lightCutoff+=1.0f;
+		lightCutoff+=2.0f;
 		break;
     case 'w':
-		lightCutoff-=1.0f;
+		lightCutoff-=2.0f;
 		break;
 	case 'a':
-		lightExponent+=1.0f;
+		lightExponent+=2.0f;
 		break;
 	case 's':
-		lightExponent-=1.0f;
+		lightExponent-=2.0f;
 		break;
 	case 'z':
 		for (i=0;i<3;i++){
