@@ -117,7 +117,7 @@ void init(){
 
 	Piso = glmReadPPM("texAO_columna.ppm", &iwidthColumna, &iheightColumna);
 
-   	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthConejo, iheightColumna, 0, GL_RGB, GL_UNSIGNED_BYTE, Columna);
+   	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthColumna, iheightColumna, 0, GL_RGB, GL_UNSIGNED_BYTE, Columna);
 
 	glDisable(GL_TEXTURE_2D);
 
