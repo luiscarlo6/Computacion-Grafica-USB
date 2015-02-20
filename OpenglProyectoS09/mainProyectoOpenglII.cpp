@@ -30,9 +30,9 @@ const aiScene* scene03 = NULL;
 
 GLfloat lightAmbient[] =  {0.1f, 0.1f, 0.1f, 1.0f};
 GLfloat lightDiffuse[] =  {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat lightSpecular[] = {0.1, 0.1, 0.1, 1.0 };
 GLfloat lightPosition[] = {0.0f, 200.0f, 0.0f, 1.0f};
 GLfloat lightDirection[] = {0.0f,-1.0f, 0.0f};
-GLfloat lightSpecular[] = { 0.1, 0.1, 0.1, 1.0 };
 GLfloat lightCutoff = 50.0f;
 GLfloat lightExponent = 25.0f;
 
@@ -42,14 +42,17 @@ GLfloat ambiental[] = {0.3f, 0.3f, 0.3f, 1.0f};
 GLfloat specular[] = {0.2f, 0.2f, 0.2f, 1.0f};
 GLfloat diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
 
+// texturas del conejo
+GLfloat c_shininess = 70.0f;
+GLfloat c_ambiental[] = {0.3f, 0.3f, 0.3f, 1.0f};
+GLfloat c_specular[] = {0.2f, 0.2f, 0.2f, 1.0f};
+GLfloat c_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
+
 GLuint scene_list = 0;
 aiVector3D scene_min, scene_max, scene_center;
 
-
-
 #define aisgl_min(x,y) (x<y?x:y)
 #define aisgl_max(x,y) (y>x?y:x)
-
 
 using namespace std;
 
@@ -57,9 +60,7 @@ using namespace std;
 #define DEF_floorGridXSteps	10.0
 #define DEF_floorGridZSteps	10.0
 
-
 #include "glm.h"
-
 
 void changeViewport(int w, int h) {
 	
@@ -107,7 +108,6 @@ void init(){
 
    	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthConejo, iheightConejo, 0, GL_RGB, GL_UNSIGNED_BYTE, Conejo);
 
-
 	glGenTextures(1, &texColumna);
    	glBindTexture(GL_TEXTURE_2D, texColumna);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -127,7 +127,6 @@ void init(){
 
 void cargar_materiales(int idx) {
 
-
 	// Material Piso
 	if (idx == 0){	
 		glBindTexture( GL_TEXTURE_2D, texPiso );
@@ -136,8 +135,7 @@ void cargar_materiales(int idx) {
 		glMaterialfv(GL_FRONT, GL_AMBIENT, ambiental);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-		glMaterialf(GL_FRONT, GL_SHININESS, shininess);
-		
+		glMaterialf(GL_FRONT, GL_SHININESS, shininess);	
 	}
 
 	// Material Columna
@@ -156,10 +154,10 @@ void cargar_materiales(int idx) {
 		glBindTexture( GL_TEXTURE_2D, texConejo );
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-		glMaterialfv(GL_FRONT, GL_AMBIENT, ambiental);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-		glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+		glMaterialfv(GL_FRONT, GL_AMBIENT, c_ambiental);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, c_diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, c_specular);
+		glMaterialf(GL_FRONT, GL_SHININESS, c_shininess);
 	}
 
 }
@@ -227,13 +225,14 @@ void recursive_render (const aiScene *sc, const aiNode* nd)
 
 void Keyboard(unsigned char key, int x, int y)
 {
+  int i;
   switch (key)
   {
-	case 'w':
-		lightCutoff-=1.0f;
-		break;
 	case 'q':
 		lightCutoff+=1.0f;
+		break;
+    case 'w':
+		lightCutoff-=1.0f;
 		break;
 	case 'a':
 		lightExponent+=1.0f;
@@ -242,14 +241,16 @@ void Keyboard(unsigned char key, int x, int y)
 		lightExponent-=1.0f;
 		break;
 	case 'z':
-		ambiental[0]+=0.1;
-		ambiental[1]+=0.1;
-		ambiental[2]+=0.1;
+		for (i=0;i<3;i++){
+			ambiental[i]+=0.1;
+			c_ambiental[i]+=0.1;
+		}
 		break;
 	case 'x':
-		ambiental[0]-=0.1;
-		ambiental[1]-=0.1;
-		ambiental[2]-=0.1;
+		for (i=0;i<3;i++){
+			ambiental[i]-=0.1;
+			c_ambiental[i]-=0.1;
+		}
 		break;
 	case 'e':
 		lightPosition[0] += 1.0f;
@@ -262,6 +263,38 @@ void Keyboard(unsigned char key, int x, int y)
 		break;
 	case 'f':
 		lightPosition[2] -= 1.0f;
+		break;
+	case 'b':
+		for (i=0;i<3;i++){
+			lightAmbient[i]+=0.1;
+			lightDiffuse[i]+=0.1;
+			lightSpecular[i]+=0.1;
+		}
+		break;
+	case 'n':
+		for (i=0;i<3;i++){
+			lightAmbient[i]-=0.1;
+			lightDiffuse[i]-=0.1;
+			lightSpecular[i]-=0.1;
+		}
+		break;
+	case 't':
+		c_diffuse[0]+=0.05;
+		break;
+	case 'g':
+		c_diffuse[0]-=0.05;
+		break;
+	case 'y':
+		c_diffuse[1]+=0.05;
+		break;
+	case 'h':
+		c_diffuse[1]-=0.05;
+		break;
+	case 'u':
+		c_diffuse[2]+=0.05;
+		break;
+	case 'j':
+		c_diffuse[2]-=0.05;
 		break;
 	case '1':
 		lightDiffuse[0]=1.0f;
@@ -295,7 +328,6 @@ void Keyboard(unsigned char key, int x, int y)
 	case 27:             
 		exit (0);
 		break;
-
   }
 
   scene_list = 0;
