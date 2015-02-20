@@ -6,6 +6,7 @@
 #include <GL\freeglut.h>
 #include <iostream>
 
+
 // assimp include files. These three are usually needed.
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
@@ -23,16 +24,21 @@ static GLuint texColumna;
 int iheightColumna, iwidthColumna;
 unsigned char* Columna = NULL;
 
+static GLuint texCubeMap;
+int heightCubeMap, widthCubeMap;
+unsigned char* CubeMap = NULL;
+
 // the global Assimp scene object
 const aiScene* scene01 = NULL;
 const aiScene* scene02 = NULL;
 const aiScene* scene03 = NULL;
 
-GLfloat lightAmbient[] =  {0.1f, 0.1f, 0.1f, 1.0f};
+GLfloat lightAmbient[] =  {1.0f, 1.0f, 1.0f, 1.0f};
 GLfloat lightDiffuse[] =  {1.0f, 1.0f, 1.0f, 1.0f};
 GLfloat lightSpecular[] = {0.1, 0.1, 0.1, 1.0 };
 GLfloat lightPosition[] = {0.0f, 200.0f, 0.0f, 1.0f};
 GLfloat lightDirection[] = {0.0f,-1.0f, 0.0f};
+
 GLfloat lightCutoff = 50.0f;
 GLfloat lightExponent = 25.0f;
 
@@ -50,6 +56,8 @@ GLfloat c_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
 
 GLuint scene_list = 0;
 aiVector3D scene_min, scene_max, scene_center;
+
+int pulsaciones = 0;
 
 #define aisgl_min(x,y) (x<y?x:y)
 #define aisgl_max(x,y) (y>x?y:x)
@@ -82,9 +90,10 @@ void init(){
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_DEPTH_TEST);
- 	glEnable(GL_TEXTURE_2D);  	
-	
-   	glGenTextures(1, &texPiso);
+
+	//////////////////////////////////////////////////////////////////////////////////////
+	glEnable(GL_TEXTURE_2D);  
+	glGenTextures(1, &texPiso);
    	glBindTexture(GL_TEXTURE_2D, texPiso);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -92,13 +101,14 @@ void init(){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
+
 	Piso = glmReadPPM("texAO_plano.ppm", &iwidthPiso, &iheightPiso);
 
    	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthPiso, iheightPiso, 0, GL_RGB, GL_UNSIGNED_BYTE, Piso);
 
 	glGenTextures(1, &texConejo);
    	glBindTexture(GL_TEXTURE_2D, texConejo);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -110,7 +120,7 @@ void init(){
 
 	glGenTextures(1, &texColumna);
    	glBindTexture(GL_TEXTURE_2D, texColumna);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -120,7 +130,7 @@ void init(){
 
    	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthColumna, iheightColumna, 0, GL_RGB, GL_UNSIGNED_BYTE, Columna);
 
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
 
 }
 
@@ -130,8 +140,6 @@ void cargar_materiales(int idx) {
 	// Material Piso
 	if (idx == 0){	
 		glBindTexture( GL_TEXTURE_2D, texPiso );
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
 		glMaterialfv(GL_FRONT, GL_AMBIENT, ambiental);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
@@ -141,7 +149,6 @@ void cargar_materiales(int idx) {
 	// Material Columna
 	if (idx == 1){		
 		glBindTexture( GL_TEXTURE_2D, texColumna );
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 		glMaterialfv(GL_FRONT, GL_AMBIENT, ambiental);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
@@ -152,8 +159,6 @@ void cargar_materiales(int idx) {
 	// Material Conejo
 	if (idx == 2){
 		glBindTexture( GL_TEXTURE_2D, texConejo );
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
 		glMaterialfv(GL_FRONT, GL_AMBIENT, c_ambiental);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, c_diffuse);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, c_specular);
