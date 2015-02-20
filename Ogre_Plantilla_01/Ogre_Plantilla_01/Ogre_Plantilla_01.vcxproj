@@ -11,15 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Helice.cpp" />
-    <ClCompile Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\mainProyectoOgreI_base.cpp" />
-    <ClCompile Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Nave.cpp" />
-    <ClCompile Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Torreta.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Helice.h" />
-    <ClInclude Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Nave.h" />
-    <ClInclude Include="..\..\Proyecto 4\Ogre_Plantilla_01\Ogre_Plantilla_01\Torreta.h" />
+    <ClCompile Include="OgreSemana10.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{56FF2693-AC05-4CE6-ABC8-9881C8FF94BA}</ProjectGuid>

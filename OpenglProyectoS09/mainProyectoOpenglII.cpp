@@ -28,13 +28,18 @@ const aiScene* scene01 = NULL;
 const aiScene* scene02 = NULL;
 const aiScene* scene03 = NULL;
 
-GLfloat lightAmbient[] =  {1.0f, 1.0f, 1.0f, 1.0f};
-GLfloat lightDiffuse[] =  {0.6f, .6f, 1.0f, 1.0f};
+GLfloat lightAmbient[] =  {0.1f, 0.1f, 0.1f, 1.0f};
+GLfloat lightDiffuse[] =  {1.0f, 1.0f, 1.0f, 1.0f};
 GLfloat lightPosition[] = {0.0f, 200.0f, 0.0f, 1.0f};
 GLfloat lightDirection[] = {0.0f,-1.0f, 0.0f};
-GLfloat lightSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat lightSpecular[] = { 0.1, 0.1, 0.1, 1.0 };
 GLfloat lightCutoff = 50.0f;
 GLfloat lightExponent = 25.0f;
+
+GLfloat shininess = 70.0f;
+GLfloat ambiental[] = {0.3f, 0.3f, 0.3f, 1.0f};
+GLfloat specular[] = {0.2f, 0.2f, 0.2f, 1.0f};
+GLfloat diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
 
 GLuint scene_list = 0;
 aiVector3D scene_min, scene_max, scene_center;
@@ -75,10 +80,11 @@ void init(){
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_DEPTH_TEST);
-   
+ 	glEnable(GL_TEXTURE_2D);  	
+	
    	glGenTextures(1, &texPiso);
    	glBindTexture(GL_TEXTURE_2D, texPiso);
-
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -90,7 +96,7 @@ void init(){
 
 	glGenTextures(1, &texConejo);
    	glBindTexture(GL_TEXTURE_2D, texConejo);
-
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -103,7 +109,7 @@ void init(){
 
 	glGenTextures(1, &texColumna);
    	glBindTexture(GL_TEXTURE_2D, texColumna);
-
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -113,6 +119,8 @@ void init(){
 
    	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iwidthConejo, iheightColumna, 0, GL_RGB, GL_UNSIGNED_BYTE, Columna);
 
+	glDisable(GL_TEXTURE_2D);
+
 }
 
 
@@ -121,24 +129,36 @@ void cargar_materiales(int idx) {
 
 	// Material Piso
 	if (idx == 0){	
-		glEnable(GL_TEXTURE_2D);
+		glBindTexture( GL_TEXTURE_2D, texPiso );
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-   		glBindTexture(GL_TEXTURE_2D, texPiso);
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, ambiental);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+		glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+		
 	}
 
 	// Material Columna
 	if (idx == 1){		
-		glEnable(GL_TEXTURE_2D);
-   		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-   		glBindTexture(GL_TEXTURE_2D, texColumna);
+		glBindTexture( GL_TEXTURE_2D, texColumna );
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, ambiental);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+		glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 	}
 
 	// Material Conejo
 	if (idx == 2){
-		glEnable(GL_TEXTURE_2D);
-   		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-   		glBindTexture(GL_TEXTURE_2D, texConejo);
-		
+		glBindTexture( GL_TEXTURE_2D, texConejo );
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, ambiental);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+		glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 	}
 
 
@@ -197,8 +217,10 @@ void recursive_render (const aiScene *sc, const aiNode* nd)
 
 	// draw all children
 	for (n = 0; n < nd->mNumChildren; ++n) {
+		glEnable(GL_TEXTURE_2D);
 		cargar_materiales(n);
 		recursive_render(sc, nd->mChildren[n]);
+		glDisable(GL_TEXTURE_2D);
 	}
 
 	glPopMatrix();
@@ -222,8 +244,14 @@ void Keyboard(unsigned char key, int x, int y)
 		lightExponent-=1.0f;
 		break;
 	case 'z':
+		ambiental[0]+=0.1;
+		ambiental[1]+=0.1;
+		ambiental[2]+=0.1;
 		break;
 	case 'x':
+		ambiental[0]-=0.1;
+		ambiental[1]-=0.1;
+		ambiental[2]-=0.1;
 		break;
 	case 'e':
 		lightPosition[0] += 1.0f;
