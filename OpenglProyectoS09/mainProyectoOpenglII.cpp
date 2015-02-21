@@ -439,13 +439,13 @@ void render(){
 
 	if (iluminacion){
 		glEnable(GL_LIGHTING);
-		glEnable(GL_LIGHT0);
-		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_LIGHT0);
+		//glEnable(GL_DEPTH_TEST);
 	}
 	else{
 		glDisable(GL_LIGHTING);
-		glDisable(GL_LIGHT0);
-		glDisable(GL_DEPTH_TEST);
+		//glDisable(GL_LIGHT0);
+		//glDisable(GL_DEPTH_TEST);
 	}
 	glPushMatrix();
 	glEnable(GL_NORMALIZE);
