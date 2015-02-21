@@ -24,9 +24,9 @@ static GLuint texColumna;
 int iheightColumna, iwidthColumna;
 unsigned char* Columna = NULL;
 
-static GLuint texCubeMap;
-int heightCubeMap, widthCubeMap;
-unsigned char* CubeMap = NULL;
+static GLuint texCubeMap[6];
+int heightCubeMap[6], widthCubeMap[6];
+unsigned char* CubeMap[6];
 
 // the global Assimp scene object
 const aiScene* scene01 = NULL;
@@ -53,6 +53,8 @@ GLfloat c_shininess = 70.0f;
 GLfloat c_ambiental[] = {0.3f, 0.3f, 0.3f, 1.0f};
 GLfloat c_specular[] = {0.2f, 0.2f, 0.2f, 1.0f};
 GLfloat c_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
+
+GLuint texPosX, texNegX, texPosY, texNegY, texPosZ, texNegZ;
 
 GLuint scene_list = 0;
 aiVector3D scene_min, scene_max, scene_center;
@@ -91,7 +93,6 @@ void init(){
 	glEnable(GL_LIGHT0);
 	glEnable(GL_DEPTH_TEST);
 
-	//////////////////////////////////////////////////////////////////////////////////////
 	glEnable(GL_TEXTURE_2D);  
 	glGenTextures(1, &texPiso);
    	glBindTexture(GL_TEXTURE_2D, texPiso);
@@ -132,6 +133,52 @@ void init(){
 
 	//glDisable(GL_TEXTURE_2D);
 
+
+	glEnable(GL_TEXTURE_CUBE_MAP);
+	glEnable(GL_TEXTURE_GEN_S);
+	glEnable(GL_TEXTURE_GEN_T);
+	glEnable(GL_TEXTURE_GEN_R);
+	glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_REFLECTION_MAP);
+    glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_REFLECTION_MAP);
+    glTexGeni(GL_R,GL_TEXTURE_GEN_MODE,GL_REFLECTION_MAP);
+
+	CubeMap[0] = glmReadPPM("posx.ppm",&widthCubeMap[0],&heightCubeMap[0]);
+	CubeMap[1] = glmReadPPM("negx.ppm",&widthCubeMap[1],&heightCubeMap[1]);
+	CubeMap[2] = glmReadPPM("posy.ppm",&widthCubeMap[2],&heightCubeMap[2]);
+	CubeMap[3] = glmReadPPM("negy.ppm",&widthCubeMap[3],&heightCubeMap[3]);
+	CubeMap[4] = glmReadPPM("posz.ppm",&widthCubeMap[4],&heightCubeMap[4]);
+	CubeMap[5] = glmReadPPM("negz.ppm",&widthCubeMap[5],&heightCubeMap[5]);
+
+	glGenTextures(1,&texPosX);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_X,texPosX);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X,0,GL_RGB,widthCubeMap[0],heightCubeMap[0],1,GL_RGB,GL_UNSIGNED_BYTE,CubeMap[0]);
+
+	glGenTextures(1,&texNegX);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_NEGATIVE_X,texNegX);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X,0,GL_RGB,widthCubeMap[1],heightCubeMap[1],1,GL_RGB,GL_UNSIGNED_BYTE,CubeMap[1]);
+
+	glGenTextures(1,&texPosY);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_Y,texPosY);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y,0,GL_RGB,widthCubeMap[2],heightCubeMap[2],1,GL_RGB,GL_UNSIGNED_BYTE,CubeMap[2]);
+
+	glGenTextures(1,&texNegY);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,texNegY);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,0,GL_RGB,widthCubeMap[3],heightCubeMap[3],1,GL_RGB,GL_UNSIGNED_BYTE,CubeMap[3]);
+
+	glGenTextures(1,&texPosZ);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_Z,texPosZ);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z,0,GL_RGB,widthCubeMap[4],heightCubeMap[4],1,GL_RGB,GL_UNSIGNED_BYTE,CubeMap[4]);
+
+	glGenTextures(1,&texNegZ);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,texNegZ);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,0,GL_RGB,widthCubeMap[5],heightCubeMap[5],1,GL_RGB,GL_UNSIGNED_BYTE,CubeMap[5]);
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_WRAP_S,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_WRAP_R,GL_REPEAT);
+    // Sets the texture's max/min filters
+    glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 }
 
 
