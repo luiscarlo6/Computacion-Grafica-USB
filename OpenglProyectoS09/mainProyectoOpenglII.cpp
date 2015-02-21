@@ -423,10 +423,18 @@ void render(){
 	DibujarObjetos3D();
 
 	if (reflexion){
+		//glDisable(GL_TEXTURE_2D);
 		glEnable(GL_TEXTURE_CUBE_MAP);
+		glEnable(GL_TEXTURE_GEN_S);
+		glEnable(GL_TEXTURE_GEN_T);
+		glEnable(GL_TEXTURE_GEN_R);
 	}
 	else{
+		glDisable(GL_TEXTURE_GEN_S);
+		glDisable(GL_TEXTURE_GEN_T);
+		glDisable(GL_TEXTURE_GEN_R);
 		glDisable(GL_TEXTURE_CUBE_MAP);
+		//glEnable(GL_TEXTURE_2D);
 	}
 
 	if (iluminacion){
