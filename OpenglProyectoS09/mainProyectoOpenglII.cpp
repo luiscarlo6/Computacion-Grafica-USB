@@ -59,6 +59,9 @@ GLuint texPosX, texNegX, texPosY, texNegY, texPosZ, texNegZ;
 GLuint scene_list = 0;
 aiVector3D scene_min, scene_max, scene_center;
 
+bool reflexion=true;
+bool iluminacion=true;
+
 int pulsaciones = 0;
 
 #define aisgl_min(x,y) (x<y?x:y)
@@ -345,6 +348,12 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'u':
 		c_diffuse[2]+=0.05;
 		break;
+	case 'c':
+		reflexion = !reflexion;
+		break;
+	case 'v':
+		iluminacion = !iluminacion;
+		break;
 	case 'j':
 		c_diffuse[2]-=0.05;
 		break;
@@ -412,6 +421,24 @@ void render(){
 	
 	
 	DibujarObjetos3D();
+
+	if (reflexion){
+		glEnable(GL_TEXTURE_CUBE_MAP);
+	}
+	else{
+		glDisable(GL_TEXTURE_CUBE_MAP);
+	}
+
+	if (iluminacion){
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		glEnable(GL_DEPTH_TEST);
+	}
+	else{
+		glDisable(GL_LIGHTING);
+		glDisable(GL_LIGHT0);
+		glDisable(GL_DEPTH_TEST);
+	}
 	glPushMatrix();
 	glEnable(GL_NORMALIZE);
 	if(scene_list == 0) {
