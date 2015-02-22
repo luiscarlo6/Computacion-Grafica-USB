@@ -49,8 +49,8 @@ GLfloat diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
 
 // texturas del conejo
 GLfloat c_shininess = 70.0f;
-GLfloat c_ambiental[] = {0.3f, 0.3f, 0.3f, 0.0f};
-GLfloat c_specular[] = {0.2f, 0.2f, 0.2f, 1.0f};
+GLfloat c_ambiental[] = {0.1f, 0.1f, 0.1f, 1.0f};
+GLfloat c_specular[] = {0.1f, 0.1f, 0.1f, 1.0f};
 GLfloat c_diffuse[] = {0.7f, 0.7f, 0.7f, 1.0f};
 
 GLuint texPosX, texNegX, texPosY, texNegY, texPosZ, texNegZ;
@@ -60,7 +60,7 @@ aiVector3D scene_min, scene_max, scene_center;
 
 bool reflexion=true;
 bool iluminacion=false;
-float escala = 15;
+float escala = 0.4;
 int pulsaciones = 0;
 
 #define aisgl_min(x,y) (x<y?x:y)
@@ -434,94 +434,63 @@ void DibujarObjetos3D() {
 void Draw_Skybox(float x, float y, float z, float width, float height, float length)
 {
 	glPushMatrix();
-	//glLoadIdentity();
-	glDisable(GL_DEPTH_TEST);
-	if (reflexion) {
-		glDisable(GL_TEXTURE_GEN_S);
-		glDisable(GL_TEXTURE_GEN_T);
-		glDisable(GL_TEXTURE_GEN_R);
-		glDisable(GL_TEXTURE_CUBE_MAP);
-	}
-	glEnable(GL_TEXTURE_2D);
-	// Center the Skybox around the given x,y,z position
-	x = x - width  / 2;
-	y = y - height / 2;
-	z = z - length / 2;
-	
-/*
-	// Draw Front side
-	glBindTexture(GL_TEXTURE_2D, texPosZ);
-	//glBindTexture(GL_TEXTURE_2D, SkyboxTexture[SKYFRONT]);
-	glBegin(GL_QUADS);	
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(x,		  y,		z+length);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(x,		  y+height, z+length);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(x+width, y+height, z+length); 
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(x+width, y,		z+length);
-	glEnd();*/
-	
-	// Draw Back side
-	glBindTexture(GL_TEXTURE_2D, texNegZ);
-//	glBindTexture(GL_TEXTURE_2D, SkyboxTexture[SKYBACK]);
-	glPushMatrix();
-	glRotatef(180.0f,0.0f,0.0f,1.0f);
-	glBegin(GL_POLYGON);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(x+width, y,		z);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(x+width, y+height, z); 
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(x,		  y+height,	z);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(x,		  y,		z);
-	glEnd();
-	glPopMatrix();
-/*
-	// Draw Left side
-	glBindTexture(GL_TEXTURE_2D, texNegX);
-	//glBindTexture(GL_TEXTURE_2D, SkyboxTexture[SKYLEFT]);
-	glBegin(GL_QUADS);		
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(x,		  y+height,	z);	
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(x,		  y+height,	z+length); 
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(x,		  y,		z+length);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(x,		  y,		z);		
-	glEnd();
-	
-	// Draw Right side
-	glBindTexture(GL_TEXTURE_2D, texPosX);
-	//glBindTexture(GL_TEXTURE_2D, SkyboxTexture[SKYRIGHT]);
-	glBegin(GL_QUADS);		
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(x+width, y,		z);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(x+width, y,		z+length);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(x+width, y+height,	z+length); 
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(x+width, y+height,	z);
-	glEnd();
+		glDisable(GL_DEPTH_TEST);
+		if (reflexion) {
+			glDisable(GL_TEXTURE_GEN_S);
+			glDisable(GL_TEXTURE_GEN_T);
+			glDisable(GL_TEXTURE_GEN_R);
+			glDisable(GL_TEXTURE_CUBE_MAP);
+		}
+		glEnable(GL_TEXTURE_2D);
+		// Center the Skybox around the given x,y,z position
+		x = x - width  / 2;
+		y = y - height / 2;
+		z = z - length / 2;
 
-	// Draw Up side
-	glBindTexture(GL_TEXTURE_2D, texPosY);
-	//glBindTexture(GL_TEXTURE_2D, SkyboxTexture[SKYUP]);
-	glBegin(GL_QUADS);		
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(x+width, y+height, z);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(x+width, y+height, z+length); 
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(x,		  y+height,	z+length);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(x,		  y+height,	z);
-	glEnd();
-
-	// Draw Down side
-	glBindTexture(GL_TEXTURE_2D, texPosX);
-	//glBindTexture(GL_TEXTURE_2D, SkyboxTexture[SKYDOWN]);
-	glBegin(GL_QUADS);		
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(x,		  y,		z);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(x,		  y,		z+length);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(x+width, y,		z+length); 
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(x+width, y,		z);
-	glEnd();*/
-
-	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_BLEND);
-	if (reflexion) {
-		glEnable(GL_TEXTURE_GEN_S);
-		glEnable(GL_TEXTURE_GEN_T);
-		glEnable(GL_TEXTURE_GEN_R);
-		glEnable(GL_TEXTURE_CUBE_MAP);
-	}
-	glPopMatrix();
+		// Draw Back side
+		glBindTexture(GL_TEXTURE_2D, texNegZ);
+		glPushMatrix();
+			//glTranslatef(0.0,53.0,0.0);
+			glRotatef(180.0f,0.0f,0.0f,1.0f);
+			//glScalef(5.0,1.0,1.0);
+			glBegin(GL_POLYGON);
+				glTexCoord2f(1.0f, 0.0f); glVertex3f(x+width, y,		z);
+				glTexCoord2f(1.0f, 1.0f); glVertex3f(x+width, y+height, z); 
+				glTexCoord2f(0.0f, 1.0f); glVertex3f(x,		  y+height,	z);
+				glTexCoord2f(0.0f, 0.0f); glVertex3f(x,		  y,		z);
+			glEnd();
+		glPopMatrix();
 	
+/*		// Draw Left side
+		glBindTexture(GL_TEXTURE_2D, texNegX);
+		glPushMatrix();
+			glRotatef(180.0f,1.0f,0.0f,0.0f);
+			glBegin(GL_POLYGON);		
+				glTexCoord2f(1.0f, 1.0f); glVertex3f(x,		  y+height,	z);	
+				glTexCoord2f(0.0f, 1.0f); glVertex3f(x,		  y+height,	z+length); 
+				glTexCoord2f(0.0f, 0.0f); glVertex3f(x,		  y,		z+length);
+				glTexCoord2f(1.0f, 0.0f); glVertex3f(x,		  y,		z);		
+			glEnd();
+		glPopMatrix();
+
+		// Draw Right side
+		glBindTexture(GL_TEXTURE_2D, texPosX);
+		//glBindTexture(GL_TEXTURE_2D, SkyboxTexture[SKYRIGHT]);
+		glBegin(GL_QUADS);		
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(x+width, y,		z);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(x+width, y,		z+length);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(x+width, y+height,	z+length); 
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(x+width, y+height,	z);
+		glEnd();
+*/
+		glEnable(GL_DEPTH_TEST);
+		if (reflexion) {
+			glEnable(GL_TEXTURE_GEN_S);
+			glEnable(GL_TEXTURE_GEN_T);
+			glEnable(GL_TEXTURE_GEN_R);
+			glEnable(GL_TEXTURE_CUBE_MAP);
+		}
+	glPopMatrix();	
 }
 
 void render(){
@@ -564,14 +533,7 @@ void render(){
 	}
 	
 	glPushMatrix();
-		//glRotatef(90,1.0f,0.0f,0.0f);
-		glPushMatrix();
-			//glRotatef(20,0.0f,0.0f,1.0f);
-			glPushMatrix();
-				//glScalef(0.25f,0.25f,0.25f);
-				Draw_Skybox(0,0,0,widthCubeMap[0]/escala,heightCubeMap[0]/escala,heightCubeMap[0]/escala);	// Draw the Skybox
-			glPopMatrix();
-		glPopMatrix();
+		Draw_Skybox(0,0,0,widthCubeMap[0]/escala,heightCubeMap[0]/escala,heightCubeMap[0]/escala);	// Draw the Skybox
 	glPopMatrix();
 
 	glPushMatrix();
