@@ -1,2 +1,2 @@
-Info,  T2296: Load escenario.obj
-Error, T2296: Unable to open file "escenario.obj".
+Info,  T684: Load escenario.obj
+Error, T684: Unable to open file "escenario.obj".
