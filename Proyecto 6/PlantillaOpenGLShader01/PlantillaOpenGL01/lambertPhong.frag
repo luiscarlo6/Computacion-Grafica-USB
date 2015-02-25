@@ -51,15 +51,8 @@ float glossySharp(vec3 N, vec3 camDirection, vec4 L, float sharpness, float roug
    float w, c;
    vec3 H;
    w = 0.18 * (1.0-sharpness);
-   if (w<0.0){
-      w += 0.72;
-   }
-   else{
-      w -= 0.72;
-   }
    H = normalize(normalize(L.xyz)+camDirection);
-   //c = smoothstep(w, pow(max(0,dot(N,H))), 1.0/roughness);
-   c= 0.0;
+   c = smoothstep(0.72-w, 0.72+w, pow(max(dot(N, H), 0.0), 1.0/roughness));
    return c;
 }
 
