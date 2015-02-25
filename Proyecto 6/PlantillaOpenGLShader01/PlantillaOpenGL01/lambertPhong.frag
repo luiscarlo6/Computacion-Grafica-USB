@@ -35,8 +35,8 @@ float fresnelFunc(vec3 camDirection, vec3 N, float bias, float eta, float Kfr){
    dotnv = abs(dot(Nn, Vn));
    Kr = eta + (1-eta)*pow(1-dotnv,5);
    Kr = Kfr * biasFun(Kr,bias);
-   col = dot(Kr, dot(Kr,Kr));
-   return col;
+   //col = dot(Kr, dot(Kr,Kr));
+   return Kr;
 }
 
 void main (void)  
@@ -81,7 +81,7 @@ void main (void)
       Kr = Kfr * biasFun(Kr,bias);
       col = dot(Kr, dot(Kr,Kr));*/
       col = fresnelFunc(camDirection,N,bias,eta,Kfr);
-      cFinal = vec4(1.0,1.0,2.0,1.0)*col;
+      cFinal = vec4(1.0*col,2.0*col,1.0*col,1.0);
    }
   
    cFinal.w = 1.0;
