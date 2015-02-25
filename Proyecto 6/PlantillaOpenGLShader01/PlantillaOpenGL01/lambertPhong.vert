@@ -5,8 +5,17 @@ varying vec3 N;
 varying vec4 L;
 
 uniform float bias;
+
+uniform bool fresnel;
 uniform float eta;
 uniform float Kfr;
+
+uniform bool cook;
+uniform float sharpness;
+uniform float roughness;
+
+uniform float intSpec;
+uniform float intDiff;
 
 void main(void)
 {

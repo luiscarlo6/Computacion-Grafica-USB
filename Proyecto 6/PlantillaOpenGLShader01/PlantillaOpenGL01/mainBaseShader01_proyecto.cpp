@@ -32,9 +32,17 @@ GLfloat posLZ;
 GLfloat bias;
 GLfloat eta;
 GLfloat Kfr;
+GLfloat sharpness;
+GLfloat roughness;
+GLfloat intSpec;
+GLfloat intDiff;
 
 bool fresnel;
-char mensaje[20];
+bool cook;
+
+char mensaje_fresnel[20];
+char mensaje_difuso[20];
+char mensaje_especular[20];
 
 void changeViewport(int w, int h) {
 	
@@ -76,7 +84,17 @@ void init(){
 	Kfr = 0.0;
 
 	fresnel = false;
-	strcpy(mensaje,"DESACTIVADO");
+	strcpy(mensaje_fresnel,"DESACTIVADO");
+
+	sharpness = 0.0;
+	roughness = 0.1;
+
+	cook = false;
+	strcpy(mensaje_difuso,"BIAS");
+	strcpy(mensaje_especular,"GLOSSY SHARP");
+
+	intSpec = 0.0;
+	intDiff = 0.0;
 }
 
 
@@ -86,16 +104,20 @@ void Keyboard(unsigned char key, int x, int y)
   switch (key)
   {
 	case '1':
+		cook = false;
+		strcpy(mensaje_especular,"GLOSSY SHARP");
 		break;
 	case '2':
+		cook = true;
+		strcpy(mensaje_especular,"COOK-TORRENCE");
 		break;
 	case '3':
 		fresnel = true;
-		strcpy(mensaje,"ACTIVADO");
+		strcpy(mensaje_fresnel,"ACTIVADO");
 		break;
 	case '4':
 		fresnel = false;
-		strcpy(mensaje,"DESACTIVADO");
+		strcpy(mensaje_fresnel,"DESACTIVADO");
 		break;
 	case 'q':
 		break;
@@ -106,18 +128,28 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'm':
 		break;
 	case 'e':
+		if (sharpness < 1.0) {
+			sharpness += 0.02;
+		}
 		break;
 	case 'r':
+		if (sharpness > 0.0){
+			sharpness -= 0.02;
+		}
 		break;
 	case 'd':
+		roughness += 0.02;
 		break;
 	case 'f':
+		if (roughness > 0.1){
+			roughness -= 0.02;
+		}
 		break;
 	case 'u':
 		eta += 0.02;
 		break;
 	case 'i':
-		if (eta>0.0001){
+		if (eta > 0.0){
 			eta -= 0.02;
 		}
 		break;
@@ -125,7 +157,7 @@ void Keyboard(unsigned char key, int x, int y)
 		Kfr += 0.1;
 		break;
 	case 'k':
-		if (Kfr>0.0001){
+		if (Kfr > 0.0){
 			Kfr -= 0.1;
 		}
 		break;
@@ -136,37 +168,45 @@ void Keyboard(unsigned char key, int x, int y)
 		bias -= 0.1;
 		break;
 	case 'c':
+		intSpec += 0.1;
 		break;
 	case 'v':
+		if (intSpec > 0.0){
+			intSpec -= 0.1;
+		}
 		break;
 	case 'b':
+		intDiff += 0.1;
 		break;
 	case 'n':
+		if (intDiff > 0.0){
+			intDiff -= 0.1;
+		}
 		break;
-	case 27:             
+	case 27:
 		exit (0);
 		break;
   }
 
   cout<<"Valores de las variables"<<endl
 	  <<"-----------------------------------------"<<endl<<endl
-	  <<"SPECULAR ACTIVO = "/*<<A*/<<endl
-	  <<"DIFFUSE ACTIVO ="/*<<L*/<<endl
-	  <<"FRESNEL "<<mensaje<<endl
+	  <<"SPECULAR ACTIVO = "<<mensaje_especular<<endl
+	  <<"DIFFUSE ACTIVO ="<<mensaje_difuso<<endl
+	  <<"FRESNEL "<<mensaje_fresnel<<endl
 	  <<"======================================================="<<endl
 	  <<"Diffuse Variables"<<endl
 	  <<"BiasDiff: bias = "<<bias<<endl
+	  <<"Intensidad Difusa: intDiff = "<<intDiff<<endl
 	  <<"======================================================="<<endl
 	  <<"Specular Variables"<<endl
 	  <<"Cook-Torrance: m = "/*<<D*/<<", indexR = "/*<<E*/<<endl
-	  <<"GlossySharp: shaperness = "/*<<Amplitud_Ruido*/<<", roughness = "/*<<var*/<<endl
-	  <<"Intensidad Especular: intSpec = "/*<<Offset_ruido*/<<endl
+	  <<"GlossySharp: shaperness = "<<sharpness<<", roughness = "<<roughness<<endl
+	  <<"Intensidad Especular: intSpec = "<<intSpec<<endl
 	  <<"======================================================="<<endl
 	  <<"Fresnel"<<endl
 	  <<"eta = "<<eta<<", Kfr = "<<Kfr<<endl
 	  <<"-----------------------------------------"<<endl;
 
-  //scene_list = 0;
   glutPostRedisplay();
 }
 
@@ -277,6 +317,11 @@ void render(){
 		shader->setUniform1f("fresnel",fresnel);
 		shader->setUniform1f("eta",eta);
 		shader->setUniform1f("Kfr", Kfr);
+		shader->setUniform1f("cook",cook);
+		shader->setUniform1f("sharpness",sharpness);
+		shader->setUniform1f("roughness",roughness);
+		shader->setUniform1f("intSpec",intSpec);
+		shader->setUniform1f("intDiff",intDiff);
 	}
 
 
