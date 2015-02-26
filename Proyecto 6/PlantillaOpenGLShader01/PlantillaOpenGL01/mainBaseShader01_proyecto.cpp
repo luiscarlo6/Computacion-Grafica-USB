@@ -32,6 +32,8 @@ GLfloat posLZ;
 GLfloat bias;
 GLfloat eta;
 GLfloat Kfr;
+GLfloat refraccion;
+GLfloat m;
 GLfloat sharpness;
 GLfloat roughness;
 GLfloat intSpec;
@@ -86,6 +88,9 @@ void init(){
 	fresnel = false;
 	strcpy(mensaje_fresnel,"DESACTIVADO");
 
+	refraccion = 1.0;
+	m = 0.0;
+
 	sharpness = 0.0;
 	roughness = 0.1;
 
@@ -100,7 +105,6 @@ void init(){
 
 void Keyboard(unsigned char key, int x, int y)
 {
-  int i;
   switch (key)
   {
 	case '1':
@@ -120,12 +124,20 @@ void Keyboard(unsigned char key, int x, int y)
 		strcpy(mensaje_fresnel,"DESACTIVADO");
 		break;
 	case 'q':
+		refraccion += 0.15;
 		break;
     case 'w':
+		if (refraccion < 1.001){
+			refraccion -= 0.15;
+		}
 		break;
 	case 'a':
+		m += 0.01;
 		break;
 	case 'm':
+		if (m < 0.001){
+			m -= 0.01;
+		}
 		break;
 	case 'e':
 		if (sharpness < 1.0) {
@@ -199,7 +211,7 @@ void Keyboard(unsigned char key, int x, int y)
 	  <<"Intensidad Difusa: intDiff = "<<intDiff<<endl
 	  <<"======================================================="<<endl
 	  <<"Specular Variables"<<endl
-	  <<"Cook-Torrance: m = "/*<<D*/<<", indexR = "/*<<E*/<<endl
+	  <<"Cook-Torrance: m = "<<m<<", indexR = "<<refraccion<<endl
 	  <<"GlossySharp: shaperness = "<<sharpness<<", roughness = "<<roughness<<endl
 	  <<"Intensidad Especular: intSpec = "<<intSpec<<endl
 	  <<"======================================================="<<endl
@@ -304,10 +316,8 @@ void render(){
 
 
 	//Suaviza las lineas
-	glEnable(GL_BLEND); 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable( GL_LINE_SMOOTH );	
-
 	
 	glPushMatrix();
 
@@ -318,6 +328,8 @@ void render(){
 		shader->setUniform1f("eta",eta);
 		shader->setUniform1f("Kfr", Kfr);
 		shader->setUniform1f("cook",cook);
+/*		shader->setUniform1f("m",m);
+		shader->setUniform1f("refracion",refraccion);*/
 		shader->setUniform1f("sharpness",sharpness);
 		shader->setUniform1f("roughness",roughness);
 		shader->setUniform1f("intSpec",intSpec);
@@ -350,8 +362,7 @@ void render(){
 	glPopMatrix();
 	 
 
-	if (shader)
-		shader->end();
+	if (shader) shader->end();
 
 	
 	

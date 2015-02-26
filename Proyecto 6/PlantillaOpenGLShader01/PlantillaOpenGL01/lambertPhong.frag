@@ -11,6 +11,9 @@ uniform float eta;
 uniform float Kfr;
 
 uniform bool cook;
+/*uniform float m;
+uniform float refraccion;*/
+
 uniform float sharpness;
 uniform float roughness;
 
@@ -49,18 +52,41 @@ float fresnelFunc(vec3 camDirection, vec3 N, float bias, float eta, float Kfr){
 // glossy sharp
 float glossySharp(vec3 N, vec3 camDirection, vec4 L, float sharpness, float roughness){
    float w, c;
-   vec3 H;
+   vec3 H, Vn;
+   Vn = normalize(camDirection);
    w = 0.18 * (1.0-sharpness);
-   H = normalize(normalize(L.xyz)+camDirection);
+   H = normalize(normalize(L.xyz)+Vn);
    c = smoothstep(0.72-w, 0.72+w, pow(max(dot(N, H), 0.0), 1.0/roughness));
    return c;
 }
 
+// cook.torrence
+/*float distro(vec3 N, vec4 H, float m){
+   float ndoth;
+   float beta;
+   float tanbeta;
+   float tanbeta_over_m;
+   float D;
+   return D;
+}
+
+float fresnelCook(vec3 normal, vec3 light, float indexR)
+{
+   // Note: compute R0 on the CPU and provide as a
+   // constant; it is more efficient than computing R0 in
+   // the vertex shader. R0 is:
+   // float const R0 = pow(1.0refractionIndexRatio, 2.0)
+   // / pow(1.0+refractionIndexRatio, 2.0); Fresnel Reflection
+   //WP01401001_   v01 7
+   // light and normal are assumed to be normalized
+   float R0 = pow(1.0-indexR,2.0)/pow(1.0+indexR, 2.0);
+   return R0 + (1.0-R0) * pow(1.0-dot(light, normal), 5.0);
+}
+*/
 void main (void)  
 {   
    vec4 cFinal = vec4(0.0,0.0,0.0,1.0);
    float iDiff, iSpec;
-   vec3 vRef;
 
    // para el bias
    float c = 0.0;
@@ -68,33 +94,36 @@ void main (void)
    // para el fresnel
    float col = 0.0;
 
+   // para el cook-torrence
+   vec4 H;
+
    // para el glossy
    float g = 0.0;
 
-   //Componente Specular Phong
-   vRef = -normalize(reflect(L.xyz,N));
-   iSpec = pow(max(dot(vRef, normalize(camDirection)), 0.0),10.0);
-   iDiff = max(dot(normalize(N),normalize(L.xyz)), 0.0);
-
    if (cook == false){
       g = glossySharp(N, camDirection, L, sharpness, roughness);
-      iSpec += g;
+      iSpec = g;
    }
-
-   //intensidad Especular
-   if (intSpec>0.0){
-      iSpec = iSpec * intSpec;
-   }
-
-   //intensidad Difusa
-   if (intDiff>0.0){
-      iDiff = iDiff * intDiff;
+   else{
+/*      H = ((camDirection+L.xyz)/ normalize(camDirection+L.xyz));
+      distro(N,H,m);*/
    }
 
    if (fresnel == false){
       c = biasFinal(L,N,bias);
       //Componente difuso.
-      iDiff += c;
+      iDiff = c;
+
+      //intensidad Especular
+      if (intSpec>0.0){
+         iSpec = iSpec * intSpec;
+      }
+
+      //intensidad Difusa
+      if (intDiff>0.0){
+         iDiff = iDiff * intDiff;
+      }
+
       cFinal = vec4(10.0,0.0,0.0,1.0)*cLightAmb*cMatAmb + iDiff*(cLightDiff*cMatDiff) + iSpec*(cLightSpec*cMatSpec);
    }
    else {
