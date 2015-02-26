@@ -140,12 +140,12 @@ void Keyboard(unsigned char key, int x, int y)
 		}
 		break;
 	case 'e':
-		if (sharpness < 1.0) {
+		if (sharpness < 1.001) {
 			sharpness += 0.02;
 		}
 		break;
 	case 'r':
-		if (sharpness > 0.0){
+		if (sharpness > 0.001){
 			sharpness -= 0.02;
 		}
 		break;
@@ -153,7 +153,7 @@ void Keyboard(unsigned char key, int x, int y)
 		roughness += 0.02;
 		break;
 	case 'f':
-		if (roughness > 0.1){
+		if (roughness > 0.1001){
 			roughness -= 0.02;
 		}
 		break;
@@ -161,7 +161,7 @@ void Keyboard(unsigned char key, int x, int y)
 		eta += 0.02;
 		break;
 	case 'i':
-		if (eta > 0.0){
+		if (eta > 0.001){
 			eta -= 0.02;
 		}
 		break;
@@ -169,7 +169,7 @@ void Keyboard(unsigned char key, int x, int y)
 		Kfr += 0.1;
 		break;
 	case 'k':
-		if (Kfr > 0.0){
+		if (Kfr > 0.01){
 			Kfr -= 0.1;
 		}
 		break;
@@ -183,7 +183,7 @@ void Keyboard(unsigned char key, int x, int y)
 		intSpec += 0.1;
 		break;
 	case 'v':
-		if (intSpec > 0.0){
+		if (intSpec > 0.01){
 			intSpec -= 0.1;
 		}
 		break;
@@ -191,7 +191,7 @@ void Keyboard(unsigned char key, int x, int y)
 		intDiff += 0.1;
 		break;
 	case 'n':
-		if (intDiff > 0.0){
+		if (intDiff > 0.01){
 			intDiff -= 0.1;
 		}
 		break;
