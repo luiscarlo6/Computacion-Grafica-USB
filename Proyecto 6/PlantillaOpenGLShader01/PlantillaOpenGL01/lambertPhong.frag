@@ -14,6 +14,7 @@ uniform bool cook;
 uniform float refraccion;
 uniform float m;
 
+uniform bool glossy;
 uniform float sharpness;
 uniform float roughness;
 
@@ -32,7 +33,7 @@ float biasFinal(vec4 L, vec3 N, float bias){
    float cos_theta_1, c;
    Ln = normalize(L);
    Nn = normalize(N);
-   cos_theta_1 = dot(Ln.xyz,Nn);
+   cos_theta_1 = max(0.0,dot(Ln.xyz,Nn));
    c = biasFun(cos_theta_1, bias);   
    return c;
 }
@@ -62,24 +63,24 @@ float glossySharp(vec3 N, vec3 camDirection, vec4 L, float sharpness, float roug
 
 // cook-torrence
 float distro(vec3 N, vec3 H, float m){
-   float ndoth = dot(N,H);
+   float ndoth = max(0.0,dot(N,H));
    float beta = acos(ndoth);
    float tanbeta = tan(beta);
    float tanbeta_over_m = tanbeta/m;
    float D = exp(-(tanbeta_over_m*tanbeta_over_m));
-   D = D / (4 * (m*m) * pow(ndoth,4));
+   D /= 4 *m*m * pow(ndoth,4);
    return D;
 }
 
-float geom(vec3 N, vec3 H, vec4 L, vec3 V){
+float geom(vec3 N, vec3 H, vec3 L, vec3 V){
    float G;
-   float ndoth = dot(N,H);
-   float ndotv = dot(N,V);
-   float ndotl = dot(N,L.xyz);
-   float vdoth = dot(V,H);
+   float ndoth = max(0.0,dot(N,H));
+   float ndotv = max(0.0,dot(N,V));
+   float ndotl = max(0.0,dot(N,L));
+   float vdoth = max(0.0,dot(V,H));
 
-   float masking = (2 * (ndoth * ndotv)) / vdoth;
-   float shadowing = (2 * (ndoth * ndotl)) / vdoth;
+   float masking = (2 * ndoth * ndotv) / vdoth;
+   float shadowing = (2 * ndoth * ndotl) / vdoth;
    G = min(1,min(masking,shadowing));
    return G;
 }
@@ -92,26 +93,28 @@ float fresnelCook(vec3 normal, vec3 light, float indexR)
    return F;
 }
 
-float cookTorrence(vec3 N, vec3 camDirection, vec4 L, float m, float refraccion){
+float cookTorrence(vec3 N, vec3 camDirection, float m, float refraccion){
    vec3 Nn = normalize(N);
+   //vec3 Nf = faceforward(Nn,normalize(L.xyz),Nn);
+   //Nf = normalize(Nf);
    float ct = 0.0;
-   vec4 Ln = normalize(L);
+   vec3 Ln = normalize(L.xyz);
    vec3 V = normalize(camDirection);
-   vec3 H = normalize(Ln.xyz+V);
+   vec3 H = normalize(Ln+V);
    float D = distro(Nn,H,m);
    float G = geom(Nn,H,Ln,V);
-   float F = fresnelCook(Nn,Ln.xyz,refraccion);
-   ct = (D*G)*F;
-   float vdotn = dot(V,Nn);
+   float F = fresnelCook(Nn,V,refraccion);
+   ct = D*G*F;
+   float vdotn = max(0.0,dot(V,Nn));
    ct = vdotn;
-   ct /= 3.1415;
+   ct /= 3.14159265359;
    return ct;
 }
 
 void main (void)  
 {   
    vec4 cFinal = vec4(0.0,0.0,0.0,1.0);
-   float iDiff, iSpec;
+   float iDiff = 0.0, iSpec = 0.0;
 
    // para el bias
    float c = 0.0;
@@ -119,26 +122,23 @@ void main (void)
    // para el fresnel
    float col = 0.0;
 
-   // para el cook-torrence
-   vec4 H;
-
    // para el glossy o el cook
    float g = 0.0;
 
    if (cook == false){
-      g = glossySharp(N, camDirection, L, sharpness, roughness);
-      iSpec = g;
+      if (glossy == true){
+         g = glossySharp(N, camDirection, L, sharpness, roughness);
+         iSpec = g;
+      }
    }
    else{
-      g = cookTorrence(N,camDirection,L,m,refraccion);
+      g = cookTorrence(N,camDirection,m,refraccion);
       iSpec = g;
    }
 
    if (fresnel == false){
-      c = biasFinal(L,N,bias);
-      //Componente difuso.
-      iDiff = c;
 
+      c = biasFinal(L,N,bias);
       //intensidad Especular
       if (intSpec>0.0){
          iSpec = iSpec * intSpec;
@@ -146,10 +146,11 @@ void main (void)
 
       //intensidad Difusa
       if (intDiff>0.0){
+         iDiff = c;
          iDiff = iDiff * intDiff;
       }
 
-      cFinal = vec4(10.0,0.0,0.0,1.0)*cLightAmb*cMatAmb + iDiff*(cLightDiff*cMatDiff) + iSpec*(cLightSpec*cMatSpec);
+      cFinal = vec4(0.0,0.0,0.0,1.0)*cLightAmb*cMatAmb + iDiff*(cLightDiff*cMatDiff) + iSpec*(cLightSpec*cMatSpec);
    }
    else {
       col = fresnelFunc(camDirection,N,bias,eta,Kfr);

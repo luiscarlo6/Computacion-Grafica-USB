@@ -41,6 +41,7 @@ GLfloat intDiff;
 
 bool fresnel;
 bool cook;
+bool glossy;
 
 char mensaje_fresnel[20];
 char mensaje_difuso[20];
@@ -91,6 +92,7 @@ void init(){
 	refraccion = 1.0;
 	m = 0.0;
 
+	glossy = false;
 	sharpness = 0.0;
 	roughness = 0.1;
 
@@ -98,8 +100,8 @@ void init(){
 	strcpy(mensaje_difuso,"BIAS");
 	strcpy(mensaje_especular,"GLOSSY SHARP");
 
-	intSpec = 0.0;
-	intDiff = 0.0;
+	intSpec = 1.0;
+	intDiff = 1.0;
 }
 
 
@@ -109,10 +111,12 @@ void Keyboard(unsigned char key, int x, int y)
   {
 	case '1':
 		cook = false;
+		glossy = !glossy;
 		strcpy(mensaje_especular,"GLOSSY SHARP");
 		break;
 	case '2':
-		cook = true;
+		cook = !cook;
+		glossy = false;
 		strcpy(mensaje_especular,"COOK-TORRENCE");
 		break;
 	case '3':
@@ -200,6 +204,9 @@ void Keyboard(unsigned char key, int x, int y)
 		break;
   }
 
+  if ((glossy==false)&&(cook==false)){
+	  strcpy(mensaje_especular,"DESACTIVADO");
+  }
   system("cls");
   cout<<"Valores de las variables"<<endl
 	  <<"-----------------------------------------"<<endl<<endl
@@ -331,6 +338,7 @@ void render(){
 		shader->setUniform1f("cook",cook);
 		shader->setUniform1f("refraccion",refraccion);
 		shader->setUniform1f("m",m);
+		shader->setUniform1f("glossy",glossy);
 		shader->setUniform1f("sharpness",sharpness);
 		shader->setUniform1f("roughness",roughness);
 		shader->setUniform1f("intSpec",intSpec);
