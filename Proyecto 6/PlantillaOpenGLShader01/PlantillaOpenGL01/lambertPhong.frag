@@ -95,8 +95,6 @@ float fresnelCook(vec3 normal, vec3 light, float indexR)
 
 float cookTorrence(vec3 N, vec3 camDirection, float m, float refraccion){
    vec3 Nn = normalize(N);
-   //vec3 Nf = faceforward(Nn,normalize(L.xyz),Nn);
-   //Nf = normalize(Nf);
    float ct = 0.0;
    vec3 Ln = normalize(L.xyz);
    vec3 V = normalize(camDirection);
@@ -106,7 +104,7 @@ float cookTorrence(vec3 N, vec3 camDirection, float m, float refraccion){
    float F = fresnelCook(Nn,V,refraccion);
    ct = D*G*F;
    float vdotn = max(0.0,dot(V,Nn));
-   ct = vdotn;
+   ct /= vdotn;
    ct /= 3.14159265359;
    return ct;
 }
@@ -114,7 +112,7 @@ float cookTorrence(vec3 N, vec3 camDirection, float m, float refraccion){
 void main (void)  
 {   
    vec4 cFinal = vec4(0.0,0.0,0.0,1.0);
-   float iDiff = 0.0, iSpec = 0.0;
+   float iDiff = 1.0, iSpec = 1.0;
 
    // para el bias
    float c = 0.0;
