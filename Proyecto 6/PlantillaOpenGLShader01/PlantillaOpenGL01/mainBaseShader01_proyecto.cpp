@@ -187,7 +187,7 @@ void Keyboard(unsigned char key, int x, int y)
 		intSpec += 0.1;
 		break;
 	case 'v':
-		if (intSpec > 0.01){
+		if (intSpec > 0.11){
 			intSpec -= 0.1;
 		}
 		break;
