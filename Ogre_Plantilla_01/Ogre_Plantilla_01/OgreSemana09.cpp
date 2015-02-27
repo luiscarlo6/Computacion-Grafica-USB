@@ -1,5 +1,5 @@
-#include "stdafx.h"
-
+#include "Ogre\Ogre.h"
+#include "OIS\OIS.h"
 
 class FrameListenerProyectos : public Ogre::FrameListener{
 private:
