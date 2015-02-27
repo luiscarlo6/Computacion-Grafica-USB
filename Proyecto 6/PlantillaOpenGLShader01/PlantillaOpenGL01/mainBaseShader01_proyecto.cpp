@@ -140,7 +140,7 @@ void Keyboard(unsigned char key, int x, int y)
 		}
 		break;
 	case 'e':
-		if (sharpness < 1.001) {
+		if (sharpness < 0.999) {
 			sharpness += 0.02;
 		}
 		break;
