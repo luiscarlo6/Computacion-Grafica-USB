@@ -11,8 +11,8 @@ uniform float eta;
 uniform float Kfr;
 
 uniform bool cook;
-/*uniform float m;
-uniform float refraccion;*/
+uniform float refraccion;
+uniform float m;
 
 uniform float sharpness;
 uniform float roughness;
@@ -60,29 +60,54 @@ float glossySharp(vec3 N, vec3 camDirection, vec4 L, float sharpness, float roug
    return c;
 }
 
-// cook.torrence
-/*float distro(vec3 N, vec4 H, float m){
-   float ndoth;
-   float beta;
-   float tanbeta;
-   float tanbeta_over_m;
-   float D;
+// cook-torrence
+float distro(vec3 N, vec3 H, float m){
+   float ndoth = dot(N,H);
+   float beta = acos(ndoth);
+   float tanbeta = tan(beta);
+   float tanbeta_over_m = tanbeta/m;
+   float D = exp(-(tanbeta_over_m*tanbeta_over_m));
+   D = D / (4 * (m*m) * pow(ndoth,4));
    return D;
+}
+
+float geom(vec3 N, vec3 H, vec4 L, vec3 V){
+   float G;
+   float ndoth = dot(N,H);
+   float ndotv = dot(N,V);
+   float ndotl = dot(N,L.xyz);
+   float vdoth = dot(V,H);
+
+   float masking = (2 * (ndoth * ndotv)) / vdoth;
+   float shadowing = (2 * (ndoth * ndotl)) / vdoth;
+   G = min(1,min(masking,shadowing));
+   return G;
 }
 
 float fresnelCook(vec3 normal, vec3 light, float indexR)
 {
-   // Note: compute R0 on the CPU and provide as a
-   // constant; it is more efficient than computing R0 in
-   // the vertex shader. R0 is:
-   // float const R0 = pow(1.0refractionIndexRatio, 2.0)
-   // / pow(1.0+refractionIndexRatio, 2.0); Fresnel Reflection
-   //WP01401001_   v01 7
-   // light and normal are assumed to be normalized
-   float R0 = pow(1.0-indexR,2.0)/pow(1.0+indexR, 2.0);
-   return R0 + (1.0-R0) * pow(1.0-dot(light, normal), 5.0);
+   float F;
+   float R0 = pow((1.0-indexR),2)/pow((1.0+indexR),2);
+   F = R0 + ((1.0-R0)*pow((1.0-dot(light,normal)),5));
+   return F;
 }
-*/
+
+float cookTorrence(vec3 N, vec3 camDirection, vec4 L, float m, float refraccion){
+   vec3 Nn = normalize(N);
+   float ct = 0.0;
+   vec4 Ln = normalize(L);
+   vec3 V = normalize(camDirection);
+   vec3 H = normalize(Ln.xyz+V);
+   float D = distro(Nn,H,m);
+   float G = geom(Nn,H,Ln,V);
+   float F = fresnelCook(Nn,Ln.xyz,refraccion);
+   ct = (D*G)*F;
+   float vdotn = dot(V,Nn);
+   ct = vdotn;
+   ct /= 3.1415;
+   return ct;
+}
+
 void main (void)  
 {   
    vec4 cFinal = vec4(0.0,0.0,0.0,1.0);
@@ -97,7 +122,7 @@ void main (void)
    // para el cook-torrence
    vec4 H;
 
-   // para el glossy
+   // para el glossy o el cook
    float g = 0.0;
 
    if (cook == false){
@@ -105,8 +130,8 @@ void main (void)
       iSpec = g;
    }
    else{
-/*      H = ((camDirection+L.xyz)/ normalize(camDirection+L.xyz));
-      distro(N,H,m);*/
+      g = cookTorrence(N,camDirection,L,m,refraccion);
+      iSpec = g;
    }
 
    if (fresnel == false){

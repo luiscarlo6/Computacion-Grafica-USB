@@ -127,7 +127,7 @@ void Keyboard(unsigned char key, int x, int y)
 		refraccion += 0.15;
 		break;
     case 'w':
-		if (refraccion < 1.001){
+		if (refraccion > 1.001){
 			refraccion -= 0.15;
 		}
 		break;
@@ -135,7 +135,7 @@ void Keyboard(unsigned char key, int x, int y)
 		m += 0.01;
 		break;
 	case 'm':
-		if (m < 0.001){
+		if (m > 0.001){
 			m -= 0.01;
 		}
 		break;
@@ -200,10 +200,11 @@ void Keyboard(unsigned char key, int x, int y)
 		break;
   }
 
+  system("cls");
   cout<<"Valores de las variables"<<endl
 	  <<"-----------------------------------------"<<endl<<endl
 	  <<"SPECULAR ACTIVO = "<<mensaje_especular<<endl
-	  <<"DIFFUSE ACTIVO ="<<mensaje_difuso<<endl
+	  <<"DIFFUSE ACTIVO = "<<mensaje_difuso<<endl
 	  <<"FRESNEL "<<mensaje_fresnel<<endl
 	  <<"======================================================="<<endl
 	  <<"Diffuse Variables"<<endl
@@ -328,8 +329,8 @@ void render(){
 		shader->setUniform1f("eta",eta);
 		shader->setUniform1f("Kfr", Kfr);
 		shader->setUniform1f("cook",cook);
-/*		shader->setUniform1f("m",m);
-		shader->setUniform1f("refracion",refraccion);*/
+		shader->setUniform1f("refraccion",refraccion);
+		shader->setUniform1f("m",m);
 		shader->setUniform1f("sharpness",sharpness);
 		shader->setUniform1f("roughness",roughness);
 		shader->setUniform1f("intSpec",intSpec);
