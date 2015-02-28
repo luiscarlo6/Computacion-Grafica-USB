@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 
+
 class FrameListenerProyectos : public Ogre::FrameListener{
 private:
 	Ogre::SceneNode* nodoF01;
@@ -157,11 +158,14 @@ public:
 
 	 void createScene(){
 		 _sceneManager->setAmbientLight(Ogre::ColourValue(1.0f,1.0f,1.0f));
+		 Ogre::SceneNode* nodeEsfera02;
+		 Ogre::Light* light02;
 
 		 Ogre::SceneNode* nM01 = _sceneManager->createSceneNode("nm01");
 		 Ogre::Entity* entMesh01 = _sceneManager->createEntity("Entnm01", "proyectoOgreI.mesh");
 		 _sceneManager->getRootSceneNode()->addChild(nM01);
 		 nM01->attachObject(entMesh01);
+		 entMesh01->setMaterialName("mat02");
 
 		 Ogre::SceneNode* nM02 = _sceneManager->createSceneNode("nm02");
 		 Ogre::Entity* entMesh02 = _sceneManager->createEntity("Entnm02", "ejes01.mesh");
@@ -174,6 +178,27 @@ public:
 		 _sceneManager->getRootSceneNode()->addChild(nM03);
 		 nM03->attachObject(entMesh03);
 		 nM03->scale(5.0f,5.0f,5.0f);
+		 entMesh03->setMaterialName("mat01");
+
+		 Ogre::Entity* entEsfera02 = _sceneManager->createEntity("EntEsfera02","sphere.mesh");
+		//Ogre::SceneNode* nodeEsfera02 = mSceneMgr->createSceneNode("NodeEsfera02");
+		nodeEsfera02 = _sceneManager->createSceneNode("NodeEsfera02");
+		_sceneManager->getRootSceneNode()->addChild(nodeEsfera02);
+		nodeEsfera02->attachObject(entEsfera02);
+
+		 //NODO LUZ
+		float lightScale = 0.9f;
+		Ogre::SceneNode* nodeLuz02 = _sceneManager->createSceneNode("NodeLuz02");		
+		light02 = _sceneManager->createLight("LuzPoint01");
+		light02->setType(Ogre::Light::LT_POINT);		
+		light02->setDiffuseColour(lightScale*Ogre::ColourValue(2.0f,2.0f,2.0f));	
+		nodeLuz02->attachObject(light02);
+
+
+		nodeEsfera02->addChild(nodeLuz02);
+		nodeEsfera02->setScale(0.05f,0.05f,0.05f);
+		nodeEsfera02->setPosition(-500.0f,500.0f,500.0f);
+
 	 }
 };
 
