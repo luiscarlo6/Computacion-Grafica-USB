@@ -1,0 +1,44 @@
+material mat01
+{
+
+	technique
+	{
+
+		pass
+		{
+
+			ambient 0.1 0.1 0.1 1.0
+			diffuse 1.0 0.6 1.0 1.0
+			specular 1.0 1.0 1.0 1.0
+			emissive 10.0 0.0 0.0 1.0
+			
+			texture_unit
+			{
+				texture Panels_reflection.png
+				scale 1 1
+				rotate_anim 0.1
+			}
+		}
+
+	}
+}
+
+material mat02
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.1 0.1 0.1 1.0
+			diffuse 1.0 0.6 1.0 1.0
+
+			texture_unit
+			{
+				texture BumpyMetal.jpg
+				scale   0.01 0.01
+				rotate_anim 0.001
+			}
+		}
+
+	}
+}
