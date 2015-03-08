@@ -1,0 +1,143 @@
+material OMV/SkyBoxTron
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture fronttron.jpg backtron.jpg lefttron.jpg righttron.jpg uptron.jpg downtron.jpg separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material OMV/SkyBoxSP2
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture sp2left.jpg sp2right.jpg sp2front.jpg sp2back.jpg sp2top.jpg sp2bot.jpg separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material OMV/SkyBoxMoon
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture front2moon.jpg back2moon.jpg left2moon.jpg right2moon.jpg top2moon.jpg bot2moon.jpg separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material OMV/SkyBoxH
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture skyhfront.jpg skyhback.jpg skyhleft.jpg skyhright.jpg uphback.jpg downhback.jpg separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material OMV/SkyBoxPE
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture frontpe.jpg backpe.jpg leftpe.jpg rightpe.jpg toppe.jpg botpe.jpg separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material OMV/SkyBoxGAZ
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture frontgaz.jpg backgaz.jpg leftgaz.jpg rightgaz.jpg topgaz.jpg botgaz.jpg separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material OMV/SkyBoxMars
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture frontmars1.jpg backmars1.jpg leftmars1.jpg rightmars1.jpg topmars1.jpg botmars1.jpg separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material OMV/SkyBoxMo
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture frontmo.jpg backmo.jpg leftmo.jpg rightmo.jpg  botmo.jpg topmo.jpg separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}

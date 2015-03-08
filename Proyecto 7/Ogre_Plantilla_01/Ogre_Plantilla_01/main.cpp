@@ -132,16 +132,29 @@ public:
 
 	 int startup(){
 		 _root = new Ogre::Root("plugins_d.cfg");
+		 /*
 		 if(!_root->showConfigDialog()){
 			 return -1;
 		 }
+		 */
+
+		 Ogre::RenderSystem* _rs = _root->getRenderSystemByName("Direct3D9 Rendering Subsystem");
+		// or use "OpenGL Rendering Subsystem"
+		_root->setRenderSystem(_rs);
+		_rs->setConfigOption("Full Screen", "No");
+		_rs->setConfigOption("Video Mode", "800 x 600 @ 32-bit colour");
+		_rs->setConfigOption("FSAA", "0");
+		_rs->setConfigOption("Floating-point mode", "Fastest");
+		_rs->setConfigOption("Use Multihead", "Auto");
+		_rs->setConfigOption("VSync", "No");
+		_rs->setConfigOption("VSync Interval", "1");
 
 		 Ogre::RenderWindow* window = _root->initialise(true, "Ventana Ogre");
 
 		 _sceneManager =  _root->createSceneManager(Ogre::ST_GENERIC);
 
 		 Ogre::Camera* camera = _sceneManager->createCamera("Camera");
-		 camera->setPosition(Ogre::Vector3(1100,1100,1100));
+		 camera->setPosition(Ogre::Vector3(0.0f,1100.0f,3000.0f));
 		 camera->lookAt(Ogre::Vector3(0,0,0));
 		 camera->setNearClipDistance(5);
 
@@ -161,15 +174,20 @@ public:
 
 	 void createScene(){
 		_sceneManager->setAmbientLight(Ogre::ColourValue(1.0f,1.0f,1.0f));
+		_sceneManager->setSkyBox(true, "OMV/SkyBoxH");
 
-		Ogre::Plane plane(Ogre::Vector3::UNIT_Y , 0.0);
+		Ogre::Plane plane(Ogre::Vector3::UNIT_Y , -5000.0);
 
 		Ogre::MeshManager::getSingleton().createPlane("plane", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-						plane, 10000,20000,200,200,true, 1,10,10, Ogre::Vector3::UNIT_Z);
-
+						plane, 10000,90000,200,200,true, 1,10,10, Ogre::Vector3::UNIT_Z);
+		Ogre::SceneNode* nodePlano;
 		Ogre::Entity* entPlano = _sceneManager->createEntity("PlanoEntity","plane");
-		_sceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(entPlano);
+		nodePlano = _sceneManager->createSceneNode("NodePlano");
+		nodePlano->attachObject(entPlano);
+		_sceneManager->getRootSceneNode()->addChild(nodePlano);
 		entPlano->setMaterialName("mat02");
+		nodePlano->translate(Ogre::Vector3(0.0f,0.0f,-45000.0f));
+		
 
 		Ogre::SceneNode* nodeEsfera02;
 		Ogre::Light* light02;
@@ -192,12 +210,7 @@ public:
 		nodeEsfera02->setScale(0.05f,0.05f,0.05f);
 		nodeEsfera02->setPosition(0.0f,5000.0f,0.0f);
 
-
-		Ogre::Entity* ent01 = _sceneManager->createEntity("MyEntity1","ejes01.mesh");
-		Ogre::SceneNode* node01 = _sceneManager->createSceneNode("Node01");
-		_sceneManager->getRootSceneNode()->addChild(node01);
-		node01->attachObject(ent01);
-		node01->setScale(100.0f,100.0f,100.0f);
+		Nave* nave = new Nave(_sceneManager, _sceneManager->getCamera("Camera"));
 	 }
 };
 
