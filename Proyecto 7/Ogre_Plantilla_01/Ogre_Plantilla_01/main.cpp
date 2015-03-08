@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-Ogre::SceneNode* nM03;
+Moneda* moneda;
 
 class FrameListenerProyectos : public Ogre::FrameListener{
 private:
@@ -31,7 +31,6 @@ public:
 			return false;
 
 		Ogre::Vector3 t(0,0,0);
-		Ogre::Vector3 t_ogro(0,0,0);
 
 		if (_key->isKeyDown(OIS::KC_W))
 			t += Ogre::Vector3(0,0,-10);
@@ -45,15 +44,17 @@ public:
 		if (_key->isKeyDown(OIS::KC_D))
 			t += Ogre::Vector3(10,0,0);
 
+		if(_key->isKeyDown(OIS::KC_I))
+			std::cout<<"CAMARA:"<<_cam->getPosition()<<std::endl;
 
-		t_ogro+= Ogre::Vector3(0,0,-100);
 		_cam->moveRelative(t*evt.timeSinceLastFrame*movSpeed);
 		float rotX = _mouse->getMouseState().X.rel * evt.timeSinceLastFrame* -1;
 		float rotY = _mouse->getMouseState().Y.rel * evt.timeSinceLastFrame * -1;
 		_cam->yaw(Ogre::Radian(rotX));
 		_cam->pitch(Ogre::Radian(rotY));
-		
-		//nM03->translate(t_ogro*evt.timeSinceLastFrame);
+
+		moneda->animState->addTime(evt.timeSinceLastFrame);
+
 		return true;
 	}
 
@@ -211,6 +212,8 @@ public:
 		nodeEsfera02->setPosition(0.0f,5000.0f,0.0f);
 
 		Nave* nave = new Nave(_sceneManager, _sceneManager->getCamera("Camera"));
+
+		moneda = new Moneda("1",_sceneManager,0.0,0.0,-1000.0);
 	 }
 };
 
