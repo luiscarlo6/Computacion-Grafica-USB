@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Aro.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Moneda.cpp" />
     <ClCompile Include="Nave.cpp" />
@@ -19,6 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Aro.h" />
     <ClInclude Include="Moneda.h" />
     <ClInclude Include="Nave.h" />
     <ClInclude Include="stdafx.h" />

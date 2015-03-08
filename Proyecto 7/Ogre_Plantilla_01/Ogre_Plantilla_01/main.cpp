@@ -214,6 +214,8 @@ public:
 		Nave* nave = new Nave(_sceneManager, _sceneManager->getCamera("Camera"));
 
 		moneda = new Moneda("1",_sceneManager,0.0,0.0,-1000.0);
+
+		Aro* aro = new Aro("1",_sceneManager,0.0,0.0,-1000.0);
 	 }
 };
 

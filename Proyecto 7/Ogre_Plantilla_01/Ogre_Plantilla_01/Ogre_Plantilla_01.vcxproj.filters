@@ -27,6 +27,9 @@
     <ClCompile Include="Moneda.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Aro.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Nave.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Moneda.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Aro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
