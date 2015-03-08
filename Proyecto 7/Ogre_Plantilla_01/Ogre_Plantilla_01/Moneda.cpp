@@ -8,7 +8,7 @@ Moneda::Moneda( Ogre::String nombre , Ogre::SceneManager* sm , float _x , float 
 	_sceneManager = sm;
 	Ogre::Vector3 scale = Ogre::Vector3(0.7);
 
-	nodoMoneda = _sceneManager->createSceneNode("moneda"+nombre);
+	nodoMoneda = _sceneManager->createSceneNode("moneda_"+nombre);
 	_sceneManager->getRootSceneNode()->addChild(nodoMoneda);
 	Ogre::Entity* entMoneda = _sceneManager->createEntity("poly14.mesh");
 	entMoneda->setMaterialName("mat02");
@@ -19,7 +19,7 @@ Moneda::Moneda( Ogre::String nombre , Ogre::SceneManager* sm , float _x , float 
 
 	Ogre::Real duration=4.0;
 	Ogre::Real step=duration/4.0;
-	Ogre::Animation* animation = _sceneManager->createAnimation("AnimMoneda"+nombre,duration);
+	Ogre::Animation* animation = _sceneManager->createAnimation("AnimMoneda_"+nombre,duration);
 	animation->setInterpolationMode(Ogre::Animation::IM_SPLINE);
 	animation->setRotationInterpolationMode(Ogre::Animation::RIM_SPHERICAL);
 	Ogre::NodeAnimationTrack* track = animation->createNodeTrack(0,nodoMoneda);
@@ -61,7 +61,7 @@ Moneda::Moneda( Ogre::String nombre , Ogre::SceneManager* sm , float _x , float 
 	key->setRotation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(360.0)),Ogre::Vector3(1.0,1.0,1.0)));
 	
 
-	animState = _sceneManager->createAnimationState("AnimMoneda"+nombre);
+	animState = _sceneManager->createAnimationState("AnimMoneda_"+nombre);
 	animState->setEnabled(true);
 	animState->setLoop(true);
 }

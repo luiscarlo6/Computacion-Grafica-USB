@@ -15,6 +15,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Moneda.cpp" />
     <ClCompile Include="Nave.cpp" />
+    <ClCompile Include="Obstaculo.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -23,6 +24,7 @@
     <ClInclude Include="Aro.h" />
     <ClInclude Include="Moneda.h" />
     <ClInclude Include="Nave.h" />
+    <ClInclude Include="Obstaculo.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

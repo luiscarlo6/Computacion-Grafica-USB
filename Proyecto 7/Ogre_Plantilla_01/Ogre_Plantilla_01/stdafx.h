@@ -4,3 +4,4 @@
 #include "Nave.h"
 #include "Moneda.h"
 #include "Aro.h"
+#include "Obstaculo.h"

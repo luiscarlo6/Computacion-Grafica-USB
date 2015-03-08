@@ -1,6 +1,8 @@
 #include "stdafx.h"
-
-Moneda* moneda;
+bool freemoving = false;
+int num_monedas = 45;
+Moneda* moneda[45];
+Nave* nave;
 
 class FrameListenerProyectos : public Ogre::FrameListener{
 private:
@@ -33,19 +35,37 @@ public:
 		Ogre::Vector3 t(0,0,0);
 
 		if (_key->isKeyDown(OIS::KC_W))
-			t += Ogre::Vector3(0,0,-10);
-
+			if (freemoving)
+				t += Ogre::Vector3(0,0,-10);
+			else
+				nave->moverAdelante();
 		if (_key->isKeyDown(OIS::KC_S))
-			t += Ogre::Vector3(0,0,10);
+			if (freemoving)
+				t += Ogre::Vector3(0,0,10);
+			else
+				nave->moverAtras();
 
 		if (_key->isKeyDown(OIS::KC_A))
-			t += Ogre::Vector3(-10,0,0);
+			if (freemoving)
+				t += Ogre::Vector3(-10,0,0);
+			else
+				nave->moverIzquierda();
 
 		if (_key->isKeyDown(OIS::KC_D))
-			t += Ogre::Vector3(10,0,0);
+			if (freemoving)
+				t += Ogre::Vector3(10,0,0);
+			else
+				nave->moverDerecha();
+
+		if (_key->isKeyDown(OIS::KC_UP))
+			nave->moverArriba();
+
+		if (_key->isKeyDown(OIS::KC_DOWN))
+			nave->moverAbajo();
 
 		if(_key->isKeyDown(OIS::KC_I))
-			std::cout<<"CAMARA:"<<_cam->getPosition()<<std::endl;
+			std::cout<<"CAMARA:"<<_cam->getPosition()<<std::endl
+					 <<"NAVE:"<<nave->nodoNave->getPosition()<<std::endl;
 
 		_cam->moveRelative(t*evt.timeSinceLastFrame*movSpeed);
 		float rotX = _mouse->getMouseState().X.rel * evt.timeSinceLastFrame* -1;
@@ -53,7 +73,11 @@ public:
 		_cam->yaw(Ogre::Radian(rotX));
 		_cam->pitch(Ogre::Radian(rotY));
 
-		moneda->animState->addTime(evt.timeSinceLastFrame);
+		for (int i = 0; i < num_monedas; i++)
+		{
+			moneda[i]->animState->addTime(evt.timeSinceLastFrame);
+		}
+		
 
 		return true;
 	}
@@ -155,7 +179,7 @@ public:
 		 _sceneManager =  _root->createSceneManager(Ogre::ST_GENERIC);
 
 		 Ogre::Camera* camera = _sceneManager->createCamera("Camera");
-		 camera->setPosition(Ogre::Vector3(0.0f,1100.0f,3000.0f));
+		 camera->setPosition(Ogre::Vector3(0.0f,500.0f,-3000.0f));
 		 camera->lookAt(Ogre::Vector3(0,0,0));
 		 camera->setNearClipDistance(5);
 
@@ -175,6 +199,8 @@ public:
 
 	 void createScene(){
 		_sceneManager->setAmbientLight(Ogre::ColourValue(1.0f,1.0f,1.0f));
+		_sceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+
 		_sceneManager->setSkyBox(true, "OMV/SkyBoxH");
 
 		Ogre::Plane plane(Ogre::Vector3::UNIT_Y , -5000.0);
@@ -187,9 +213,9 @@ public:
 		nodePlano->attachObject(entPlano);
 		_sceneManager->getRootSceneNode()->addChild(nodePlano);
 		entPlano->setMaterialName("mat02");
-		nodePlano->translate(Ogre::Vector3(0.0f,0.0f,-45000.0f));
+		nodePlano->translate(Ogre::Vector3(0.0f,0.0f,45000.0f));
 		
-
+		
 		Ogre::SceneNode* nodeEsfera02;
 		Ogre::Light* light02;
 		Ogre::Entity* entEsfera02 = _sceneManager->createEntity("EntEsfera02","sphere.mesh");
@@ -211,11 +237,16 @@ public:
 		nodeEsfera02->setScale(0.05f,0.05f,0.05f);
 		nodeEsfera02->setPosition(0.0f,5000.0f,0.0f);
 
-		Nave* nave = new Nave(_sceneManager, _sceneManager->getCamera("Camera"));
+		nave = new Nave(_sceneManager, _sceneManager->getCamera("Camera"));
 
-		moneda = new Moneda("1",_sceneManager,0.0,0.0,-1000.0);
+		for (int i = 0; i < num_monedas; i++)
+		{
+			moneda[i] = new Moneda(std::to_string(i),_sceneManager,0.0,pow(-1,i)*250.0,i*2000.0);
+		}
 
-		Aro* aro = new Aro("1",_sceneManager,0.0,0.0,-1000.0);
+		//Aro* aro = new Aro("1",_sceneManager,0.0,0.0,1000.0);
+
+		//Obstaculo obs = Obstaculo("1",1,_sceneManager,0.0,0.0,2000.0);
 	 }
 };
 
