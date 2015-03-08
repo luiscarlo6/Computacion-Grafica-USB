@@ -35,8 +35,8 @@ material mat02
 			texture_unit
 			{
 				texture BumpyMetal.jpg
-				scale   0.01 0.01
-				rotate_anim 0.001
+				scale   2.0 2.0
+//				rotate_anim 0.001
 			}
 		}
 
