@@ -8,6 +8,8 @@ class Nave{
 		Ogre::Camera* camera;
 		Ogre::SceneManager* mSceneMgr;
 		Ogre::SceneNode* nodoNave;
+		Ogre::SceneNode* nodoEntNave;
+		Ogre::SceneNode* nodoCamara;
 		Ogre::AnimationState* animStateDer;
 		Ogre::AnimationState* animStateIzq;
 		float x;
@@ -25,6 +27,8 @@ class Nave{
 
 		void Nave::moverAtras();
 
+		void Nave::reset();
+
 		Ogre::Quaternion Nave::girarDerecha();
 
 		void Nave::moverIzquierda();
@@ -38,9 +42,5 @@ class Nave{
 		void Nave::moverAbajo();
 
 		void Nave::rotarDerecha();
-
-		void Nave::rotarIzquierda();
-
-		void Nave::arreglar();
 
 };

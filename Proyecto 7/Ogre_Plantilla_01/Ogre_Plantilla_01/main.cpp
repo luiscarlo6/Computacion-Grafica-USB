@@ -56,29 +56,34 @@ public:
 				t += Ogre::Vector3(10,0,0);
 			else
 				nave->moverDerecha();
-
 		if (_key->isKeyDown(OIS::KC_UP))
 			nave->moverArriba();
 
 		if (_key->isKeyDown(OIS::KC_DOWN))
 			nave->moverAbajo();
 
+		if (!_key->isKeyDown(OIS::KC_A) && !_key->isKeyDown(OIS::KC_D))
+			nave->reset();
+
 		if(_key->isKeyDown(OIS::KC_I))
 			std::cout<<"CAMARA:"<<_cam->getPosition()<<std::endl
 					 <<"NAVE:"<<nave->nodoNave->getPosition()<<std::endl;
 
 		_cam->moveRelative(t*evt.timeSinceLastFrame*movSpeed);
-		float rotX = _mouse->getMouseState().X.rel * evt.timeSinceLastFrame* -1;
-		float rotY = _mouse->getMouseState().Y.rel * evt.timeSinceLastFrame * -1;
-		_cam->yaw(Ogre::Radian(rotX));
-		_cam->pitch(Ogre::Radian(rotY));
-
+		if (freemoving){
+			float rotX = _mouse->getMouseState().X.rel * evt.timeSinceLastFrame* -1;
+			float rotY = _mouse->getMouseState().Y.rel * evt.timeSinceLastFrame * -1;
+		
+			_cam->yaw(Ogre::Radian(rotX));
+			_cam->pitch(Ogre::Radian(rotY));
+		}
 		for (int i = 0; i < num_monedas; i++)
 		{
 			moneda[i]->animState->addTime(evt.timeSinceLastFrame);
 		}
 		
-
+		nave->animStateDer->addTime(evt.timeSinceLastFrame);
+		nave->animStateIzq->addTime(evt.timeSinceLastFrame);
 		return true;
 	}
 
