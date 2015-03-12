@@ -201,7 +201,7 @@ public:
 		_sceneManager->setAmbientLight(Ogre::ColourValue(1.0f,1.0f,1.0f));
 		_sceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
-		_sceneManager->setSkyBox(true, "OMV/SkyBoxUnderwater");
+		_sceneManager->setSkyBox(true, "OMV/SkyBoxUnderwater1");
 
 		Ogre::Plane plane(Ogre::Vector3::UNIT_Y , -5000.0);
 
@@ -212,7 +212,7 @@ public:
 		nodePlano = _sceneManager->createSceneNode("NodePlano");
 		nodePlano->attachObject(entPlano);
 		_sceneManager->getRootSceneNode()->addChild(nodePlano);
-		entPlano->setMaterialName("mat02");
+		entPlano->setMaterialName("plano");
 		nodePlano->translate(Ogre::Vector3(0.0f,0.0f,45000.0f));
 		
 		

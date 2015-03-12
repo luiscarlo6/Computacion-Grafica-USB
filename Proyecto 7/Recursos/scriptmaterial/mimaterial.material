@@ -43,6 +43,27 @@ material mat02
 	}
 }
 
+material plano
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.6 0.6 0.6 1.0
+			diffuse 1.0 0.6 1.0 1.0
+
+			texture_unit
+			{
+				tex_address_mode mirror
+				texture underwater.jpg
+				scale 10.0 1.0
+
+				rotate_anim 0.01
+			}
+		}
+
+	}
+}
 
 material RZR-002
 {
