@@ -201,7 +201,7 @@ public:
 		_sceneManager->setAmbientLight(Ogre::ColourValue(1.0f,1.0f,1.0f));
 		_sceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
-		_sceneManager->setSkyBox(true, "OMV/SkyBoxH");
+		_sceneManager->setSkyBox(true, "OMV/SkyBoxUnderwater");
 
 		Ogre::Plane plane(Ogre::Vector3::UNIT_Y , -5000.0);
 

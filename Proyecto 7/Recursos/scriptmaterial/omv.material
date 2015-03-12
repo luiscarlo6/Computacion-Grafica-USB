@@ -141,3 +141,57 @@ material OMV/SkyBoxMo
 		}
 	}
 }
+
+material OMV/SkyBoxUnderwater
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture underwater_front.jpg underwater_back.jpg underwater_left.jpg underwater_right.jpg underwater_top.jpg underwater_bot.jpg separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material OMV/SkyBoxUnderwater1
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture aqua4_ft.jpg aqua4_bk.jpg aqua4_rt.jpg aqua4_lf.jpg aqua4_up.jpg aqua4_dn.jpg separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material OMV/SkyBoxUnderwater2
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture aqua9_ft.jpg aqua9_bk.jpg aqua9_rt.jpg aqua9_lf.jpg aqua9_up.jpg aqua9_dn.jpg separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
