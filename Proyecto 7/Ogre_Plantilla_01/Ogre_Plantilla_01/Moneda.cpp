@@ -17,8 +17,7 @@ Moneda::Moneda( Ogre::String nombre , Ogre::SceneManager* sm , float _x , float 
 	nodoMoneda->setPosition(x,y,z); 
 	nodoMoneda->setScale(scale,scale,scale);
 	//nodoMoneda->showBoundingBox(true);
-	std::cout<<this->getRadius()<<std::endl;
-
+	
 	Ogre::Real duration=4.0;
 	Ogre::Real step=duration/4.0;
 	Ogre::Animation* animation = mSceneMgr->createAnimation("AnimMoneda_"+nombre,duration);
