@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Aro.cpp" />
+    <ClCompile Include="Banderin.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Moneda.cpp" />
     <ClCompile Include="Nave.cpp" />
@@ -22,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aro.h" />
+    <ClInclude Include="Banderin.h" />
     <ClInclude Include="Moneda.h" />
     <ClInclude Include="Nave.h" />
     <ClInclude Include="Obstaculo.h" />

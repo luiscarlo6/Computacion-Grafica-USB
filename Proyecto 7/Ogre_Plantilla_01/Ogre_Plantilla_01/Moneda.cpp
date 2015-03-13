@@ -11,7 +11,7 @@ Moneda::Moneda( Ogre::String nombre , Ogre::SceneManager* sm , float _x , float 
 	nodoMoneda = _sceneManager->createSceneNode("moneda_"+nombre);
 	_sceneManager->getRootSceneNode()->addChild(nodoMoneda);
 	Ogre::Entity* entMoneda = _sceneManager->createEntity("poly14.mesh");
-	entMoneda->setMaterialName("mat02");
+	entMoneda->setMaterialName("moneda");
 	nodoMoneda->rotate(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(90.0)),Ogre::Vector3(1.0,0.0,0.0)));
 	nodoMoneda->attachObject(entMoneda);
 	nodoMoneda->setPosition(x,y,z); 

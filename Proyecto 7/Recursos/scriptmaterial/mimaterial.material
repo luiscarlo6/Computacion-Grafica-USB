@@ -55,10 +55,82 @@ material plano
 			texture_unit
 			{
 				tex_address_mode mirror
-				texture underwater.jpg
-				scale 10.0 1.0
+				texture marino.jpg
+				scale 1.0 1.0
+				scroll_anim 0.0 0.1
+			}
+		}
 
-				rotate_anim 0.01
+	}
+}
+
+material moneda
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.6 0.6 0.6 1.0
+			diffuse 1.0 0.6 1.0 1.0
+
+			texture_unit
+			{
+				tex_address_mode mirror
+				texture plata2.jpg
+				scale 1.0 1.0
+				//scroll_anim 0.0 0.1
+			}
+		}
+
+	}
+}
+
+material banderin
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				tex_address_mode mirror
+				texture hierro.jpg
+				scale 0.2 0.2
+			}
+		}
+
+	}
+}
+
+material superior
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				tex_address_mode mirror
+				texture hierro.jpg
+				scale 0.5 0.5
+			}
+		}
+
+	}
+}
+
+material bandera
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				tex_address_mode border
+				texture bandera.jpg
+				rotate 270
+				scale 4.0 1.0
 			}
 		}
 

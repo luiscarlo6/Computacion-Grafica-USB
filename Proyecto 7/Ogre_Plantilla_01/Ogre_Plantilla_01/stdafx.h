@@ -5,3 +5,4 @@
 #include "Moneda.h"
 #include "Aro.h"
 #include "Obstaculo.h"
+#include "Banderin.h"

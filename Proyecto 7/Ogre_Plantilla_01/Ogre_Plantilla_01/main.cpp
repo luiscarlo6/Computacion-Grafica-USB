@@ -2,6 +2,7 @@
 bool freemoving = false;
 int num_monedas = 45;
 Moneda* moneda[45];
+Banderin* banderin[2];
 Nave* nave;
 
 class FrameListenerProyectos : public Ogre::FrameListener{
@@ -211,7 +212,7 @@ public:
 		Ogre::Plane plane(Ogre::Vector3::UNIT_Y , -5000.0);
 
 		Ogre::MeshManager::getSingleton().createPlane("plane", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-						plane, 10000,90000,200,200,true, 1,10,10, Ogre::Vector3::UNIT_Z);
+						plane, 60000,100000,200,200,true, 1,10,10, Ogre::Vector3::UNIT_Z);
 		Ogre::SceneNode* nodePlano;
 		Ogre::Entity* entPlano = _sceneManager->createEntity("PlanoEntity","plane");
 		nodePlano = _sceneManager->createSceneNode("NodePlano");
@@ -241,6 +242,11 @@ public:
 		nodeEsfera02->addChild(nodeLuz02);
 		nodeEsfera02->setScale(0.05f,0.05f,0.05f);
 		nodeEsfera02->setPosition(0.0f,5000.0f,0.0f);
+
+		banderin[0] = new Banderin("Inicio",_sceneManager, 1105.0, 0.0, 0.0);
+		_sceneManager->getRootSceneNode()->addChild(banderin[0]->nodoBanderin);
+		banderin[1] = new Banderin("Fin",_sceneManager, 1105.0, 0.0, 90000.0);
+		_sceneManager->getRootSceneNode()->addChild(banderin[1]->nodoBanderin);
 
 		nave = new Nave(_sceneManager, _sceneManager->getCamera("Camera"));
 
