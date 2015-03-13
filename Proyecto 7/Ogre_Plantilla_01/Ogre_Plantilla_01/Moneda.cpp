@@ -69,10 +69,10 @@ Moneda::Moneda( Ogre::String nombre , Ogre::SceneManager* sm , float _x , float 
 	nodoMoneda->_updateBounds();
 	
 }
+
 Ogre::Vector3 Moneda::getCenter(){
 	return nodoMoneda->getPosition();
 }
-
 
 Ogre::Real Moneda::getRadius(){
 	return entMoneda->getBoundingRadius();

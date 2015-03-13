@@ -1,14 +1,15 @@
 #include "stdafx.h"
 bool freemoving = false;
-int num_monedas = 45;
-Moneda* moneda[45];
+int num_monedas = 50;
+Moneda* moneda[50];
 Banderin* banderin[2];
-int num_obstaculo = 20;
-Obstaculo* obstaculo[20];
-int num_aros = 10;
-Aro* aro[10];
+int num_obstaculo = 25;
+Obstaculo* obstaculo[25];
+int num_aros = 20;
+Aro* aro[20];
 Nave* nave;
 float puntaje = 0.0;
+int vidas = 3;
 
 class FrameListenerProyectos : public Ogre::FrameListener{
 private:
@@ -30,10 +31,12 @@ private:
 public:
 
 	void mostrarPuntaje(){
-		std::cout<<"Puntuación: "<<puntaje<<std::endl;
+		std::cout<<"Puntuación: "<<puntaje<<", Vidas: "<<vidas<<std::endl;
 	}
 
 	bool frameStarted(const Ogre::FrameEvent& evt){
+		if(vidas==0)
+			return false;
 		_key->capture();
 		_mouse->capture();
 		
@@ -93,6 +96,11 @@ public:
 			moneda[i]->animState->addTime(evt.timeSinceLastFrame);
 		}
 
+		for (int i = 0; i < num_obstaculo; i++)
+		{
+			obstaculo[i]->animState->addTime(evt.timeSinceLastFrame);
+		}
+
 		for (int i = 0; i < num_monedas; i++)
 		{
 			if (moneda[i]->visible && nave->getBox().intersects(moneda[i]->getBox())){
@@ -118,6 +126,15 @@ public:
 			}
 		}
 		
+		for (int i = 0; i < num_obstaculo; i++)
+		{
+			if (obstaculo[i]->visible && nave->getBox().intersects(obstaculo[i]->getBox())){
+				obstaculo[i]->visible = false;
+				obstaculo[i]->nodoObstaculo->setVisible(false);
+				vidas-=1;
+				mostrarPuntaje();
+			}
+		}
 		
 		nave->animStateDer->addTime(evt.timeSinceLastFrame);
 		nave->animStateIzq->addTime(evt.timeSinceLastFrame);
@@ -239,6 +256,42 @@ public:
 		 return 0;
 	 }
 
+	void crearMoneda( int num , int limite_x , int limite_min_z , int limite_max_z ){
+				
+		float pos_x = rand() % limite_x;
+
+		if ( rand() % 2 == 1 ){
+			pos_x*=-1;
+		}
+
+		float pos_z = (rand() % (limite_max_z-limite_min_z))+limite_min_z;
+		moneda[num] = new Moneda(std::to_string(num),_sceneManager,pos_x,pow(-1,num)*350.0,pos_z);
+	}
+
+	void crearObstaculo( int num , int limite_x , int limite_min_z , int limite_max_z ){
+				
+		float pos_x = rand() % limite_x;
+
+		if ( rand() % 2 == 1 ){
+			pos_x*=-1;
+		}
+
+		float pos_z = (rand() % (limite_max_z-limite_min_z))+limite_min_z;
+		obstaculo[num] = new Obstaculo(std::to_string(num),_sceneManager,pos_x,pow(-1,num)*350.0-2800.0,pos_z);
+	}
+
+	void crearAro( int num , int limite_x , int limite_min_z , int limite_max_z ){
+				
+		float pos_x = rand() % limite_x;
+
+		if ( rand() % 2 == 1 ){
+			pos_x*=-1;
+		}
+
+		float pos_z = (rand() % (limite_max_z-limite_min_z))+limite_min_z;
+		aro[num] = new Aro(std::to_string(num),_sceneManager,pos_x,pow(-1,num)*350.0,pos_z);
+	}
+
 	 void createScene(){
 		_sceneManager->setAmbientLight(Ogre::ColourValue(1.0f,1.0f,1.0f));
 		_sceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
@@ -284,19 +337,24 @@ public:
 		banderin[1] = new Banderin("Fin",_sceneManager, 5105.0, -2000.0, 90000.0);
 		_sceneManager->getRootSceneNode()->addChild(banderin[1]->nodoBanderin);
 
-		obstaculo[0] = new Obstaculo("prueba",_sceneManager, -100.0, -3000.0, 0.0);
-		_sceneManager->getRootSceneNode()->addChild(obstaculo[0]->nodoObstaculo);
+		
+		
 
 		nave = new Nave(_sceneManager, _sceneManager->getCamera("Camera"));
 
 		for (int i = 0; i < num_monedas; i++)
 		{
-			moneda[i] = new Moneda(std::to_string(i),_sceneManager,0.0,pow(-1,i)*250.0,i*2000.0);
+			crearMoneda(i,4000,5000,90000);
 		}
 
 		for (int i = 0; i < num_aros; i++)
 		{
-			aro[i] = new Aro(std::to_string(i),_sceneManager,0.0,pow(-1,i)*250.0,i*2000.0+1000);
+			crearAro(i,4000,5000,90000);
+		}
+
+		for (int i = 0; i < num_obstaculo; i++)
+		{
+			crearObstaculo(i,4000,5000,90000);
 		}
 		
 	 }

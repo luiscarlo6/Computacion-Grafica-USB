@@ -4,7 +4,7 @@ Nave::Nave(Ogre::SceneManager* sm, Ogre::Camera* cam){
 	camera = cam;
 	mSceneMgr = sm;
 	lastMove = 0;
-	speed = 25.0;
+	speed = 50.0;
 	x = 0.0;
 	y = 0.0;
 	z = 0.0;
@@ -14,8 +14,7 @@ Nave::Nave(Ogre::SceneManager* sm, Ogre::Camera* cam){
 	nodoCamara = nodoNave->createChildSceneNode("NaveCam");
 
 	mSceneMgr->getRootSceneNode()->addChild(nodoNave);
-	entNave = mSceneMgr->createEntity("RZR-002.mesh");
-	entNave->setMaterialName("RZR-002");
+	entNave = mSceneMgr->createEntity("Batboat.001.mesh");
 	nodoEntNave->attachObject(entNave);		
 	nodoNave->setPosition(0.0,0.0,0.0); 
 	nodoEntNave->setScale(s,s,s);
@@ -50,7 +49,7 @@ Nave::Nave(Ogre::SceneManager* sm, Ogre::Camera* cam){
 	keyD->setRotation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0.0)),Ogre::Vector3(0.0,0.0,1.0)));
 
 	keyD = trackDer->createNodeKeyFrame(1.0f);
-	//key->setTranslate(Ogre::Vector3(0.0,-500,0.0));
+	//key->sdwetTranslate(Ogre::Vector3(0.0,-500,0.0));
 	keyD->setScale(Ogre::Vector3(s,s,s));
 	keyD->setRotation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(45.0)),Ogre::Vector3(0.0,0.0,1.0)));
 
