@@ -22,7 +22,7 @@ particle_system Examples/Smoke
 		//inner_height 0.9
 		//inner_width 0.9
 
-		position -7 0 -10
+		position -120 0 -140
 		angle 30
 		emission_rate 600
 		time_to_live 2
@@ -116,7 +116,7 @@ particle_system Examples/Smoke2
 		//inner_height 0.9
 		//inner_width 0.9
 
-		position -7 0 -10
+		position 120 0 -140
 		angle 30
 		emission_rate 600
 		time_to_live 2
