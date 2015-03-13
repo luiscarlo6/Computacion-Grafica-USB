@@ -32,7 +32,7 @@ Banderin::Banderin( Ogre::String nombre , Ogre::SceneManager* sm , float _x , fl
 	nodoSuperiorIzq->rotate(Ogre::Vector3(0.0,0.0,1.0),Ogre::Radian(Ogre::Degree(180.0)));
 
 	nodoBandera->attachObject(entBandera);
-	nodoBandera->setScale(1.2,4.10,1.0);
+	nodoBandera->setScale(1.2,3.85,1.0);
 	nodoBandera->translate(-2.2,7.2,0.0);
 	nodoBandera->rotate(Ogre::Vector3(0.0,0.0,1.0),Ogre::Radian(Ogre::Degree(90.0)));
 
@@ -50,5 +50,5 @@ Banderin::Banderin( Ogre::String nombre , Ogre::SceneManager* sm , float _x , fl
 	nodoBanderin->addChild(nodoBaseDer);
 	
 	nodoBanderin->setPosition(x,y,z);
-	nodoBanderin->setScale(15.0,140.0,15.0);
+	nodoBanderin->setScale(60.0,600.0,60.0);
 }

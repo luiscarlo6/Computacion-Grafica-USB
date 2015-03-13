@@ -277,9 +277,9 @@ public:
 		nodeEsfera02->setScale(0.05f,0.05f,0.05f);
 		nodeEsfera02->setPosition(0.0f,5000.0f,0.0f);
 
-		banderin[0] = new Banderin("Inicio",_sceneManager, 1105.0, 0.0, 0.0);
+		banderin[0] = new Banderin("Inicio",_sceneManager, 5105.0, -2000.0, 0.0);
 		_sceneManager->getRootSceneNode()->addChild(banderin[0]->nodoBanderin);
-		banderin[1] = new Banderin("Fin",_sceneManager, 1105.0, 0.0, 90000.0);
+		banderin[1] = new Banderin("Fin",_sceneManager, 5105.0, -2000.0, 90000.0);
 		_sceneManager->getRootSceneNode()->addChild(banderin[1]->nodoBanderin);
 
 		nave = new Nave(_sceneManager, _sceneManager->getCamera("Camera"));
