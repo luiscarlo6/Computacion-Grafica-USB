@@ -3,7 +3,9 @@ bool freemoving = false;
 int num_monedas = 45;
 Moneda* moneda[45];
 Banderin* banderin[2];
-int num_aros= 10;
+int num_obstaculo = 20;
+Obstaculo* obstaculo[20];
+int num_aros = 10;
 Aro* aro[10];
 Nave* nave;
 float puntaje = 0.0;
@@ -282,6 +284,9 @@ public:
 		banderin[1] = new Banderin("Fin",_sceneManager, 5105.0, -2000.0, 90000.0);
 		_sceneManager->getRootSceneNode()->addChild(banderin[1]->nodoBanderin);
 
+		obstaculo[0] = new Obstaculo("prueba",_sceneManager, -100.0, -3000.0, 0.0);
+		_sceneManager->getRootSceneNode()->addChild(obstaculo[0]->nodoObstaculo);
+
 		nave = new Nave(_sceneManager, _sceneManager->getCamera("Camera"));
 
 		for (int i = 0; i < num_monedas; i++)
@@ -294,8 +299,6 @@ public:
 			aro[i] = new Aro(std::to_string(i),_sceneManager,0.0,pow(-1,i)*250.0,i*2000.0+1000);
 		}
 		
-
-		//Obstaculo obs = Obstaculo("1",1,_sceneManager,0.0,0.0,2000.0);
 	 }
 };
 

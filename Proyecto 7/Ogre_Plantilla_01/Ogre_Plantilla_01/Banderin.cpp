@@ -6,7 +6,6 @@ Banderin::Banderin( Ogre::String nombre , Ogre::SceneManager* sm , float _x , fl
 	y = _y;
 	z = _z;
 	_sceneManager = sm;
-	Ogre::Vector3 scale = Ogre::Vector3(3.5);
 
 	nodoBanderin = _sceneManager->createSceneNode("Banderin"+nombre);
 	Ogre::SceneNode* nodoSuperiorIzq = _sceneManager->createSceneNode(nombre+"superiorIzq");

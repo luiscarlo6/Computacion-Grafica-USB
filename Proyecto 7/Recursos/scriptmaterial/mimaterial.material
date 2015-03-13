@@ -137,6 +137,57 @@ material bandera
 	}
 }
 
+material obstaculo
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				tex_address_mode mirror
+				texture hierro_base.jpg
+				scale 1.0 1.0
+			}
+		}
+
+	}
+}
+
+material cadena
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				tex_address_mode mirror
+				texture hierro_cadena.jpg
+				scale 1.0 1.0
+			}
+		}
+
+	}
+}
+
+material mina
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				tex_address_mode mirror
+				texture hierro_mina.jpg
+				scale 1.0 1.0
+			}
+		}
+
+	}
+}
+
 material RZR-002
 {
 	technique

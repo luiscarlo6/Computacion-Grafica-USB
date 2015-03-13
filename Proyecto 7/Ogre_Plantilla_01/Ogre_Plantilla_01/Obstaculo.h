@@ -10,6 +10,6 @@ class Obstaculo{
 	Ogre::SceneNode* nodoObstaculo;
 	Ogre::AnimationState* animState;
 
-	Obstaculo::Obstaculo( Ogre::String nombre, int tipo , Ogre::SceneManager* sm , float x , float y , float z);
+	Obstaculo::Obstaculo( Ogre::String nombre, Ogre::SceneManager* sm , float x , float y , float z);
 
 };
