@@ -21,4 +21,6 @@ Obstaculo::Obstaculo( Ogre::String nombre, int tipo, Ogre::SceneManager* sm , fl
 	nodoObstaculo->attachObject(entObstaculo);
 	nodoObstaculo->setPosition(x,y,z); 
 	nodoObstaculo->setScale(scale);
+
+	nodoObstaculo->_updateBounds();
 }

@@ -12,6 +12,8 @@ class Nave{
 		Ogre::SceneNode* nodoCamara;
 		Ogre::AnimationState* animStateDer;
 		Ogre::AnimationState* animStateIzq;
+		Ogre::Entity* entNave;
+
 		float x;
 		float y;
 		float z;
@@ -42,5 +44,9 @@ class Nave{
 		void Nave::moverAbajo();
 
 		void Nave::rotarDerecha();
+
+		Ogre::AxisAlignedBox Nave::getBox();
+
+		Ogre::Vector3 Nave::getCenter();
 
 };

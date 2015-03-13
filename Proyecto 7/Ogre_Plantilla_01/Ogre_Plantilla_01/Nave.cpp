@@ -4,37 +4,38 @@ Nave::Nave(Ogre::SceneManager* sm, Ogre::Camera* cam){
 	camera = cam;
 	mSceneMgr = sm;
 	lastMove = 0;
-	speed = 50.0;
+	speed = 25.0;
 	x = 0.0;
 	y = 0.0;
 	z = 0.0;
+	Ogre::Real s = 20.0f;
 	nodoNave = mSceneMgr->createSceneNode("Nave");
 	nodoEntNave = nodoNave->createChildSceneNode("NaveEnt");
 	nodoCamara = nodoNave->createChildSceneNode("NaveCam");
 
 	mSceneMgr->getRootSceneNode()->addChild(nodoNave);
-	Ogre::Entity* entNave = mSceneMgr->createEntity("RZR-002.mesh");
+	entNave = mSceneMgr->createEntity("RZR-002.mesh");
 	entNave->setMaterialName("RZR-002");
 	nodoEntNave->attachObject(entNave);		
 	nodoNave->setPosition(0.0,0.0,0.0); 
-	nodoNave->setScale(20.0f,20.0f,20.0f);
-	nodoCamara->setPosition((Ogre::Vector3(0.0f,500.0f,-3000.0f)));
-
+	nodoEntNave->setScale(s,s,s);
+	nodoCamara->setPosition((Ogre::Vector3(0.0f,300.0f,-1000.0f)));
+	
+//	nodoEntNave->showBoundingBox(true);
 
 	Ogre::ParticleSystem* partSystem = mSceneMgr->createParticleSystem("Smoke","Examples/Smoke");
-	nodoEntNave->attachObject(partSystem);
+	nodoNave->attachObject(partSystem);
 
 	Ogre::ParticleSystem* partSystem2 = mSceneMgr->createParticleSystem("Smoke2","Examples/Smoke2");
-	//nodoEntNave->attachObject(partSystem2);
+	nodoNave->attachObject(partSystem2);
 
-	Ogre::Vector3 escala(2.0f,2.0f,2.0f);
 	Ogre::Light* light = mSceneMgr->createLight("luz");
 	light->setType(Ogre::Light::LT_POINT);
 	light->setDiffuseColour(Ogre::ColourValue(1.0f,1.0f,1.0f));
 	light->setDirection(Ogre::Vector3(0.0,-1.0,0.0));
 	light->setDirection(Ogre::Vector3(0.0,0.0,0.0));
 	nodoEntNave->attachObject(light);
-	nodoNave->attachObject(camera);
+	nodoCamara->attachObject(camera);
 
 
 	Ogre::Animation* animDer = mSceneMgr->createAnimation("NaveAnimDer",1.0);
@@ -45,12 +46,12 @@ Nave::Nave(Ogre::SceneManager* sm, Ogre::Camera* cam){
 
 	keyD = trackDer->createNodeKeyFrame(0.0f);
 	//key->setTranslate(Ogre::Vector3(0.0,0.0,0.0));
-	//key->setScale(Ogre::Vector3(0.5,0.5,0.5));
+	keyD->setScale(Ogre::Vector3(s,s,s));
 	keyD->setRotation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0.0)),Ogre::Vector3(0.0,0.0,1.0)));
 
 	keyD = trackDer->createNodeKeyFrame(1.0f);
 	//key->setTranslate(Ogre::Vector3(0.0,-500,0.0));
-	//key->setScale(Ogre::Vector3(0.5,0.5,0.5));
+	keyD->setScale(Ogre::Vector3(s,s,s));
 	keyD->setRotation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(45.0)),Ogre::Vector3(0.0,0.0,1.0)));
 
 	animStateDer = mSceneMgr->createAnimationState("NaveAnimDer");
@@ -66,25 +67,28 @@ Nave::Nave(Ogre::SceneManager* sm, Ogre::Camera* cam){
 
 	keyI = trackIzq->createNodeKeyFrame(0.0f);
 	//key->setTranslate(Ogre::Vector3(0.0,0.0,0.0));
-	//key->setScale(Ogre::Vector3(0.5,0.5,0.5));
+	keyI->setScale(Ogre::Vector3(s,s,s));
 	keyI->setRotation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(0.0)),Ogre::Vector3(0.0,0.0,1.0)));
 
 	keyI = trackIzq->createNodeKeyFrame(1.0f);
 	//key->setTranslate(Ogre::Vector3(0.0,-500,0.0));
-	//key->setScale(Ogre::Vector3(0.5,0.5,0.5));
+	keyI->setScale(Ogre::Vector3(s,s,s));
 	keyI->setRotation(Ogre::Quaternion(Ogre::Radian(Ogre::Degree(-45.0)),Ogre::Vector3(0.0,0.0,1.0)));
 
 	animStateIzq = mSceneMgr->createAnimationState("NaveAnimIzq");
 	animStateIzq->setEnabled(false);
 	animStateIzq->setLoop(false);
 
+	nodoNave->_updateBounds();
+
 }
 
 
 void Nave::moverDerecha(){
+	if (entNave->getWorldBoundingBox().getCorner(Ogre::AxisAlignedBox::CornerEnum::NEAR_LEFT_BOTTOM).x <=-4975)
+		return;
 	nodoNave->translate(-speed,0.0,0.0);
 	if ( lastMove != 1 ){
-
 		lastMove++;
 		animStateDer->setEnabled(true);
 		animStateDer->setTimePosition(0.0);
@@ -97,6 +101,8 @@ void Nave::moverDerecha(){
 
 
 void Nave::moverIzquierda(){
+	if (entNave->getWorldBoundingBox().getCorner(Ogre::AxisAlignedBox::CornerEnum::NEAR_RIGHT_BOTTOM).x >=4975)
+		return;
 	nodoNave->translate(speed,0.0,0.0);
 	if ( lastMove != -1 ){
 
@@ -112,22 +118,30 @@ void Nave::moverIzquierda(){
 
 
 void Nave::moverAdelante(){
+	if (entNave->getWorldBoundingBox().getCorner(Ogre::AxisAlignedBox::CornerEnum::NEAR_RIGHT_BOTTOM).z >=89975)
+		return;
 	z+=speed;
 	nodoNave->translate(0.0,0.0,speed);
 }
 
 
 void Nave::moverAtras(){
+	if (entNave->getWorldBoundingBox().getCorner(Ogre::AxisAlignedBox::CornerEnum::FAR_RIGHT_BOTTOM).z <=25)
+		return;
 	z-=speed;
 	nodoNave->translate(0.0,0.0,-speed);
 }
 
 void Nave::moverArriba(){
+	if (entNave->getWorldBoundingBox().getCorner(Ogre::AxisAlignedBox::CornerEnum::NEAR_RIGHT_TOP).y >=4975)
+		return;
 	y+=speed;
 	nodoNave->translate(0.0,speed,0.0);
 }
 
 void Nave::moverAbajo(){
+	if (entNave->getWorldBoundingBox().getCorner(Ogre::AxisAlignedBox::CornerEnum::NEAR_RIGHT_BOTTOM).y <=-4975)
+		return;
 	y-=speed;
 	nodoNave->translate(0.0,-speed,0.0);
 }
@@ -139,4 +153,12 @@ void Nave::reset(){
 	//animStateDer->setEnabled(false);
 	animStateIzq->setTimePosition(0.0);
 	//animStateIzq->setEnabled(false);
+}
+
+Ogre::AxisAlignedBox Nave::getBox(){
+	return entNave->getWorldBoundingBox();
+}
+
+Ogre::Vector3 Nave::getCenter(){
+	return nodoNave->getPosition();
 }

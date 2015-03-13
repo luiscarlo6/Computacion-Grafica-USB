@@ -3,7 +3,10 @@ bool freemoving = false;
 int num_monedas = 45;
 Moneda* moneda[45];
 Banderin* banderin[2];
+int num_aros= 10;
+Aro* aro[10];
 Nave* nave;
+float puntaje = 0.0;
 
 class FrameListenerProyectos : public Ogre::FrameListener{
 private:
@@ -23,6 +26,11 @@ private:
 	float _rotation;
 
 public:
+
+	void mostrarPuntaje(){
+		std::cout<<"Puntuación: "<<puntaje<<std::endl;
+	}
+
 	bool frameStarted(const Ogre::FrameEvent& evt){
 		_key->capture();
 		_mouse->capture();
@@ -82,6 +90,32 @@ public:
 		{
 			moneda[i]->animState->addTime(evt.timeSinceLastFrame);
 		}
+
+		for (int i = 0; i < num_monedas; i++)
+		{
+			if (moneda[i]->visible && nave->getBox().intersects(moneda[i]->getBox())){
+				moneda[i]->visible = false;
+				moneda[i]->nodoMoneda->setVisible(false);
+				puntaje+=100;
+				mostrarPuntaje();
+			}
+		}
+		
+		for (int i = 0; i < num_aros; i++)
+		{
+			Ogre::AxisAlignedBox boxNave = nave->getBox();
+			Ogre::Vector3 centro = nave->getCenter();
+			if (aro[i]->visible &&
+				nave->getBox().intersects(aro[i]->getBox()) && 
+				aro[i]->adentro(boxNave, centro))
+			{
+				aro[i]->visible = false;
+				aro[i]->nodoAro->setVisible(false);
+				puntaje+=200;
+				mostrarPuntaje();
+			}
+		}
+		
 		
 		nave->animStateDer->addTime(evt.timeSinceLastFrame);
 		nave->animStateIzq->addTime(evt.timeSinceLastFrame);
@@ -185,7 +219,7 @@ public:
 		 _sceneManager =  _root->createSceneManager(Ogre::ST_GENERIC);
 
 		 Ogre::Camera* camera = _sceneManager->createCamera("Camera");
-		 camera->setPosition(Ogre::Vector3(0.0f,500.0f,-3000.0f));
+		 camera->setPosition(Ogre::Vector3(0.0f,300.0f,-1000.0f));
 		 camera->lookAt(Ogre::Vector3(0,0,0));
 		 camera->setNearClipDistance(5);
 
@@ -255,7 +289,11 @@ public:
 			moneda[i] = new Moneda(std::to_string(i),_sceneManager,0.0,pow(-1,i)*250.0,i*2000.0);
 		}
 
-		//Aro* aro = new Aro("1",_sceneManager,0.0,0.0,1000.0);
+		for (int i = 0; i < num_aros; i++)
+		{
+			aro[i] = new Aro(std::to_string(i),_sceneManager,0.0,pow(-1,i)*250.0,i*2000.0+1000);
+		}
+		
 
 		//Obstaculo obs = Obstaculo("1",1,_sceneManager,0.0,0.0,2000.0);
 	 }
